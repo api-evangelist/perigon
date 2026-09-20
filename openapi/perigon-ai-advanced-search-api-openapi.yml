@@ -1,0 +1,2365 @@
+openapi: 3.2.0
+info:
+  title: Perigon AI & Advanced Search API
+  version: 1.0.0
+  contact:
+    name: Perigon Support
+    url: https://docs.perigon.io/
+    email: data@perigon.io
+  description: 'Operations tagged AI & Advanced Search across 2 of this provider''s published API definitions: perigon-openapi.json, perigon-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.perigon.io
+  description: Generated server url
+security:
+- apiKeyAuth: []
+tags:
+- name: AI & Advanced Search
+  description: These endpoints enable semantic search beyond traditional keyword matching, content summarization, and advanced information retrieval across articles
+paths:
+  /v1/summarize:
+    post:
+      tags:
+      - AI & Advanced Search
+      summary: Search Summarizer
+      description: Produce one concise summary from up to 100 articles matching the supplied filters. Use the prompt and summarization fields to control which insights are highlighted. When method is CLUSTERS, article-only parameters such as articleId, page, sortBy, watchlist, reprintGroupId, exclusion filters, prefixTaxonomy, and highlighting options are ignored.
+      operationId: search-summarizer
+      parameters:
+      - name: q
+        in: query
+        description: String. Primary search query for filtering articles based on their title, description, and content. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
+        required: false
+        schema:
+          type: string
+      - name: title
+        in: query
+        description: String. Search specifically within article headlines/titles. Supports Boolean operators, exact phrases with quotes, and wildcards for matching title variations.
+        required: false
+        schema:
+          type: string
+      - name: desc
+        in: query
+        description: String. Search within article description fields. Supports Boolean expressions, exact phrase matching with quotes, and wildcards for flexible pattern matching.
+        required: false
+        schema:
+          type: string
+      - name: content
+        in: query
+        description: String. Search within the full article body content. Supports Boolean logic, exact phrase matching with quotes, and wildcards for comprehensive content searching.
+        required: false
+        schema:
+          type: string
+      - name: summary
+        in: query
+        description: String. Search within article summary fields. Supports Boolean expressions, exact phrase matching with quotes, and wildcards for flexible pattern matching.
+        required: false
+        schema:
+          type: string
+      - name: url
+        in: query
+        description: String. Search query on the url field. Semantic similar to q parameter. E.g. could be used for querying certain website sections, e.g. source=cnn.com&url=travel.
+        required: false
+        schema:
+          type: string
+      - name: articleId
+        in: query
+        description: String Array. Retrieve specific news articles by their unique article identifiers. Multiple IDs can be provided to return a collection of specific articles.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: clusterId
+        in: query
+        description: String Array. Filter results to only show content within a specific related content cluster. Returns articles grouped together as part of Perigon Stories based on topic relevance.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: sortBy
+        in: query
+        description: String. Determines the article sorting order. Options include relevance (default), date/pubDate (newest publication date first), reverseDate (oldest publication date first), addDate (newest ingestion date first), reverseAddDate (oldest ingestion date first), and refreshDate (most recently updated in system first, often identical to addDate).
+        required: false
+        schema:
+          $ref: '#/components/schemas/AllEndpointSortBy'
+      - name: page
+        in: query
+        description: Integer. The specific page of results to retrieve in the paginated response. Starts at 0.
+        required: false
+        schema:
+          maximum: 10000
+          minimum: 0
+          type: integer
+          format: int32
+      - name: from
+        in: query
+        description: Date. Filter for articles published after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - name: to
+        in: query
+        description: Date. Filter for articles published before this date. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - name: addDateFrom
+        in: query
+        description: Date. Filter for articles added to Perigon's system after this date. Accepts ISO 8601 format (e.g., 2022-02-01T00:00:00) or yyyy-mm-dd format.
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - name: addDateTo
+        in: query
+        description: Date. Filter for articles added to Perigon's system before this date. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - name: refreshDateFrom
+        in: query
+        description: Date. Filter for articles refreshed/updated in Perigon's system after this date. In most cases yields similar results to addDateFrom but can differ for updated content. Accepts ISO 8601 format (e.g., 2022-02-01T00:00:00) or yyyy-mm-dd format.
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - name: refreshDateTo
+        in: query
+        description: Date. Filter for articles refreshed/updated in Perigon's system before this date. In most cases yields similar results to addDateTo but can differ for updated content. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - name: medium
+        in: query
+        description: String Array. Filter articles by their primary medium type. Accepts Article for written content or Video for video-based stories. Multiple values create an OR filter.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: source
+        in: query
+        description: String Array. Filter articles by specific publisher domains or subdomains. Supports wildcards (* and ?) for pattern matching (e.g., *.cnn.com). Multiple values create an OR filter.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: sourceGroup
+        in: query
+        description: String Array. Filter articles using Perigon's curated publisher bundles (e.g., top100, top25crypto). Multiple values create an OR filter to include articles from any of the specified bundles.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: excludeSourceGroup
+        in: query
+        description: String Array. Exclude articles from specified Perigon source groups. Multiple values create an AND-exclude filter, removing content from publishers in any of the specified bundles (e.g., top10, top100).
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: excludeSource
+        in: query
+        description: String Array. Exclude articles from specific publisher domains or subdomains. Supports wildcards (* and ?) for pattern matching (e.g., *.cnn.com). Multiple values create an AND-exclude filter.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: watchlist
+        in: query
+        description: String Array. Filter articles using watchlists of people and companies. Multiple values create an OR filter to include articles mentioning any entity from the specified watchlists.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: excludeWatchlist
+        in: query
+        description: String Array. Exclude articles mentioning entities from specified watchlists. Multiple values create an AND-exclude filter, removing content mentioning any entity from the specified watchlists.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: paywall
+        in: query
+        description: Boolean. Filter to show only results where the source has a paywall (true) or does not have a paywall (false).
+        required: false
+        schema:
+          type: boolean
+      - name: byline
+        in: query
+        description: String Array. Filter articles by author bylines. Works as an exact match for each author name provided. Multiple values create an OR filter to find articles by any of the specified authors.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: author
+        in: query
+        description: String Array. Filter articles by specific author names. Works as an exact match for each name. Multiple values create an OR filter to find articles by any of the specified authors.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: excludeAuthor
+        in: query
+        description: String Array. Exclude articles written by specific authors. Any article with an author name matching an entry in this list will be omitted from results. Multiple values create an AND-exclude filter.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: journalistId
+        in: query
+        description: String Array. Filter by unique journalist identifiers which can be found through the Journalist API or in the matchedAuthors field. Multiple values create an OR filter.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: excludeJournalistId
+        in: query
+        description: String Array. Exclude articles written by specific journalists identified by their unique IDs. Multiple values create an AND-exclude filter.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: language
+        in: query
+        description: String Array. Filter articles by their language using ISO-639 two-letter codes (e.g., en, es, fr). Multiple values create an OR filter.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: excludeLanguage
+        in: query
+        description: String Array. Exclude articles in specific languages using ISO-639 two-letter codes. Multiple values create an AND-exclude filter.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: searchTranslation
+        in: query
+        description: Boolean. Expand search to include translated content fields for non-English articles. When true, searches translated title, description, and content fields.
+        required: false
+        schema:
+          type: boolean
+      - name: label
+        in: query
+        description: String Array. Filter articles by editorial labels such as Opinion, Paid-news, Non-news, Fact Check, or Press Release. Multiple values create an OR filter.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: excludeLabel
+        in: query
+        description: String Array. Exclude articles with specific editorial labels. Multiple values create an AND-exclude filter, removing all content with any of these labels.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: category
+        in: query
+        description: 'String Array. Filter by categories. Categories are general themes that the article is about. Examples of categories: Tech, Politics, etc. If multiple parameters are passed, they will be applied as OR operations. Use ''none'' to search uncategorized articles.'
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: excludeCategory
+        in: query
+        description: String Array. Exclude articles with specific categories. Multiple values create an AND-exclude filter, removing all content with any of these categories.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: topic
+        in: query
+        description: String Array. Filter by specific topics such as Markets, Crime, Cryptocurrency, or College Sports. Topics are more granular than categories, and articles can have multiple topics. Use the /topics endpoint for a complete list of available topics. Multiple values create an OR filter.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: excludeTopic
+        in: query
+        description: String Array. Exclude articles with specific topics. Multiple values create an AND-exclude filter, removing all content with any of these topics.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: linkTo
+        in: query
+        description: String. Returns only articles that contain links to the specified URL pattern. Matches against the 'links' field in article responses.
+        required: false
+        schema:
+          type: string
+      - name: showReprints
+        in: query
+        description: Boolean. Controls whether to include reprinted content in results. When true (default), shows syndicated articles from wire services like AP or Reuters that appear on multiple sites.
+        required: false
+        schema:
+          type: boolean
+      - name: reprintGroupId
+        in: query
+        description: String. Returns all articles in a specific reprint group, including the original article and all its known reprints. Use when you want to see all versions of the same content.
+        required: false
+        schema:
+          type: string
+      - name: city
+        in: query
+        description: String Array. Filters articles where a specified city plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the urban area in question. If multiple parameters are passed, they will be applied as OR operations.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: excludeCity
+        in: query
+        description: String Array. A list of cities to exclude from the results. Articles that are associated with any of the specified cities will be filtered out.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: area
+        in: query
+        description: String Array. Filters articles where a specified area, such as a neighborhood, borough, or district, plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the area in question. If multiple parameters are passed, they will be applied as OR operations.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: state
+        in: query
+        description: String Array. Filters articles where a specified state plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the state in question. If multiple parameters are passed, they will be applied as OR operations.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: excludeState
+        in: query
+        description: String Array. A list of states to exclude. Articles that include, or are associated with, any of the states provided here will be filtered out. This is especially useful if you want to ignore news tied to certain geographical areas (e.g., US states).
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: county
+        in: query
+        description: String Array. A list of counties to include (or specify) in the search results. This field filters the returned articles based on the county associated with the event or news. Only articles tagged with one of these counties will be included.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: excludeCounty
+        in: query
+        description: String Array. Excludes articles from specific counties or administrative divisions in the search results. Accepts either a single county name or a list of county names. County names should match the format used in article metadata (e.g., 'Los Angeles County', 'Cook County'). This parameter allows for more granular geographic filter
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: locationsCountry
+        in: query
+        description: String Array. Filters articles where a specified country plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the country in question. If multiple parameters are passed, they will be applied as OR operations.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: country
+        in: query
+        description: String Array. Country code to filter by country. If multiple parameters are passed, they will be applied as OR operations.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: excludeLocationsCountry
+        in: query
+        description: String Array. Excludes articles where a specified country plays a central role in the content, ensuring results are not deeply relevant to the country in question. If multiple parameters are passed, they will be applied as AND operations, excluding articles relevant to any of the specified countries.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: location
+        in: query
+        description: 'String Array. Return all articles that have the specified location. Location attributes are delimited by '':'' between key and value, and ''::'' between attributes. Example: ''city:New York::state:NY''.'
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: lat
+        in: query
+        description: Float. Latitude of the center point to search places
+        required: false
+        schema:
+          maximum: 90
+          minimum: -90
+          type: number
+          format: double
+      - name: lon
+        in: query
+        description: Float. Longitude of the center point to search places
+        required: false
+        schema:
+          maximum: 180
+          minimum: -180
+          type: number
+          format: double
+      - name: maxDistance
+        in: query
+        description: Float. Maximum distance (in km) from starting point to search articles by tagged places
+        required: false
+        schema:
+          maximum: 300
+          minimum: 1
+          type: number
+          format: double
+      - name: sourceCity
+        in: query
+        description: String Array. Find articles published by sources that are located within a given city.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: excludeSourceCity
+        in: query
+        description: String Array. Excludes articles published by sources that are located within the specified cities.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: sourceCounty
+        in: query
+        description: String Array. Find articles published by sources that are located within a given county.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: excludeSourceCounty
+        in: query
+        description: String Array. Excludes articles published by sources that are located within the specified counties.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: sourceCountry
+        in: query
+        description: String Array. Find articles published by sources that are located within a given country. Must be 2 character country code (i.e. us, gb, etc).
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: excludeSourceCountry
+        in: query
+        description: String Array. Excludes articles published by sources that are located within the specified countries. Must be 2 character country codes (e.g., us, gb).
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: sourceState
+        in: query
+        description: String Array. Find articles published by sources that are located within a given state.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: excludeSourceState
+        in: query
+        description: String Array. Excludes articles published by sources that are located within the specified states.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: sourceLat
+        in: query
+        description: Float. Latitude of the center point to search articles created by local publications.
+        required: false
+        schema:
+          maximum: 90
+          minimum: -90
+          type: number
+          format: double
+      - name: sourceLon
+        in: query
+        description: Float. Longitude of the center point to search articles created by local publications.
+        required: false
+        schema:
+          maximum: 180
+          minimum: -180
+          type: number
+          format: double
+      - name: sourceMaxDistance
+        in: query
+        description: Float. Maximum distance from starting point to search articles created by local publications.
+        required: false
+        schema:
+          maximum: 300
+          minimum: 1
+          type: number
+          format: double
+      - name: personWikidataId
+        in: query
+        description: String Array. Filter articles by Wikidata IDs of mentioned people. Refer to the /people endpoint for a complete list of tracked individuals.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: excludePersonWikidataId
+        in: query
+        description: String Array. Exclude articles mentioning people with specific Wikidata IDs. Creates an AND-exclude filter to remove content about these individuals. Uses precise identifiers to avoid name ambiguity.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: personName
+        in: query
+        description: String Array. Filter articles by exact person name matches. Does not support Boolean or complex logic. For available person entities, consult the /people endpoint.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: excludePersonName
+        in: query
+        description: String Array. Exclude articles mentioning specific people by name. Creates an AND-exclude filter to remove content about these individuals.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: companyId
+        in: query
+        description: String Array. Filter articles by company identifiers. For a complete list of tracked companies, refer to the /companies endpoint.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: excludeCompanyId
+        in: query
+        description: String Array. Exclude articles mentioning companies with specific identifiers. Creates an AND-exclude filter to remove content about these corporate entities.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: companyName
+        in: query
+        description: String. Filter articles by company name mentions. Performs an exact match on company names.
+        required: false
+        schema:
+          type: string
+      - name: companyDomain
+        in: query
+        description: String Array. Filter articles by company domains (e.g., apple.com). For available company entities, consult the /companies endpoint.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: excludeCompanyDomain
+        in: query
+        description: String Array. Exclude articles related to companies with specific domains. Creates an AND-exclude filter to remove content about these companies.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: companySymbol
+        in: query
+        description: String Array. Filter articles by company stock symbols. For available company entities and their symbols, consult the /companies endpoint.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: companyIsin
+        in: query
+        description: String Array. Filter articles by company ISIN codes (International Securities Identification Numbers). For available company entities and their ISINs, consult the /companies endpoint.
+        required: false
+        schema:
+          maxItems: 300
+          minItems: 0
+          type: array
+          items:
+            type: string
+      - name: companySymbolIsin
+        in: query
+        description: String Array. Filter articles by ISIN codes on company ticker listings (symbols.isin). Distinct from companyIsin, which matches the company-level ISIN. For available company entities and their listing ISINs, consult the /companies endpoint.
+        required: false
+        schema:
+          maxItems: 300
+          minItems: 0
+          type: array
+          items:
+            type: string
+      - name: excludeCompanyIsin
+        in: query
+        description: String Array. Exclude articles related to companies with specific ISIN codes. Creates an AND-exclude filter to remove content about these companies. For available company entities and their ISINs, consult the /companies endpoint.
+        required: false
+        schema:
+          maxItems: 300
+          minItems: 0
+          type: array
+          items:
+            type: string
+      - name: excludeCompanySymbolIsin
+        in: query
+        description: String Array. Exclude articles related to companies whose ticker listings have these ISIN codes (symbols.isin). Distinct from excludeCompanyIsin, which matches the company-level ISIN. For available company entities and their listing ISINs, consult the /companies endpoint.
+        required: false
+        schema:
+          maxItems: 300
+          minItems: 0
+          type: array
+          items:
+            type: string
+      - name: excludeCompanySymbol
+        in: query
+        description: String Array. A list of stock symbols (ticker symbols) that identify companies to be excluded. Articles related to companies using any of these symbols will be omitted, which is useful for targeting or avoiding specific public companies.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: positiveSentimentFrom
+        in: query
+        description: Float. Filter articles with a positive sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
+        required: false
+        schema:
+          type: number
+          format: float
+      - name: positiveSentimentTo
+        in: query
+        description: Float. Filter articles with a positive sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
+        required: false
+        schema:
+          type: number
+          format: float
+      - name: neutralSentimentFrom
+        in: query
+        description: Float. Filter articles with a neutral sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
+        required: false
+        schema:
+          type: number
+          format: float
+      - name: neutralSentimentTo
+        in: query
+        description: Float. Filter articles with a neutral sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
+        required: false
+        schema:
+          type: number
+          format: float
+      - name: negativeSentimentFrom
+        in: query
+        description: Float. Filter articles with a negative sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
+        required: false
+        schema:
+          type: number
+          format: float
+      - name: negativeSentimentTo
+        in: query
+        description: Float. Filter articles with a negative sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
+        required: false
+        schema:
+          type: number
+          format: float
+      - name: taxonomy
+        in: query
+        description: 'String Array. Filters by Google Content Categories. This field will accept 1 or more categories, must pass the full name of the category. Example: taxonomy=/Finance/Banking/Other, /Finance/Investing/Funds. [Full list](https://docs.cloud.google.com/natural-language/docs/categories#version_2)'
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: prefixTaxonomy
+        in: query
+        description: 'String. Filters by Google Content Categories. This field will filter by the category prefix only. Example: prefixTaxonomy=/Finance'
+        required: false
+        schema:
+          type: string
+      - name: showHighlighting
+        in: query
+        description: Boolean. When set to true, enables text highlighting in search results.
+        required: false
+        schema:
+          type: boolean
+      - name: highlightFragmentSize
+        in: query
+        description: Integer. Specifies the size in characters of each highlighted text fragment. Defaults to 100 if not specified.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: highlightNumFragments
+        in: query
+        description: Integer. Controls the maximum number of highlighted fragments to return per field.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: highlightPreTag
+        in: query
+        description: String. Defines the HTML tag that appears before highlighted text. Defaults to '<em>' if not specified.
+        required: false
+        schema:
+          type: string
+      - name: highlightPostTag
+        in: query
+        description: String. Defines the HTML tag that appears after highlighted text. Defaults to '</em>' if not specified.
+        required: false
+        schema:
+          type: string
+      - name: highlightQ
+        in: query
+        description: 'String. Specifies a separate query for highlighting, allowing highlights based on terms different from the main search query. Example: main query ''q=climate change'' with ''highlightQ=renewable OR solar'' will highlight terms ''renewable'' and ''solar'' in results about climate change.'
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SummaryBody'
+        required: true
+      responses:
+        '200':
+          description: 200 - Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SummarySearchResult'
+        '401':
+          description: 401 - Invalid API Key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 401
+                message: Invalid API key.
+                timestamp: 1681338367402
+        '500':
+          description: 500 - Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 500
+                message: Internal error. Please contact the support to resolve the problem. We apologize for any inconvenience :)
+                timestamp: 1681338367402
+        '400':
+          description: 400 - Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 400
+                message: Errors during parameter validation.
+                timestamp: 1681338367402
+        '403':
+          description: 403 - Request Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 403
+                message: The number of allowed requests is exceeded.
+                timestamp: 1681338367402
+        '429':
+          description: 429 - Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 429
+                message: Exceeded request rate limit for your account.
+                timestamp: 1681338367402
+      security:
+      - apiKeyAuth: []
+    servers:
+    - url: https://api.perigon.io
+      description: Generated server url
+components:
+  schemas:
+    SummarySearchResult:
+      required:
+      - numResults
+      - results
+      - status
+      - summary
+      type: object
+      properties:
+        status:
+          type: integer
+          description: HTTP status code for the response.
+          format: int32
+        numResults:
+          type: integer
+          description: Number of articles returned in results after applying returnedArticleCount.
+          format: int64
+        summary:
+          type: string
+          description: Generated summary of the selected articles, or 'No articles found' when no content matches.
+        results:
+          type: array
+          description: Articles returned after summary generation, limited by returnedArticleCount.
+          items:
+            $ref: '#/components/schemas/Article'
+      example:
+        status: 200
+        numResults: 10
+        summary: 'Across these articles, a few themes stand out: public concern and adaptation in the face of ongoing challenges, whether in pandemic management, economic shifts, or even sports. In the U.S., anxiety about COVID-19 is surging again as the delta variant spreads, with Americans divided yet increasingly supportive of mask and vaccine mandates, even as federal travel restrictions persist at the borders. Meanwhile, regions like Rheinland-Pfalz in Germany are experiencing rising infection rates, signaling the fourth wave’s intensification. On the economic front, both the industrial fastening equipment and intravascular ultrasound catheter markets are navigating recovery, competition, and supply chain intricacies, highlighting the pandemic’s ripple effects. Elsewhere, local politics—like Lipetsk’s focus on wages and infrastructure, or Russia’s restoration of energy market competition—reflect everyday priorities. Even in sports, player transfers and injuries illustrate how life’s routines continue, albeit under new pressures and uncertainties.'
+        results:
+        - url: https://www.recorderonline.com/news/national_news/covid-anxiety-rising-amid-delta-surge-ap-norc-poll-finds/article_0f59e7ab-864d-5690-b6f5-692cd9903d40.html
+          authorsByline: JAMES ANDERSON and HANNAH FINGERHUT Associated Press
+          articleId: cbf66b7f0ec641528180766d7a1f95d6
+          clusterId: 6c262dee867f45588b43da0066126f79
+          source:
+            domain: recorderonline.com
+            location: null
+          imageUrl: https://bloximages.newyork1.vip.townnews.com/recorderonline.com/content/tncms/assets/v3/editorial/2/44/244be964-8860-5c56-bc92-95b2cf717acf/611fab31295f3.image.jpg?resize=945%2C630
+          country: us
+          language: en
+          pubDate: '2021-08-20T13:12:55+00:00'
+          addDate: '2021-08-22T01:07:16.414408+00:00'
+          refreshDate: '2021-08-22T01:07:16.414408+00:00'
+          score: 1.0
+          title: COVID anxiety rising amid delta surge, AP-NORC poll finds
+          description: COVID anxiety rising amid delta surge, AP-NORC poll finds  Porterville Recorder
+          content: 'DENVER (AP) — Anxiety in the United States over COVID-19 is at its highest level since winter, a new poll shows, as the delta variant rages, more states and school districts adopt mask and vaccination requirements and the nation’s hospitals once again fill to capacity.
+
+
+            The poll from The Associated Press-NORC Center for Public Affairs Research also finds that majorities of American adults want vaccination mandates for those attending movies, sports, concerts and other crowded events; those traveling by airplane; and workers in hospitals, restaurants, stores and government offices.
+
+
+            The poll shows that 41% are “extremely” or “very” worried about themselves or their family becoming infected with the virus. That is up from 21% in June, and about the same as in January, during the country''s last major surge, when 43% were extremely or very worried.
+
+
+            “I wouldn’t have said this a couple of years ago, but I’m not as confident as I was in America’s ability to take care of itself,” said David Bowers, a 42-year-old business analyst in the Phoenix suburb of Peoria.
+
+
+            Bowers, a Democrat, and his wife, a public school teacher, got vaccinated early. But they fret once again about their daughters, ages 7 and 9, attending school in a state whose Republican governor, Doug Ducey, signed a law to block school districts from mandating masks, let alone vaccines.
+
+
+            A brief summer respite from COVID-19 fatigue included a family trip to New York. “COVID was pretty much out of mind," Bowers said. "Now it feels like we’re going backward.”
+
+
+            Close to 6 in 10 Americans say they favor requiring people to be fully vaccinated against COVID-19 to travel on an airplane or attend crowded public events. Only about a quarter of Americans oppose such measures.
+
+
+            Roughly 6 in 10 also support vaccine mandates for hospital or other health care workers, along with government employees, members of the military and workers who interact with the public, such as in restaurants and stores. Support is slightly lower for requiring vaccinations to go out to a bar or restaurant, though more are in favor than opposed, 51% to 28%.
+
+
+            Nearly 200 million people, or just over 60% of the U.S. population, had received at least one vaccine dose as of Thursday, according to the Centers for Disease Control and Prevention. Just over half of the population was fully vaccinated.
+
+
+            Hospitals across the U.S. had more than 75,000 coronavirus patients as of last week, a dramatic increase from a few weeks ago but still well below the winter surge records. Florida, Arkansas, Oregon, Hawaii, Louisiana and Mississippi have set records for COVID-19 hospitalizations in recent weeks, and the surge in the delta variant, combined with low vaccination rates, has produced a scramble to find beds for patients.
+
+
+            The poll suggests that despite increasing cases and greater concern about the virus, Americans have not stepped up their own precautionary behavior since June, though at least half still say they always or often wear a mask around other people, stay away from large groups and avoid nonessential travel.
+
+
+            Confidence in vaccines to withstand virus variants has not waned, either, as U.S. health officials this week announced plans to dispense booster shots to all Americans to shore up their protection. The doses could begin next month.
+
+
+            Carla Jones, 37, of Lafayette, Louisiana, is a paraplegic with immunity problems and uses a wheelchair after she was severely injured in a car accident. Because of her health, she has been told by her doctor she cannot get the vaccine. She gets anxious visiting the doctor or when her grandchildren visit.
+
+
+            “I see someone next to me at the doctor’s without a mask, it makes my heart rapidly beat faster,” Jones said.
+
+
+            Jones, a Democrat, strongly favors vaccination and mask mandates, and not just for herself. “For the good of all,” she said. "I don’t have the shot, but I definitely wouldn’t want to pass it on to anyone else.”
+
+
+            The poll shows that 55% support requiring Americans to wear masks around other people outside their homes, while 62% support mask mandates specifically for workers who interact with the public, such as at restaurants and stores. Eighty-five percent of Democrats and 39% of Republicans are in favor of mask mandates for public-facing workers.
+
+
+            Robbie Allen, a 63-year-old retiree from Clifton, Texas, is fully vaccinated and will wear a mask when required by stores or other places. But the self-described independent who leans Republican insists it is a matter of personal choice, and he sees mandates as taking the joy out of life.
+
+
+            “The COVID is not going away very quickly, but I don’t think people should live in fear," said Allen, who motorcycled with his girlfriend to this month''s Sturgis Motorcycle Rally, which attracted hundreds of thousands to the South Dakota city. “People are going to die, but if we all hunker down, life gets miserable."
+
+
+            Partisan gaps are also wide on vaccination requirements. In Arizona, Bowers has already taken time off work to pick up his daughter from school after she developed a high fever. They spent hours last week looking for a drive-thru COVID-19 testing site that wasn’t overcrowded. She tested negative. But the worries persist.
+
+
+            “My thinking is, the people who don’t want mandates are the people who need to be regulated,” Bowers said. "There’s a slim majority in this country making the right decisions. If it wasn’t for a slim majority as a country, we’d be in trouble.”
+
+
+            The AP-NORC poll of 1,729 adults was conducted Aug. 12-16 using a sample drawn from NORC’s probability-based AmeriSpeak Panel, which is designed to be representative of the U.S. population. The margin of sampling error for all respondents is plus or minus 3.2 percentage points.'
+          medium: Article
+          labels:
+          - name: Opinion
+          matchedAuthors: []
+          claim: ''
+          verdict: ''
+          keywords:
+          - name: mask mandates
+            weight: 0.07696303
+          - name: vaccine mandates
+            weight: 0.06830935
+          - name: vaccination mandates
+            weight: 0.06619582
+          - name: other people
+            weight: 0.06527583
+          - name: masks
+            weight: 0.06391404
+          - name: other crowded events
+            weight: 0.06374716
+          - name: last week
+            weight: 0.062233474
+          - name: recent weeks
+            weight: 0.059354812
+          - name: virus variants
+            weight: 0.059015423
+          - name: school districts
+            weight: 0.058817048
+          topics:
+          - name: Coronavirus
+          - name: Polls
+          categories: []
+          taxonomies: []
+          entities:
+          - data: hours
+            type: TIME
+            mentions: 1
+          - data: David Bowers
+            type: PERSON
+            mentions: 5
+          - data: Jones
+            type: PERSON
+            mentions: 2
+          - data: Doug Ducey
+            type: PERSON
+            mentions: 1
+          - data: Carla Jones
+            type: PERSON
+            mentions: 1
+          - data: Robbie Allen
+            type: PERSON
+            mentions: 1
+          - data: Allen
+            type: PERSON
+            mentions: 1
+          - data: AP
+            type: ORG
+            mentions: 2
+          - data: The Associated Press-NORC Center for Public Affairs Research
+            type: ORG
+            mentions: 1
+          - data: the Centers for Disease Control and Prevention
+            type: ORG
+            mentions: 1
+          - data: COVID
+            type: ORG
+            mentions: 1
+          - data: NORC
+            type: ORG
+            mentions: 1
+          - data: the United States
+            type: GPE
+            mentions: 6
+          - data: Louisiana
+            type: GPE
+            mentions: 2
+          - data: DENVER
+            type: GPE
+            mentions: 1
+          - data: Phoenix
+            type: GPE
+            mentions: 1
+          - data: Peoria
+            type: GPE
+            mentions: 1
+          - data: New York
+            type: GPE
+            mentions: 1
+          - data: Florida
+            type: GPE
+            mentions: 1
+          - data: Arkansas
+            type: GPE
+            mentions: 1
+          - data: Oregon
+            type: GPE
+            mentions: 1
+          - data: Hawaii
+            type: GPE
+            mentions: 1
+          - data: Mississippi
+            type: GPE
+            mentions: 1
+          - data: Lafayette
+            type: GPE
+            mentions: 1
+          - data: Clifton
+            type: GPE
+            mentions: 1
+          - data: Texas
+            type: GPE
+            mentions: 1
+          - data: South Dakota
+            type: GPE
+            mentions: 1
+          - data: Arizona
+            type: GPE
+            mentions: 1
+          - data: delta
+            type: LOC
+            mentions: 1
+          - data: COVID
+            type: EVENT
+            mentions: 1
+          - data: Sturgis Motorcycle Rally
+            type: EVENT
+            mentions: 1
+          - data: American
+            type: NORP
+            mentions: 6
+          - data: Democrat
+            type: NORP
+            mentions: 3
+          - data: Republican
+            type: NORP
+            mentions: 3
+          sentiment:
+            positive: 0.05536453
+            negative: 0.6762484
+            neutral: 0.26838717
+          summary: "\n\nThe poll from The Associated Press-NORC Center for Public Affairs Research also finds that majorities of American adults want vaccination mandates for those attending movies, sports, concerts and other crowded events; those traveling by airplane; and workers in hospitals, restaurants, stores and government offices. But they fret once again about their daughters, ages 7 and 9, attending school in a state whose Republican governor, Doug Ducey, signed a law to block school districts from mandating masks, let alone vaccines. \n\nJones, a Democrat, strongly favors vaccination and mask mandates, and not just for herself. “For the good of all,” she said. \"I don’t have the shot, but I definitely wouldn’t want to pass it on to anyone else.”\n\nThe poll shows that 55% support requiring Americans to wear masks around other people outside their homes, while 62% support mask mandates specifically for workers who interact with the public, such as at restaurants and stores."
+          translation: ''
+          locations: []
+          reprint: true
+          places: null
+    PersonCount:
+      type: object
+      properties:
+        wikidataId:
+          type:
+          - string
+          - 'null'
+          description: Wikidata identifier for the person.
+        name:
+          type:
+          - string
+          - 'null'
+          description: Person name.
+        count:
+          type:
+          - integer
+          - 'null'
+          description: Number of story articles mentioning the person.
+          format: int32
+      description: People associated with the story and their article counts.
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        message:
+          type:
+          - string
+          - 'null'
+        timestamp:
+          type:
+          - integer
+          - 'null'
+          format: int64
+    VectorData:
+      type: object
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          description: Numeric values in the vector embedding.
+          items:
+            type: number
+            description: Numeric values in the vector embedding.
+            format: float
+        version:
+          type:
+          - integer
+          - 'null'
+          description: Version of the embedding representation.
+          format: int32
+      description: Vector embeddings associated with the article, when requested.
+    CompanyHolder:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          description: Unique Perigon identifier for the company.
+        name:
+          type:
+          - string
+          - 'null'
+          description: Company name.
+        domains:
+          type:
+          - array
+          - 'null'
+          description: Domains associated with the company.
+          items:
+            type: string
+            description: Domains associated with the company.
+        symbols:
+          type:
+          - array
+          - 'null'
+          description: Stock symbols associated with the company.
+          items:
+            type: string
+            description: Stock symbols associated with the company.
+      description: Companies most strongly associated with the story.
+    Question:
+      type: object
+      properties:
+        question:
+          type:
+          - string
+          - 'null'
+          description: Question generated from the story content.
+        answer:
+          type:
+          - string
+          - 'null'
+          description: Answer generated from the story content.
+        references:
+          type:
+          - array
+          - 'null'
+          description: Article IDs supporting the answer.
+          items:
+            type: string
+            description: Article IDs supporting the answer.
+      description: Questions and answers generated from the story content.
+    EntityHolder:
+      type: object
+      properties:
+        data:
+          type:
+          - string
+          - 'null'
+          description: Text value of the extracted entity.
+        type:
+          type:
+          - string
+          - 'null'
+          description: Entity type, such as PERSON, ORGANIZATION, or LOCATION.
+        mentions:
+          type:
+          - integer
+          - 'null'
+          description: Number of times the entity appears in the article.
+          format: int32
+      description: Named entities extracted from the article.
+    TopicHolder:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: Topic assigned to the article.
+      description: Topics most strongly associated with the story.
+    CategoryWithScoreHolder:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: Full taxonomy category path.
+        score:
+          type:
+          - number
+          - 'null'
+          description: Confidence score for the category assignment.
+          format: double
+      description: Google Content Categories assigned to the article with confidence scores.
+    AllEndpointSortBy:
+      type: string
+      enum:
+      - relevance
+      - date
+      - reverseDate
+      - reverseAddDate
+      - addDate
+      - pubDate
+      - refreshDate
+    CategoryHolder:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: Content category assigned to the article.
+      description: Google Content Categories most strongly associated with the story.
+    Coordinate:
+      type: object
+      properties:
+        lat:
+          type:
+          - number
+          - 'null'
+          description: Latitude in decimal degrees.
+          format: double
+        lon:
+          type:
+          - number
+          - 'null'
+          description: Longitude in decimal degrees.
+          format: double
+      description: Geographic coordinates of the place.
+    LocationHolder:
+      type: object
+      properties:
+        country:
+          type:
+          - string
+          - 'null'
+          description: Country central to the article.
+        state:
+          type:
+          - string
+          - 'null'
+          description: State or region central to the article.
+        county:
+          type:
+          - string
+          - 'null'
+          description: County central to the article.
+        city:
+          type:
+          - string
+          - 'null'
+          description: City central to the article.
+        area:
+          type:
+          - string
+          - 'null'
+          description: Neighborhood, borough, or district central to the article.
+      description: Locations most strongly associated with the story.
+    SentimentHolder:
+      type: object
+      properties:
+        positive:
+          type:
+          - number
+          - 'null'
+          description: Positive sentiment score from 0 to 1.
+          format: float
+        negative:
+          type:
+          - number
+          - 'null'
+          description: Negative sentiment score from 0 to 1.
+          format: float
+        neutral:
+          type:
+          - number
+          - 'null'
+          description: Neutral sentiment score from 0 to 1.
+          format: float
+      description: Aggregate sentiment scores for the story.
+    KeyPoint:
+      type: object
+      properties:
+        point:
+          type:
+          - string
+          - 'null'
+          description: A key fact or development identified in the content.
+        references:
+          type:
+          - array
+          - 'null'
+          description: Article IDs supporting the key point.
+          items:
+            type: string
+            description: Article IDs supporting the key point.
+      description: Key facts and developments identified in the story.
+    CompanyCount:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          description: Unique Perigon identifier for the company.
+        name:
+          type:
+          - string
+          - 'null'
+          description: Company name.
+        domains:
+          type:
+          - array
+          - 'null'
+          description: Domains associated with the company.
+          items:
+            type: string
+            description: Domains associated with the company.
+        symbols:
+          type:
+          - array
+          - 'null'
+          description: Stock symbols associated with the company.
+          items:
+            type: string
+            description: Stock symbols associated with the company.
+        count:
+          type:
+          - integer
+          - 'null'
+          description: Number of story articles mentioning the company.
+          format: int32
+      description: Companies associated with the story and their article counts.
+    KeywordHolder:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: Keyword extracted from the article.
+        weight:
+          type:
+          - number
+          - 'null'
+          description: Relative relevance weight of the keyword.
+          format: float
+      description: Keywords extracted from the article with their relevance weights.
+    SourceHolder:
+      type: object
+      properties:
+        domain:
+          type:
+          - string
+          - 'null'
+          description: Publisher domain.
+        paywall:
+          type:
+          - boolean
+          - 'null'
+          description: Whether the publisher uses a paywall, when known.
+        location:
+          allOf:
+          - $ref: '#/components/schemas/SourceLocation'
+      description: Publisher information for the selected story image.
+    SummaryBody:
+      type: object
+      properties:
+        prompt:
+          type:
+          - string
+          - 'null'
+          description: 'Instructions guiding how the summary should be written. Maximum length: 2,048 characters.'
+          default: You are a helpful assistant tasked with summarizing the search results. In a casual, natural tone, craft a vivid, insightful synthesis in one fluid paragraph (no more than 125 words). Cover as many relevant points as possible, connect ideas, highlight themes, and surface anything interesting or surprising.
+        maxArticleCount:
+          maximum: 100
+          minimum: 1
+          type:
+          - integer
+          - 'null'
+          description: Maximum number of articles used to generate the summary. Must be between 1 and 100.
+          format: int32
+          default: 10
+        returnedArticleCount:
+          maximum: 100
+          minimum: 1
+          type:
+          - integer
+          - 'null'
+          description: Maximum number of articles returned in the response. Must be between 1 and 100 and cannot return more articles than maxArticleCount selected.
+          format: int32
+          default: 10
+        summarizeFields:
+          type:
+          - array
+          - 'null'
+          description: Which article fields to include when generating the summary. Up to three values from TITLE, CONTENT, SUMMARY.
+          items:
+            type: string
+            enum:
+            - TITLE
+            - CONTENT
+            - SUMMARY
+          default:
+          - TITLE
+          - CONTENT
+          - SUMMARY
+        method:
+          type:
+          - string
+          - 'null'
+          description: Article selection method. ARTICLES selects up to maxArticleCount matching articles; CLUSTERS selects the first article from each of up to maxArticleCount stories.
+          default: ARTICLES
+          enum:
+          - ARTICLES
+          - CLUSTERS
+        model:
+          type:
+          - string
+          - 'null'
+          description: The underlying LLM model to use for generation.
+          default: gpt-4.1
+          enum:
+          - gpt-5.4-mini
+          - gpt-5.4-nano
+          - gpt-5-mini
+          - gpt-5-nano
+          - gpt-4o
+          - gpt-4o-mini
+          - gpt-4.1
+          - gpt-4.1-mini
+          - openai/gpt-oss-120b
+        temperature:
+          maximum: 2
+          minimum: 0
+          type:
+          - number
+          - 'null'
+          description: Sampling temperature from 0.0 to 2.0. Ignored by gpt-5.4-mini, gpt-5.4-nano, gpt-5-mini, and gpt-5-nano.
+          format: double
+          default: 0.7
+        topP:
+          maximum: 1
+          minimum: 0
+          type:
+          - number
+          - 'null'
+          description: Nucleus sampling (top-p) for the LLM (0.0 to 1.0).
+          format: double
+          default: 1.0
+        maxTokens:
+          minimum: 0
+          type:
+          - integer
+          - 'null'
+          description: Maximum number of tokens to generate. Must be 0 or greater.
+          format: int32
+          default: 2048
+      description: Request body for the Search-Summarizer endpoint. Contains the user’s summary instructions, how many articles to include, which fields to use, the retrieval method, and LLM generation settings.
+    Journalist:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          description: Unique Perigon identifier for the journalist.
+        primaryRecordId:
+          type:
+          - string
+          - 'null'
+        name:
+          type:
+          - string
+          - 'null'
+          description: Common display name of the journalist.
+        fullName:
+          type:
+          - string
+          - 'null'
+          description: Full name of the journalist.
+        headline:
+          type:
+          - string
+          - 'null'
+          description: Professional headline associated with the journalist.
+        description:
+          type:
+          - string
+          - 'null'
+          description: Biographical description of the journalist.
+        title:
+          type:
+          - string
+          - 'null'
+          description: Professional title of the journalist.
+        email:
+          type:
+          - string
+          - 'null'
+          description: Journalist's email.
+        locations:
+          type:
+          - array
+          - 'null'
+          description: Locations associated with the journalist.
+          items:
+            $ref: '#/components/schemas/LocationHolder'
+        updatedAt:
+          type:
+          - string
+          - 'null'
+          description: Date and time the journalist record was last refreshed, in ISO 8601 format.
+        topTopics:
+          type:
+          - array
+          - 'null'
+          description: Topics most frequently covered by the journalist.
+          items:
+            $ref: '#/components/schemas/NameCount'
+        topSources:
+          type:
+          - array
+          - 'null'
+          description: Publishers most frequently associated with the journalist.
+          items:
+            $ref: '#/components/schemas/NameCount'
+        topCategories:
+          type:
+          - array
+          - 'null'
+          description: Categories most frequently covered by the journalist.
+          items:
+            $ref: '#/components/schemas/NameCount'
+        topLabels:
+          type:
+          - array
+          - 'null'
+          description: Editorial labels most frequently associated with the journalist's articles.
+          items:
+            $ref: '#/components/schemas/NameCount'
+        topCountries:
+          type:
+          - array
+          - 'null'
+          description: Countries most frequently associated with the journalist's articles.
+          items:
+            $ref: '#/components/schemas/NameCount'
+        avgMonthlyPosts:
+          type:
+          - integer
+          - 'null'
+          description: Average number of articles published by the journalist per month.
+          format: int32
+        twitterHandle:
+          type:
+          - string
+          - 'null'
+          description: Journalist's X or Twitter handle.
+        twitterBio:
+          type:
+          - string
+          - 'null'
+          description: Biography from the journalist's X or Twitter profile.
+        imageUrl:
+          type:
+          - string
+          - 'null'
+          description: Profile image URL for the journalist.
+        linkedinUrl:
+          type:
+          - string
+          - 'null'
+          description: LinkedIn profile URL for the journalist.
+        linkedinConnections:
+          type:
+          - integer
+          - 'null'
+          description: LinkedIn connection count for the journalist, when available.
+          format: int32
+        linkedinFollowers:
+          type:
+          - integer
+          - 'null'
+          description: LinkedIn follower count for the journalist, when available.
+          format: int32
+        facebookUrl:
+          type:
+          - string
+          - 'null'
+          description: Facebook profile URL for the journalist.
+        instagramUrl:
+          type:
+          - string
+          - 'null'
+          description: Instagram profile URL for the journalist.
+        websiteUrl:
+          type:
+          - string
+          - 'null'
+          description: Personal or professional website URL for the journalist.
+        blogUrl:
+          type:
+          - string
+          - 'null'
+          description: Blog URL for the journalist.
+        tumblrUrl:
+          type:
+          - string
+          - 'null'
+          description: Tumblr profile URL for the journalist.
+        youtubeUrl:
+          type:
+          - string
+          - 'null'
+          description: YouTube channel URL for the journalist.
+      description: Expanded journalist details, when requested and available.
+    PersonHolder:
+      type: object
+      properties:
+        wikidataId:
+          type:
+          - string
+          - 'null'
+          description: Wikidata identifier for the person.
+        name:
+          type:
+          - string
+          - 'null'
+          description: Person name.
+      description: People most strongly associated with the story.
+    Place:
+      type: object
+      properties:
+        osmId:
+          type:
+          - string
+          - 'null'
+          description: OpenStreetMap identifier for the place.
+        road:
+          type:
+          - string
+          - 'null'
+          description: Road associated with the place.
+        quarter:
+          type:
+          - string
+          - 'null'
+          description: Quarter associated with the place.
+        suburb:
+          type:
+          - string
+          - 'null'
+          description: Suburb associated with the place.
+        city:
+          type:
+          - string
+          - 'null'
+          description: City associated with the place.
+        town:
+          type:
+          - string
+          - 'null'
+          description: Town associated with the place.
+        county:
+          type:
+          - string
+          - 'null'
+          description: County associated with the place.
+        stateDistrict:
+          type:
+          - string
+          - 'null'
+          description: State district associated with the place.
+        state:
+          type:
+          - string
+          - 'null'
+          description: State or region associated with the place.
+        postcode:
+          type:
+          - string
+          - 'null'
+          description: Postal code associated with the place.
+        country:
+          type:
+          - string
+          - 'null'
+          description: Country associated with the place.
+        countryCode:
+          type:
+          - string
+          - 'null'
+          description: Two-character country code for the place.
+        amenity:
+          type:
+          - string
+          - 'null'
+          description: Named amenity associated with the place.
+        neighbourhood:
+          type:
+          - string
+          - 'null'
+          description: Neighborhood associated with the place.
+        coordinates:
+          allOf:
+          - $ref: '#/components/schemas/Coordinate'
+      description: Structured geographic places extracted from the article.
+    EventTypeHolder:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: Detected event name.
+        type:
+          type:
+          - string
+          - 'null'
+          description: Detected event classification.
+      description: Event types detected in the article.
+    Article:
+      type: object
+      properties:
+        url:
+          type:
+          - string
+          - 'null'
+          description: Canonical URL of the article.
+        authorsByline:
+          type:
+          - string
+          - 'null'
+          description: Author byline as published by the source.
+        articleId:
+          type:
+          - string
+          - 'null'
+          description: Unique Perigon identifier for the article.
+        clusterId:
+          type:
+          - string
+          - 'null'
+          description: Identifier of the story cluster containing the article, when assigned.
+        source:
+          allOf:
+          - $ref: '#/components/schemas/SourceHolder'
+        imageUrl:
+          type:
+          - string
+          - 'null'
+          description: Primary image URL associated with the article.
+        country:
+          type:
+          - string
+          - 'null'
+          description: Two-character country code associated with the article.
+        language:
+          type:
+          - string
+          - 'null'
+          description: ISO 639 two-letter language code for the article.
+        pubDate:
+          type:
+          - string
+          - 'null'
+          description: Date and time the article was published, in ISO 8601 format.
+        addDate:
+          type:
+          - string
+          - 'null'
+          description: Date and time the article was added to Perigon, in ISO 8601 format.
+        refreshDate:
+          type:
+          - string
+          - 'null'
+          description: Date and time the article was last refreshed by Perigon, in ISO 8601 format.
+        score:
+          type:
+          - number
+          - 'null'
+          description: Search relevance score for the article, when applicable.
+          format: float
+        title:
+          type:
+          - string
+          - 'null'
+          description: Article headline.
+        description:
+          type:
+          - string
+          - 'null'
+          description: Article description or publisher-provided excerpt.
+        content:
+          type:
+          - string
+          - 'null'
+          description: Full article body available to Perigon.
+        enContentWordCount:
+          type:
+          - integer
+          - 'null'
+          description: Word count of the English article content, when available.
+          format: int32
+        medium:
+          type:
+          - string
+          - 'null'
+          description: Primary medium type, such as Article or Video.
+        links:
+          type:
+          - array
+          - 'null'
+          description: URLs linked from the article content.
+          items:
+            type: string
+            description: URLs linked from the article content.
+        labels:
+          type:
+          - array
+          - 'null'
+          description: Editorial labels assigned to the article.
+          items:
+            $ref: '#/components/schemas/LabelHolder'
+        eventTypes:
+          type:
+          - array
+          - 'null'
+          description: Event types detected in the article.
+          items:
+            $ref: '#/components/schemas/EventTypeHolder'
+        matchedAuthors:
+          type:
+          - array
+          - 'null'
+          description: Known journalist records matched to the article byline.
+          items:
+            $ref: '#/components/schemas/IdNameHolder'
+        claim:
+          type:
+          - string
+          - 'null'
+          description: Claim identified in fact-check content, when applicable.
+        verdict:
+          type:
+          - string
+          - 'null'
+          description: Verdict identified in fact-check content, when applicable.
+        keywords:
+          type:
+          - array
+          - 'null'
+          description: Keywords extracted from the article with their relevance weights.
+          items:
+            $ref: '#/components/schemas/KeywordHolder'
+        topics:
+          type:
+          - array
+          - 'null'
+          description: Topics assigned to the article.
+          items:
+            $ref: '#/components/schemas/TopicHolder'
+        categories:
+          type:
+          - array
+          - 'null'
+          description: Broad content categories assigned to the article.
+          items:
+            $ref: '#/components/schemas/CategoryHolder'
+        taxonomies:
+          type:
+          - array
+          - 'null'
+          description: Google Content Categories assigned to the article with confidence scores.
+          items:
+            $ref: '#/components/schemas/CategoryWithScoreHolder'
+        entities:
+          type:
+          - array
+          - 'null'
+          description: Named entities extracted from the article.
+          items:
+            $ref: '#/components/schemas/EntityHolder'
+        companies:
+          type:
+          - array
+          - 'null'
+          description: Companies identified in the article.
+          items:
+            $ref: '#/components/schemas/CompanyHolder'
+        sentiment:
+          allOf:
+          - $ref: '#/components/schemas/SentimentHolder'
+        summary:
+          type:
+          - string
+          - 'null'
+          description: Generated summary of the article, when available.
+        shortSummary:
+          type:
+          - string
+          - 'null'
+          description: Short generated summary of the article, when available.
+        translation:
+          type:
+          - string
+          - 'null'
+          description: Translated article content, when available.
+        translatedTitle:
+          type:
+          - string
+          - 'null'
+          description: English translation of the article title, when available.
+        translatedDescription:
+          type:
+          - string
+          - 'null'
+          description: English translation of the article description, when available.
+        translatedSummary:
+          type:
+          - string
+          - 'null'
+          description: English translation of the article summary, when available.
+        locations:
+          type:
+          - array
+          - 'null'
+          description: Locations identified as central to the article.
+          items:
+            $ref: '#/components/schemas/LocationHolder'
+        reprint:
+          type:
+          - boolean
+          - 'null'
+          description: Whether the article is a reprint of previously published content.
+        reprintGroupId:
+          type:
+          - string
+          - 'null'
+          description: Identifier grouping the original article with its known reprints.
+        places:
+          type:
+          - array
+          - 'null'
+          description: Structured geographic places extracted from the article.
+          items:
+            $ref: '#/components/schemas/Place'
+        people:
+          type:
+          - array
+          - 'null'
+          description: Known people identified in the article.
+          items:
+            $ref: '#/components/schemas/PersonHolder'
+        cluster:
+          allOf:
+          - $ref: '#/components/schemas/NewsCluster'
+        journalists:
+          type:
+          - array
+          - 'null'
+          description: Expanded journalist details, when requested and available.
+          items:
+            $ref: '#/components/schemas/Journalist'
+        highlights:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: array
+            description: Matched text fragments grouped by article field.
+            items:
+              type: string
+              description: Matched text fragments grouped by article field.
+          description: Matched text fragments grouped by article field.
+        vectors:
+          type:
+          - array
+          - 'null'
+          description: Vector embeddings associated with the article, when requested.
+          items:
+            $ref: '#/components/schemas/VectorData'
+    RecordStatHolder:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: Name of the aggregated value.
+        count:
+          type:
+          - integer
+          - 'null'
+          description: Number of matching articles for the value.
+          format: int32
+      description: Google Content Categories associated with the story and their article counts.
+    IdNameHolder:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          description: Unique identifier for the matched record.
+        name:
+          type:
+          - string
+          - 'null'
+          description: Display name of the matched record.
+      description: Known journalist records matched to the article byline.
+    LocationCount:
+      type: object
+      properties:
+        country:
+          type:
+          - string
+          - 'null'
+          description: Country associated with the story.
+        state:
+          type:
+          - string
+          - 'null'
+          description: State or region associated with the story.
+        county:
+          type:
+          - string
+          - 'null'
+          description: County associated with the story.
+        city:
+          type:
+          - string
+          - 'null'
+          description: City associated with the story.
+        area:
+          type:
+          - string
+          - 'null'
+          description: Neighborhood, borough, or district associated with the story.
+        count:
+          type:
+          - integer
+          - 'null'
+          description: Number of story articles associated with the location.
+          format: int32
+      description: Locations associated with the story and their article counts.
+    NewsCluster:
+      type: object
+      properties:
+        createdAt:
+          type:
+          - string
+          - 'null'
+          description: Date and time the story was created, in ISO 8601 format.
+        updatedAt:
+          type:
+          - string
+          - 'null'
+          description: Date and time the story was last updated, in ISO 8601 format.
+        initializedAt:
+          type:
+          - string
+          - 'null'
+          description: Date and time the story became initialized and visible, in ISO 8601 format.
+        id:
+          type:
+          - string
+          - 'null'
+          description: Unique identifier for the story cluster.
+        duplicateOf:
+          type:
+          - string
+          - 'null'
+          description: Identifier of the original story when this story is a duplicate.
+        slug:
+          type:
+          - string
+          - 'null'
+          description: URL-safe identifier for the story.
+        name:
+          type:
+          - string
+          - 'null'
+          description: Generated story title.
+        summary:
+          type:
+          - string
+          - 'null'
+          description: Generated story summary.
+        shortSummary:
+          type:
+          - string
+          - 'null'
+          description: Short generated story summary, when available.
+        summaryReferences:
+          type:
+          - array
+          - 'null'
+          description: Article IDs supporting the story summary.
+          items:
+            type: string
+            description: Article IDs supporting the story summary.
+        imageSource:
+          allOf:
+          - $ref: '#/components/schemas/SourceHolder'
+        imageUrl:
+          type:
+          - string
+          - 'null'
+          description: Primary image URL selected for the story.
+        keyPoints:
+          type:
+          - array
+          - 'null'
+          description: Key facts and developments identified in the story.
+          items:
+            $ref: '#/components/schemas/KeyPoint'
+        questions:
+          type:
+          - array
+          - 'null'
+          description: Questions and answers generated from the story content.
+          items:
+            $ref: '#/components/schemas/Question'
+        uniqueSources:
+          type:
+          - array
+          - 'null'
+          description: Distinct publisher domains represented in the story.
+          items:
+            type: string
+            description: Distinct publisher domains represented in the story.
+        selectedArticles:
+          type:
+          - array
+          - 'null'
+          description: Representative articles selected for the story.
+          items:
+            $ref: '#/components/schemas/Article'
+        sentiment:
+          allOf:
+          - $ref: '#/components/schemas/SentimentHolder'
+        uniqueCount:
+          type:
+          - integer
+          - 'null'
+          description: Number of unique articles in the story.
+          format: int32
+        reprintCount:
+          type:
+          - integer
+          - 'null'
+          description: Number of reprinted articles in the story.
+          format: int32
+        totalCount:
+          type:
+          - integer
+          - 'null'
+          description: Total article count including reprints.
+          format: int32
+        countries:
+          type:
+          - array
+          - 'null'
+          description: Countries associated with the story and their article counts.
+          items:
+            $ref: '#/components/schemas/RecordStatHolder'
+        topCountries:
+          type:
+          - array
+          - 'null'
+          description: Countries most strongly associated with the story.
+          items:
+            type: string
+            description: Countries most strongly associated with the story.
+        topics:
+          type:
+          - array
+          - 'null'
+          description: Topics associated with the story and their article counts.
+          items:
+            $ref: '#/components/schemas/RecordStatHolder'
+        topTopics:
+          type:
+          - array
+          - 'null'
+          description: Topics most strongly associated with the story.
+          items:
+            $ref: '#/components/schemas/TopicHolder'
+        categories:
+          type:
+          - array
+          - 'null'
+          description: Categories associated with the story and their article counts.
+          items:
+            $ref: '#/components/schemas/RecordStatHolder'
+        topCategories:
+          type:
+          - array
+          - 'null'
+          description: Categories most strongly associated with the story.
+          items:
+            $ref: '#/components/schemas/CategoryHolder'
+        taxonomies:
+          type:
+          - array
+          - 'null'
+          description: Google Content Categories associated with the story and their article counts.
+          items:
+            $ref: '#/components/schemas/RecordStatHolder'
+        topTaxonomies:
+          type:
+          - array
+          - 'null'
+          description: Google Content Categories most strongly associated with the story.
+          items:
+            $ref: '#/components/schemas/CategoryHolder'
+        people:
+          type:
+          - array
+          - 'null'
+          description: People associated with the story and their article counts.
+          items:
+            $ref: '#/components/schemas/PersonCount'
+        topPeople:
+          type:
+          - array
+          - 'null'
+          description: People most strongly associated with the story.
+          items:
+            $ref: '#/components/schemas/PersonHolder'
+        companies:
+          type:
+          - array
+          - 'null'
+          description: Companies associated with the story and their article counts.
+          items:
+            $ref: '#/components/schemas/CompanyCount'
+        topCompanies:
+          type:
+          - array
+          - 'null'
+          description: Companies most strongly associated with the story.
+          items:
+            $ref: '#/components/schemas/CompanyHolder'
+        locations:
+          type:
+          - array
+          - 'null'
+          description: Locations associated with the story and their article counts.
+          items:
+            $ref: '#/components/schemas/LocationCount'
+        topLocations:
+          type:
+          - array
+          - 'null'
+          description: Locations most strongly associated with the story.
+          items:
+            $ref: '#/components/schemas/LocationHolder'
+        highlights:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: array
+            description: Matched text fragments grouped by story field.
+            items:
+              type: string
+              description: Matched text fragments grouped by story field.
+          description: Matched text fragments grouped by story field.
+        sourceDiversity:
+          type:
+          - number
+          - 'null'
+          description: Ratio of unique publisher domains to total articles in the story.
+          format: double
+      description: Expanded story cluster details, when requested and available.
+    LabelHolder:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: Editorial label assigned to the article.
+      description: Editorial labels assigned to the article.
+    SourceLocation:
+      type: object
+      properties:
+        country:
+          type:
+          - string
+          - 'null'
+          description: Country where the publisher is located.
+        state:
+          type:
+          - string
+          - 'null'
+          description: State or region where the publisher is located.
+        county:
+          type:
+          - string
+          - 'null'
+          description: County where the publisher is located.
+        city:
+          type:
+          - string
+          - 'null'
+          description: City where the publisher is located.
+        coordinates:
+          allOf:
+          - $ref: '#/components/schemas/Coordinate'
+      description: Geographic location of the publisher, when available.
+    NameCount:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: Name of the aggregated value.
+        count:
+          type:
+          - integer
+          - 'null'
+          description: Number of matching records for the value.
+          format: int64
+      description: Countries most frequently associated with the journalist's articles.
+  securitySchemes:
+    apiKeyAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- perigon-openapi.json
+- perigon-openapi.yml

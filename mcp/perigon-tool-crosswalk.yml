@@ -1,0 +1,174 @@
+generated: '2026-09-20'
+method: derived
+source: well-known/perigon-mcp-server-card.json + openapi/perigon-openapi.yml
+surfaces:
+  openapi: openapi/perigon-openapi.yml
+  mcp:
+    url: https://mcp.perigon.io/v1/mcp
+    gated: true
+    note: tools/list returns 401 without an API key; mapped by name/description only
+crosswalk:
+- tool: search_news_articles
+  rest:
+  - search-articles
+  binding: name-semantic
+  confidence: high
+- tool: search_news_stories
+  rest:
+  - search-stories
+  binding: name-semantic
+  confidence: high
+- tool: search_story_history
+  rest:
+  - get-story-history
+  binding: name-semantic
+  confidence: high
+- tool: search_vector_news
+  rest:
+  - vector-search-articles
+  binding: name-semantic
+  confidence: high
+- tool: summarize_news
+  rest:
+  - search-summarizer
+  binding: name-semantic
+  confidence: high
+- tool: search_journalists
+  rest:
+  - search-journalists
+  binding: name-semantic
+  confidence: high
+- tool: search_sources
+  rest:
+  - search-sources
+  binding: name-semantic
+  confidence: high
+- tool: search_people
+  rest:
+  - search-people
+  binding: name-semantic
+  confidence: high
+- tool: search_companies
+  rest:
+  - search-companies
+  binding: name-semantic
+  confidence: high
+- tool: search_topics
+  rest:
+  - search-topics
+  binding: name-semantic
+  confidence: high
+- tool: search_wikipedia
+  rest:
+  - search-wikipedia
+  binding: name-semantic
+  confidence: high
+- tool: search_vector_wikipedia
+  rest:
+  - vector-search-wikipedia
+  binding: name-semantic
+  confidence: high
+- tool: get_article_counts
+  rest:
+  - get-story-counts
+  binding: name-semantic
+  confidence: low
+  note: convenience/analytics tool; backing REST operation inferred from semantics, not confirmed
+- tool: get_company_news
+  rest:
+  - search-articles
+  binding: name-semantic
+  confidence: low
+  note: convenience/analytics tool; backing REST operation inferred from semantics, not confirmed
+- tool: get_person_news
+  rest:
+  - search-articles
+  binding: name-semantic
+  confidence: low
+  note: convenience/analytics tool; backing REST operation inferred from semantics, not confirmed
+- tool: get_location_news
+  rest:
+  - search-articles
+  binding: name-semantic
+  confidence: low
+  note: convenience/analytics tool; backing REST operation inferred from semantics, not confirmed
+- tool: list_monitors
+  rest:
+  - list-monitors-api
+  binding: name-semantic
+  confidence: high
+- tool: get_monitor
+  rest:
+  - get-monitor-api
+  binding: name-semantic
+  confidence: high
+- tool: get_monitor_events
+  rest:
+  - list-monitor-events-api
+  binding: name-semantic
+  confidence: high
+- tool: get_monitor_newsletters
+  rest:
+  - list-monitor-newsletters-api
+  binding: name-semantic
+  confidence: high
+- tool: get_monitor_summaries
+  rest:
+  - list-monitor-summaries-api
+  binding: name-semantic
+  confidence: high
+- tool: create_monitor
+  rest:
+  - create-monitor-api
+  binding: name-semantic
+  confidence: high
+- tool: update_monitor
+  rest:
+  - update-monitor-api
+  binding: name-semantic
+  confidence: high
+- tool: set_monitor_status
+  rest:
+  - activate-monitor-api
+  - pause-monitor-api
+  - archive-monitor-api
+  binding: name-semantic
+  confidence: medium
+mcp_only:
+- tool: get_avg_sentiment
+  reason: aggregate analytics tool with no matching public REST operation in the OpenAPI
+- tool: get_top_entities
+  reason: aggregate analytics tool with no matching public REST operation in the OpenAPI
+- tool: get_top_people
+  reason: aggregate analytics tool with no matching public REST operation in the OpenAPI
+- tool: get_top_companies
+  reason: aggregate analytics tool with no matching public REST operation in the OpenAPI
+rest_only:
+- create-contact-point
+- create-source-group
+- create-watchlist
+- delete-contact-point
+- delete-source-group
+- delete-watchlist
+- get-article-refresh-job
+- get-contact-point
+- get-journalist-by-id
+- get-limits
+- get-source-group
+- get-watchlist
+- list-contact-points
+- list-source-groups
+- list-watchlists
+- peek-article-refresh
+- resolve-source-groups
+- resolve-watchlists
+- submit-article-refresh-job
+- update-contact-point
+- update-source-group
+- update-watchlist
+coverage:
+  tools: 28
+  tools_mapped: 24
+  mcp_only: 4
+  operations: 45
+  operations_with_tool: 23

@@ -1,0 +1,882 @@
+openapi: 3.2.0
+info:
+  title: Perigon Watchlists API
+  version: 1.0.0
+  contact:
+    name: Perigon Support
+    url: https://docs.perigon.io/
+    email: data@perigon.io
+  description: 'Operations tagged Watchlists across 2 of this provider''s published API definitions: perigon-openapi.json, perigon-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.perigon.io
+  description: Generated server url
+security:
+- apiKeyAuth: []
+tags:
+- name: Watchlists
+  description: Manage watchlists of people and companies for use with monitors. Watchlists can contain up to 100 combined entities and are used to track mentions across news content.
+paths:
+  /v1/api/watchlists:
+    get:
+      tags:
+      - Watchlists
+      summary: List watchlists
+      description: List watchlists owned by the organization associated with the API key, as well as publicly visible watchlists. Supports filtering by name.
+      operationId: list-watchlists
+      parameters:
+      - name: name
+        in: query
+        description: Filter watchlists by name (case-insensitive, partial match)
+        required: false
+        schema:
+          type: string
+      - name: sortBy
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/WatchlistSortBy'
+      - name: page
+        in: query
+        description: Zero-based page number to retrieve. Defaults to 0.
+        required: false
+        schema:
+          minimum: 0
+          type: integer
+          description: Zero-based page number to retrieve. Defaults to 0.
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        description: Number of results per page. Must be between 1 and 100; defaults to 10.
+        required: false
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          description: Number of results per page. Must be between 1 and 100; defaults to 10.
+          format: int32
+          default: 10
+      - name: sortOrder
+        in: query
+        description: Required direction used to sort results. Accepts asc or desc.
+        required: true
+        schema:
+          type: string
+          description: Required direction used to sort results. Accepts asc or desc.
+          enum:
+          - asc
+          - desc
+      - name: nulls
+        in: query
+        description: Placement of null values in sorted results. Accepts first or last.
+        required: false
+        schema:
+          type: string
+          description: Placement of null values in sorted results. Accepts first or last.
+          enum:
+          - first
+          - last
+      responses:
+        '401':
+          description: 401 - Invalid API Key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 401
+                message: Invalid API key.
+                timestamp: 1681338367402
+        '200':
+          description: 200 - Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WatchlistListResult'
+        '500':
+          description: 500 - Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 500
+                message: Internal error. Please contact the support to resolve the problem. We apologize for any inconvenience :)
+                timestamp: 1681338367402
+        '400':
+          description: 400 - Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 400
+                message: Errors during parameter validation.
+                timestamp: 1681338367402
+        '403':
+          description: 403 - Request Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 403
+                message: The number of allowed requests is exceeded.
+                timestamp: 1681338367402
+        '429':
+          description: 429 - Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 429
+                message: Exceeded request rate limit for your account.
+                timestamp: 1681338367402
+      security:
+      - apiKeyAuth: []
+    post:
+      tags:
+      - Watchlists
+      summary: Create watchlist
+      description: Create a new watchlist under the organization associated with the API key. A watchlist can contain up to 100 combined people and companies.
+      operationId: create-watchlist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWatchlistParams'
+        required: true
+      responses:
+        '200':
+          description: 200 - Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WatchlistResult'
+        '401':
+          description: 401 - Invalid API Key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 401
+                message: Invalid API key.
+                timestamp: 1681338367402
+        '500':
+          description: 500 - Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 500
+                message: Internal error. Please contact the support to resolve the problem. We apologize for any inconvenience :)
+                timestamp: 1681338367402
+        '400':
+          description: 400 - Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 400
+                message: Errors during parameter validation.
+                timestamp: 1681338367402
+        '403':
+          description: 403 - Request Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 403
+                message: The number of allowed requests is exceeded.
+                timestamp: 1681338367402
+        '429':
+          description: 429 - Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 429
+                message: Exceeded request rate limit for your account.
+                timestamp: 1681338367402
+      security:
+      - apiKeyAuth: []
+    servers:
+    - url: https://api.perigon.io
+      description: Generated server url
+  /v1/api/watchlists/resolve:
+    get:
+      tags:
+      - Watchlists
+      summary: Resolve watchlists
+      description: Resolve watchlists by name. For each name, returns the organization's private watchlist if one exists, otherwise falls back to the matching public watchlist.
+      operationId: resolve-watchlists
+      parameters:
+      - name: name
+        in: query
+        description: Watchlist names to resolve (max 100)
+        required: false
+        schema:
+          maxItems: 100
+          minItems: 0
+          type: array
+          items:
+            type: string
+      responses:
+        '401':
+          description: 401 - Invalid API Key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 401
+                message: Invalid API key.
+                timestamp: 1681338367402
+        '500':
+          description: 500 - Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 500
+                message: Internal error. Please contact the support to resolve the problem. We apologize for any inconvenience :)
+                timestamp: 1681338367402
+        '200':
+          description: 200 - Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WatchlistResolveResult'
+        '400':
+          description: 400 - Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 400
+                message: Errors during parameter validation.
+                timestamp: 1681338367402
+        '403':
+          description: 403 - Request Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 403
+                message: The number of allowed requests is exceeded.
+                timestamp: 1681338367402
+        '429':
+          description: 429 - Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 429
+                message: Exceeded request rate limit for your account.
+                timestamp: 1681338367402
+      security:
+      - apiKeyAuth: []
+    servers:
+    - url: https://api.perigon.io
+      description: Generated server url
+  /v1/api/watchlists/{id}:
+    get:
+      tags:
+      - Watchlists
+      summary: Get watchlist
+      description: Retrieve a watchlist by ID. Only returns watchlists owned by the organization associated with the API key.
+      operationId: get-watchlist
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: 200 - Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WatchlistResult'
+        '401':
+          description: 401 - Invalid API Key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 401
+                message: Invalid API key.
+                timestamp: 1681338367402
+        '500':
+          description: 500 - Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 500
+                message: Internal error. Please contact the support to resolve the problem. We apologize for any inconvenience :)
+                timestamp: 1681338367402
+        '400':
+          description: 400 - Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 400
+                message: Errors during parameter validation.
+                timestamp: 1681338367402
+        '403':
+          description: 403 - Request Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 403
+                message: The number of allowed requests is exceeded.
+                timestamp: 1681338367402
+        '429':
+          description: 429 - Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 429
+                message: Exceeded request rate limit for your account.
+                timestamp: 1681338367402
+      security:
+      - apiKeyAuth: []
+    delete:
+      tags:
+      - Watchlists
+      summary: Delete watchlist
+      description: Delete a watchlist owned by the organization associated with the API key. A watchlist cannot be deleted if it is attached to active monitors.
+      operationId: delete-watchlist
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: 200 - Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WatchlistResult'
+        '401':
+          description: 401 - Invalid API Key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 401
+                message: Invalid API key.
+                timestamp: 1681338367402
+        '500':
+          description: 500 - Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 500
+                message: Internal error. Please contact the support to resolve the problem. We apologize for any inconvenience :)
+                timestamp: 1681338367402
+        '400':
+          description: 400 - Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 400
+                message: Errors during parameter validation.
+                timestamp: 1681338367402
+        '403':
+          description: 403 - Request Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 403
+                message: The number of allowed requests is exceeded.
+                timestamp: 1681338367402
+        '429':
+          description: 429 - Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 429
+                message: Exceeded request rate limit for your account.
+                timestamp: 1681338367402
+      security:
+      - apiKeyAuth: []
+    patch:
+      tags:
+      - Watchlists
+      summary: Update watchlist
+      description: Partially update a watchlist owned by the organization associated with the API key. Only provided fields will be updated.
+      operationId: update-watchlist
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateWatchlistParams'
+        required: true
+      responses:
+        '200':
+          description: 200 - Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WatchlistResult'
+        '401':
+          description: 401 - Invalid API Key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 401
+                message: Invalid API key.
+                timestamp: 1681338367402
+        '500':
+          description: 500 - Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 500
+                message: Internal error. Please contact the support to resolve the problem. We apologize for any inconvenience :)
+                timestamp: 1681338367402
+        '400':
+          description: 400 - Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 400
+                message: Errors during parameter validation.
+                timestamp: 1681338367402
+        '403':
+          description: 403 - Request Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 403
+                message: The number of allowed requests is exceeded.
+                timestamp: 1681338367402
+        '429':
+          description: 429 - Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 429
+                message: Exceeded request rate limit for your account.
+                timestamp: 1681338367402
+      security:
+      - apiKeyAuth: []
+    servers:
+    - url: https://api.perigon.io
+      description: Generated server url
+components:
+  schemas:
+    WatchlistListResult:
+      required:
+      - data
+      - total
+      type: object
+      properties:
+        total:
+          type: integer
+          description: Total number of matching watchlists across all pages.
+          format: int64
+        data:
+          type: array
+          description: Watchlists returned for the requested page.
+          items:
+            $ref: '#/components/schemas/WatchlistDto'
+      description: Paginated list of watchlists.
+      example:
+        total: 1
+        data:
+        - id: 42
+          createdAt: '2025-06-01T09:00:00.000Z'
+          updatedAt: '2025-08-01T16:30:00.000Z'
+          name: ai-executives
+          displayName: AI Executives
+          description: Leadership at major AI companies.
+          people: []
+          companies: []
+          organizationId: 1001
+          visible: true
+    WatchlistCompany:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+        description:
+          type:
+          - string
+          - 'null'
+        id:
+          type:
+          - string
+          - 'null'
+        domain:
+          type:
+          - string
+          - 'null'
+        aliases:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        query:
+          type:
+          - string
+          - 'null'
+      description: Updated list of companies to include in the watchlist
+    WatchlistPersonDto:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+        description:
+          type:
+          - string
+          - 'null'
+        wikidataId:
+          type:
+          - string
+          - 'null'
+        aliases:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        query:
+          type:
+          - string
+          - 'null'
+      description: People included in the watchlist.
+    WatchlistCompanyDto:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+        description:
+          type:
+          - string
+          - 'null'
+        id:
+          type:
+          - string
+          - 'null'
+        domain:
+          type:
+          - string
+          - 'null'
+        aliases:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        query:
+          type:
+          - string
+          - 'null'
+      description: Companies included in the watchlist.
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        message:
+          type:
+          - string
+          - 'null'
+        timestamp:
+          type:
+          - integer
+          - 'null'
+          format: int64
+    WatchlistSortBy:
+      type: string
+      enum:
+      - id
+      - createdAt
+      - updatedAt
+      - name
+    UpdateWatchlistParams:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: New name for the watchlist
+        displayName:
+          type:
+          - string
+          - 'null'
+          description: New display name for the watchlist
+        description:
+          type:
+          - string
+          - 'null'
+          description: New description for the watchlist
+        people:
+          type:
+          - array
+          - 'null'
+          description: Updated list of people to include in the watchlist
+          items:
+            $ref: '#/components/schemas/WatchlistPerson'
+        companies:
+          type:
+          - array
+          - 'null'
+          description: Updated list of companies to include in the watchlist
+          items:
+            $ref: '#/components/schemas/WatchlistCompany'
+        visible:
+          type:
+          - boolean
+          - 'null'
+          description: Whether the watchlist is visible in the UI
+    WatchlistDto:
+      type: object
+      properties:
+        id:
+          type:
+          - integer
+          - 'null'
+          description: Numeric identifier for the watchlist.
+          format: int32
+        createdAt:
+          type:
+          - string
+          - 'null'
+          description: Date and time the watchlist was created, in ISO 8601 format.
+          format: date-time
+        updatedAt:
+          type:
+          - string
+          - 'null'
+          description: Date and time the watchlist was last updated, in ISO 8601 format.
+          format: date-time
+        name:
+          type:
+          - string
+          - 'null'
+          description: Unique slug name for the watchlist.
+        displayName:
+          type:
+          - string
+          - 'null'
+          description: Human-readable display name.
+        description:
+          type:
+          - string
+          - 'null'
+          description: Optional description of the watchlist.
+        people:
+          type:
+          - array
+          - 'null'
+          description: People included in the watchlist.
+          items:
+            $ref: '#/components/schemas/WatchlistPersonDto'
+        companies:
+          type:
+          - array
+          - 'null'
+          description: Companies included in the watchlist.
+          items:
+            $ref: '#/components/schemas/WatchlistCompanyDto'
+        organizationId:
+          type:
+          - integer
+          - 'null'
+          description: Owning organization ID when the watchlist is private.
+          format: int32
+        visible:
+          type:
+          - boolean
+          - 'null'
+          description: Whether the watchlist is publicly visible.
+      description: Watchlist of people and companies for use with monitors.
+    WatchlistResult:
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/WatchlistDto'
+      description: Single watchlist response.
+      example:
+        data:
+          id: 42
+          createdAt: '2025-06-01T09:00:00.000Z'
+          updatedAt: '2025-08-01T16:30:00.000Z'
+          name: ai-executives
+          displayName: AI Executives
+          description: Leadership at major AI companies.
+          people:
+          - name: Sam Altman
+            description: CEO of OpenAI
+            wikidataId: Q7411063
+            aliases: []
+          companies:
+          - name: OpenAI
+            description: AI research company
+            id: openai
+            domain: openai.com
+            aliases: []
+          organizationId: 1001
+          visible: true
+    WatchlistPerson:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+        description:
+          type:
+          - string
+          - 'null'
+        aliases:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        wikidataId:
+          type:
+          - string
+          - 'null'
+        query:
+          type:
+          - string
+          - 'null'
+      description: Updated list of people to include in the watchlist
+    CreateWatchlistParams:
+      required:
+      - companies
+      - name
+      - people
+      type: object
+      properties:
+        name:
+          type: string
+          description: Unique name for the watchlist within the organization
+        displayName:
+          type:
+          - string
+          - 'null'
+          description: Display name for the watchlist
+        description:
+          type:
+          - string
+          - 'null'
+          description: Description of the watchlist
+        people:
+          maxItems: 100
+          minItems: 0
+          type: array
+          description: List of people to include in the watchlist
+          items:
+            $ref: '#/components/schemas/WatchlistPerson'
+        companies:
+          maxItems: 100
+          minItems: 0
+          type: array
+          description: List of companies to include in the watchlist
+          items:
+            $ref: '#/components/schemas/WatchlistCompany'
+        visible:
+          type:
+          - boolean
+          - 'null'
+          description: Whether the watchlist is visible in the UI
+          default: true
+    WatchlistResolveResult:
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: array
+          description: Resolved watchlists.
+          items:
+            $ref: '#/components/schemas/WatchlistDto'
+      description: Resolved watchlists response.
+      example:
+        data:
+        - id: 42
+          createdAt: '2025-06-01T09:00:00.000Z'
+          updatedAt: '2025-08-01T16:30:00.000Z'
+          name: ai-executives
+          displayName: AI Executives
+          description: Leadership at major AI companies.
+          people: []
+          companies: []
+          organizationId: 1001
+          visible: true
+  securitySchemes:
+    apiKeyAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- perigon-openapi.json
+- perigon-openapi.yml

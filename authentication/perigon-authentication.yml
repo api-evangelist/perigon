@@ -1,0 +1,35 @@
+generated: '2026-09-20'
+method: searched
+source: https://perigon.io/docs/api/authentication
+docs: https://perigon.io/docs/api/authentication
+summary: 'API key only. Perigon checks for the key in order: ?apiKey= query parameter, x-api-key header, Authorization:
+  Bearer header. Keys are created at https://perigon.io/dev/keys after browser sign-up; agent-readable instructions
+  at https://perigon.io/auth.md. OAuth metadata documents (RFC 9728 / RFC 8414) describe dashboard login (Google
+  OAuth, password grant) and an agent_auth block, not delegated API scopes.'
+schemes:
+- name: apiKeyAuth
+  type: http
+  scheme: bearer
+  in: header
+  header: Authorization
+  source: openapi securitySchemes
+  preferred: true
+- name: x-api-key
+  type: apiKey
+  in: header
+  header: x-api-key
+  source: https://perigon.io/docs/api/account-usage
+- name: apiKey
+  type: apiKey
+  in: query
+  parameter: apiKey
+  source: https://perigon.io/docs/api/account-usage
+key_management:
+  create: https://perigon.io/dev/keys
+  register: https://perigon.io/sign-up
+  revocation: disable or delete keys at https://perigon.io/dev/keys
+  validate: GET /v1/limits?apiKeys= checks up to 50 keys
+discovery:
+- https://perigon.io/.well-known/oauth-protected-resource
+- https://perigon.io/.well-known/oauth-authorization-server
+- https://perigon.io/auth.md

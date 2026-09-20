@@ -1,0 +1,61 @@
+generated: '2026-09-20'
+method: searched
+source: https://perigon.io/products/pricing/apis
+name: Perigon API rate limits
+docs:
+- https://perigon.io/api-policy
+- https://perigon.io/docs/api/account-usage
+note: limit_text is the comparison-table row copied verbatim; the four values are the Free, Basic, Plus and Commercial
+  columns in that order. Limits apply per API key by plan. GET /v1/limits is quota-exempt and not rate-limited and
+  reports requestsUsed / requestLimit / resetAt.
+headers:
+  current:
+  - RateLimit-Policy
+  - RateLimit
+  on_exhaustion:
+  - Retry-After
+  legacy:
+  - X-Rate-Limit-*
+  source: https://perigon.io/api-policy
+exhaustion_status: 429
+limit_count: 6
+limits:
+- name: Free rate limit
+  plan: Free
+  scope: per-key
+  limit_text: Rate Limit (req/sec) 1 2 4 Custom
+  limit: 1
+  window: second
+- name: Basic rate limit
+  plan: Basic
+  scope: per-key
+  limit_text: Rate Limit (req/sec) 1 2 4 Custom
+  limit: 2
+  window: second
+- name: Plus rate limit
+  plan: Plus
+  scope: per-key
+  limit_text: Rate Limit (req/sec) 1 2 4 Custom
+  limit: 4
+  window: second
+- name: Free monthly quota
+  plan: Free
+  scope: per-account
+  kind: quota
+  limit_text: API Requests (monthly) 150 10,000 50,000 Custom
+  limit: 150
+  window: month
+- name: Basic monthly quota
+  plan: Basic
+  scope: per-account
+  kind: quota
+  limit_text: API Requests (monthly) 150 10,000 50,000 Custom
+  limit: 10000
+  window: month
+- name: Plus monthly quota
+  plan: Plus
+  scope: per-account
+  kind: quota
+  limit_text: API Requests (monthly) 150 10,000 50,000 Custom
+  limit: 50000
+  window: month

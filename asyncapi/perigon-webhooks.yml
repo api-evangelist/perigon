@@ -1,0 +1,35 @@
+generated: '2026-09-20'
+method: searched
+source: https://perigon.io/docs/signals/webhook-integration-guide
+description: Monitor (Signals) results are POSTed to a webhook contact point. No AsyncAPI document is published
+  (/asyncapi.yaml and /asyncapi.json return 404 on perigon.io and api.perigon.io).
+asyncapi: null
+webhooks:
+- name: monitor-notification
+  direction: outbound
+  method: POST
+  content_type: application/json
+  user_agent: perigon-notifier
+  target: URL on the webhook contact point (create-contact-point)
+  trigger: a monitor (EVENT, MENTIONS or TOPIC) produces a notification
+  envelope:
+  - signal_id
+  - signal_notification_id
+  - contact_point_notification_id
+  - sent_at
+  - metadata
+  signature:
+    header: Perigon-Signature
+    format: t=<timestamp>,v1=<hex>
+    algorithm: HMAC_SHA256(secret, "<t>" + "." + "<raw body bytes>")
+    secret: generated when the contact point is created; returned as webhookSecret by GET /v1/api/contactPoints/{uuid};
+      no rotation endpoint
+  delivery:
+    timeout: 30 seconds
+    success: any 2xx
+    retries: retried up to 2 times, for a maximum of 3 attempts per notification
+    dedupe_key: signal_notification_id
+  docs: https://perigon.io/docs/signals/webhook-integration-guide
+gaps:
+- no AsyncAPI document
+- no event-type registry beyond monitor type

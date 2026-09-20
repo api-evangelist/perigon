@@ -1,0 +1,1 @@
+{"resource":"https://perigon.io","authorization_servers":["https://perigon.io"],"scopes_supported":["openid","profile","email"],"bearer_methods_supported":["header"],"resource_name":"Perigon API","resource_documentation":"https://perigon.io/docs/api/intro"}

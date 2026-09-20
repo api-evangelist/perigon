@@ -1,0 +1,30 @@
+generated: '2026-09-20'
+method: none
+source: https://perigon.io/
+signals: {}
+probed:
+- url: https://perigon.io/accessibility
+  status: 404
+- url: https://perigon.io/legal/subprocessors
+  status: 410
+- url: https://perigon.io/subprocessors
+  status: 404
+- url: https://perigon.io/legal/dpa
+  status: 410
+- url: https://perigon.io/dpa
+  status: 404
+- url: https://perigon.io/privacy/requests
+  status: 404
+- url: https://perigon.io/transparency
+  status: 404
+- url: https://perigon.io/security/sbom
+  status: 410
+- url: https://perigon.io/trust
+  status: 404
+- url: https://perigon.io/ai/transparency
+  status: 410
+- url: https://perigon.io/legal/report-content
+  status: 410
+- url: https://perigon.io/docs/data-residency
+  status: 404
+note: llms.txt says "SOC 2 compliant" but no trust center, report or subprocessor list was found; no signal recorded.

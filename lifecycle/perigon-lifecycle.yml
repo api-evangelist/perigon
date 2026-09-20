@@ -1,0 +1,25 @@
+generated: '2026-09-20'
+method: searched
+source: https://perigon.io/api-policy
+versioning:
+  scheme: url-major
+  current: v1
+  policy: Major version in the URL (/v1/). Additive changes (new optional fields, parameters, endpoints, extensible
+    enum values) ship within a major; breaking changes require a new major unless correcting a security or specification
+    defect.
+  docs: https://perigon.io/api-policy
+  last_updated: '2026-08-24'
+deprecation:
+  url: https://perigon.io/api-policy
+  notice_period: at least 180 days of notice before a planned shutdown
+  headers:
+  - Deprecation (RFC 9745)
+  - Link rel="deprecation"
+  - Sunset (RFC 8594)
+  channels:
+  - https://perigon.io/changelog
+  - account contact email
+sla: SLA & dedicated support listed only on the Commercial plan (https://perigon.io/products/pricing/apis); no public
+  SLA figure.
+status_page: https://status.perigon.io/
+deprecated_operations: []

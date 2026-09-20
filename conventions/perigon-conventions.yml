@@ -1,0 +1,63 @@
+generated: '2026-09-20'
+method: searched
+source: https://perigon.io/api-policy
+authentication:
+  style: 'API key; Authorization: Bearer, x-api-key header, or apiKey query'
+  ref: authentication/perigon-authentication.yml
+idempotency:
+  coverage: none
+  mechanism: null
+  header: null
+  retention: null
+  note: No idempotency key on the REST write surface (contact points, monitors, source groups, watchlists, refresh
+    jobs). Separately, webhook CONSUMERS are told to dedupe on signal_notification_id, which is stable across retries
+    (https://perigon.io/docs/signals/webhook-integration-guide).
+reversibility:
+  grade: documented
+  surfaces:
+  - surface: monitors
+    action: pause-monitor-api
+    reversal: activate-monitor-api
+    window: null
+    docs: https://perigon.io/docs/api/manage-monitors-api
+  - surface: monitors
+    action: archive-monitor-api
+    reversal: null
+    note: Provider MCP server card describes archive as irreversible ("Activate, pause, or irreversibly archive
+      a monitor").
+    docs: https://perigon.io/.well-known/mcp/server-card.json
+  - surface: contact points / source groups / watchlists
+    action: delete-*
+    reversal: null
+    note: no restore operation in the OpenAPI; no window stated
+  note: No reversal windows are stated anywhere in the docs.
+pagination:
+  style: page-number
+  params:
+    page: zero-indexed, default 0
+    size: 0-100, default 10
+  max_results: 10,000 records (100 pages of 100); use date ranges beyond that
+  plan_limits: maxPageSize and paginationLimit per plan via GET /v1/limits
+  docs: https://perigon.io/docs/api/pagination
+versioning:
+  style: url-major (/v1/)
+  ref: lifecycle/perigon-lifecycle.yml
+error_envelope:
+  fields:
+  - status
+  - message
+  - timestamp
+  ref: errors/perigon-problem-types.yml
+field_expansion: null
+metadata: null
+request_tracing: null
+rate_limit_signaling:
+  headers:
+  - RateLimit-Policy
+  - RateLimit
+  - Retry-After
+  - X-Rate-Limit-* (legacy)
+  status: 429
+  ref: rate-limits/perigon-rate-limits.yml
+  docs: https://perigon.io/api-policy
+casing: camelCase JSON in REST responses; webhook envelope snake_case with camelCase metadata

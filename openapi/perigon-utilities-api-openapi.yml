@@ -1,0 +1,255 @@
+openapi: 3.2.0
+info:
+  title: Perigon Utilities API
+  version: 1.0.0
+  contact:
+    name: Perigon Support
+    url: https://docs.perigon.io/
+    email: data@perigon.io
+  description: 'Operations tagged Utilities across 2 of this provider''s published API definitions: perigon-openapi.json, perigon-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.perigon.io
+  description: Generated server url
+security:
+- apiKeyAuth: []
+tags:
+- name: Utilities
+paths:
+  /v1/limits:
+    get:
+      tags:
+      - Utilities
+      summary: Limits
+      description: 'Returns the authenticated account''s current API usage and the limits that apply to it: the number of requests made in the current tracking period, the request limit, the per-second rate limit, and when the counter resets.
+
+
+        Optionally, pass one or more API keys via the `apiKeys` parameter to check their status. For each supplied key the response reports whether it is `valid` (exists and belongs to your account), `enabled` (a disabled key is ''off''), and whether its `subscription` is active.
+
+
+        This endpoint is authenticated with your API key but is quota-exempt: calling it does **not** count against your monthly request quota and is not subject to rate limiting. It is intended for liveness/health probes and external dashboards that need to check whether an API key and subscription are active without consuming usage.'
+      operationId: get-limits
+      parameters:
+      - name: apiKeys
+        in: query
+        description: Optional list of API keys whose validity and status should be checked. Each key is reported as valid only if it exists and belongs to your account.
+        required: false
+        schema:
+          maxItems: 50
+          minItems: 0
+          type: array
+          items:
+            type: string
+      responses:
+        '401':
+          description: 401 - Invalid API Key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 401
+                message: Invalid API key.
+                timestamp: 1681338367402
+        '200':
+          description: 200 - Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LimitsResult'
+        '500':
+          description: 500 - Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 500
+                message: Internal error. Please contact the support to resolve the problem. We apologize for any inconvenience :)
+                timestamp: 1681338367402
+        '400':
+          description: 400 - Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 400
+                message: Errors during parameter validation.
+                timestamp: 1681338367402
+        '403':
+          description: 403 - Request Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 403
+                message: The number of allowed requests is exceeded.
+                timestamp: 1681338367402
+        '429':
+          description: 429 - Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 429
+                message: Exceeded request rate limit for your account.
+                timestamp: 1681338367402
+      security:
+      - apiKeyAuth: []
+    servers:
+    - url: https://api.perigon.io
+      description: Generated server url
+components:
+  schemas:
+    LimitsResult:
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ApiLimitsDto'
+      description: API usage and limits response.
+      example:
+        data:
+          organizationName: Acme Research
+          requestsUsed: 12450
+          requestLimit: 100000
+          maxPageSize: 100
+          paginationLimit: 10000
+          articleContentTruncation: null
+          since: '2025-08-01T00:00:00Z'
+          lastMadeAt: '2025-08-12T15:42:11Z'
+          resetAt: '2025-09-01T00:00:00Z'
+          subscriptionCancelAt: null
+          keyStatuses:
+          - keyPreview: abc...def
+            valid: true
+            enabled: true
+            subscriptionActive: true
+            requestCount: 320
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        message:
+          type:
+          - string
+          - 'null'
+        timestamp:
+          type:
+          - integer
+          - 'null'
+          format: int64
+    ApiKeyStatus:
+      type: object
+      properties:
+        keyPreview:
+          type:
+          - string
+          - 'null'
+          description: Masked preview of the supplied API key.
+        valid:
+          type:
+          - boolean
+          - 'null'
+          description: Whether the supplied API key is valid and belongs to the authenticated account.
+        enabled:
+          type:
+          - boolean
+          - 'null'
+          description: Whether the API key is enabled. A disabled ('off') key is valid but cannot be used to make requests. False when the key is not valid.
+        subscriptionActive:
+          type:
+          - boolean
+          - 'null'
+          description: Whether the account owning the key has an active subscription or trial.
+        requestCount:
+          type:
+          - integer
+          - 'null'
+          description: Approx number of requests made with this API key in this billing cycle.
+          format: int64
+      description: Validity and status of a single API key.
+    ApiLimitsDto:
+      type: object
+      properties:
+        organizationName:
+          type:
+          - string
+          - 'null'
+          description: Name of the account (organization) the API key belongs to.
+        requestsUsed:
+          type:
+          - integer
+          - 'null'
+          description: Number of billable requests used in the current tracking period.
+          format: int64
+        requestLimit:
+          type:
+          - integer
+          - 'null'
+          description: Maximum number of requests allowed in the current tracking period. Null means the account has no request limit.
+          format: int64
+        maxPageSize:
+          type:
+          - integer
+          - 'null'
+          description: Maximum number of results allowed per page (page size).
+          format: int32
+        paginationLimit:
+          type:
+          - integer
+          - 'null'
+          description: Maximum number of results that can be paginated through.
+          format: int32
+        articleContentTruncation:
+          type:
+          - integer
+          - 'null'
+          description: Number of characters article content is truncated to. Null means content is not truncated.
+          format: int32
+        since:
+          type:
+          - string
+          - 'null'
+          description: Start of the current tracking period.
+          format: date-time
+        lastMadeAt:
+          type:
+          - string
+          - 'null'
+          description: Timestamp of the last billable request.
+          format: date-time
+        resetAt:
+          type:
+          - string
+          - 'null'
+          description: When the request counter resets to zero.
+          format: date-time
+        subscriptionCancelAt:
+          type:
+          - string
+          - 'null'
+          description: Date the API subscription is scheduled to be cancelled. Absent when the subscription is not set to cancel.
+          format: date-time
+        keyStatuses:
+          type:
+          - array
+          - 'null'
+          description: Status of each API key supplied via the 'apiKeys' parameter, in the same order as the request. Absent when no keys were supplied.
+          items:
+            $ref: '#/components/schemas/ApiKeyStatus'
+      description: Current API usage and limits for the authenticated account, optionally including the status of additional API keys that were requested. Reading this does not count against the account's request quota or rate limit.
+  securitySchemes:
+    apiKeyAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- perigon-openapi.json
+- perigon-openapi.yml

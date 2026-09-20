@@ -1,0 +1,19 @@
+generated: '2026-09-20'
+method: searched
+source: https://perigon.io/sandbox
+description: Perigon publishes an interactive API Sandbox ("Interactive API playground to build queries, preview
+  responses, and generate code") and an MCP playground with a tools inspector and chat. Both run against live data
+  with the signed-in account key; there is no separate test environment, test-mode key prefix or fixture data. The
+  Free plan (150 requests/month, no credit card) is the practical trial tier.
+docs:
+- https://perigon.io/sandbox
+- https://mcp.perigon.io
+- https://perigon.io/docs/api/getting-started
+environments:
+- name: production
+  base_url: https://api.perigon.io
+  note: only environment published
+gaps:
+- no test/live key distinction
+- no fixture or mock data
+- no time simulation

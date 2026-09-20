@@ -1,0 +1,103 @@
+generated: '2026-09-20'
+method: searched
+source: https://perigon.io/products/pricing/apis
+name: Perigon Data API plans
+audience: developer-api
+pricing_basis: tiered-subscription
+published: true
+delivery:
+  delivery: managed
+note: 'Monthly prices shown; the page offers an Annual toggle ("Save 10%"). Basic and Plus prices are asterisked
+  on the page: "* Price for eligible startups". price_text is copied as the page text renders it (the page splits
+  "$", the number and "/mo" into separate elements).'
+plan_count: 4
+plans:
+- name: Free
+  price_text: $0
+  price: 0
+  currency: USD
+  period: month
+  quota: 150 API requests/mo
+  license: Personal use license
+  limits:
+  - name: rate_limit_req_per_sec
+    value: 1
+  - name: max_results_per_request
+    value: 25
+  - name: historical_data
+    value: 3 mo
+  - name: data_delay
+    value: real time
+  endpoints: Full access to all endpoints
+  mcp: true
+- name: Basic
+  price_text: $ 250 * /mo
+  price: 250
+  currency: USD
+  period: month
+  quota: 10k API requests/mo
+  license: Limited commercial license
+  eligibility: '* Price for eligible startups'
+  limits:
+  - name: rate_limit_req_per_sec
+    value: 2
+  - name: max_results_per_request
+    value: 50
+  - name: historical_data
+    value: 6 mo
+  - name: data_delay
+    value: 1h delay
+  endpoints:
+  - Articles
+  mcp: true
+- name: Plus
+  price_text: $ 550 * /mo
+  price: 550
+  currency: USD
+  period: month
+  quota: 50k API requests/mo
+  license: Limited commercial license
+  eligibility: '* Price for eligible startups'
+  limits:
+  - name: rate_limit_req_per_sec
+    value: 4
+  - name: max_results_per_request
+    value: 100
+  - name: historical_data
+    value: 3 yrs
+  - name: data_delay
+    value: real time
+  endpoints:
+  - Articles
+  - Top Stories
+  - Companies
+  - People
+  - Sources
+  - Journalists
+  mcp: true
+- name: Commercial
+  price_text: Custom plans starting at $24k /yr
+  currency: USD
+  period: year
+  quota: Custom request limits
+  license: Full commercial license
+  limits:
+  - name: rate_limit_req_per_sec
+    value: Custom
+  - name: max_results_per_request
+    value: 100
+  - name: historical_data
+    value: 10+ yrs
+  - name: data_delay
+    value: real time
+  endpoints:
+  - Articles
+  - Stories
+  - Companies
+  - People
+  - Sources
+  - Journalists
+  extras:
+  - Custom sources
+  - SLA & dedicated support
+  mcp: true

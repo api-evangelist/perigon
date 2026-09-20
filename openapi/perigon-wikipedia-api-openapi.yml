@@ -1,0 +1,1219 @@
+openapi: 3.2.0
+info:
+  title: Perigon Wikipedia API
+  version: 1.0.0
+  contact:
+    name: Perigon Support
+    url: https://docs.perigon.io/
+    email: data@perigon.io
+  description: 'Operations tagged Wikipedia across 2 of this provider''s published API definitions: perigon-openapi.json, perigon-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.perigon.io
+  description: Generated server url
+security:
+- apiKeyAuth: []
+tags:
+- name: Wikipedia
+  description: Endpoints for searching ingested Wikipedia content. Provides keyword and filtered search capabilities along with vector-based semantic search across Wikipedia pages.
+paths:
+  /v1/vector/wikipedia/all:
+    post:
+      tags:
+      - Wikipedia
+      summary: Wikipedia (Vector)
+      description: Perform a natural language search over Wikipedia pages using semantic relevance. The result includes a list of page sections most closely matched to your query intent.
+      operationId: vector-search-wikipedia
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WikipediaSearchParams'
+        required: true
+      responses:
+        '401':
+          description: 401 - Invalid API Key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 401
+                message: Invalid API key.
+                timestamp: 1681338367402
+        '200':
+          description: 200 - Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WikipediaVectorSearchResult'
+        '500':
+          description: 500 - Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 500
+                message: Internal error. Please contact the support to resolve the problem. We apologize for any inconvenience :)
+                timestamp: 1681338367402
+        '400':
+          description: 400 - Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 400
+                message: Errors during parameter validation.
+                timestamp: 1681338367402
+        '403':
+          description: 403 - Request Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 403
+                message: The number of allowed requests is exceeded.
+                timestamp: 1681338367402
+        '429':
+          description: 429 - Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 429
+                message: Exceeded request rate limit for your account.
+                timestamp: 1681338367402
+      security:
+      - apiKeyAuth: []
+    servers:
+    - url: https://api.perigon.io
+      description: Generated server url
+  /v1/wikipedia/all:
+    get:
+      tags:
+      - Wikipedia
+      summary: Wikipedia
+      description: Search and filter all Wikipedia pages available via the Perigon API. The result includes a list of individual pages that were matched to your specific criteria.
+      operationId: search-wikipedia
+      parameters:
+      - name: q
+        in: query
+        description: String. Primary search query for filtering pages based on their title, summary, and content. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
+        required: false
+        schema:
+          type: string
+      - name: title
+        in: query
+        description: String. Search specifically within page titles. Supports Boolean operators, exact phrases with quotes, and wildcards for matching title variations.
+        required: false
+        schema:
+          type: string
+      - name: summary
+        in: query
+        description: String. Search specifically within page summary. Supports Boolean operators, exact phrases with quotes, and wildcards for matching title variations.
+        required: false
+        schema:
+          type: string
+      - name: text
+        in: query
+        description: String. Search specifically within the page's content (across all sections). Supports Boolean operators, exact phrases with quotes, and wildcards for matching title variations.
+        required: false
+        schema:
+          type: string
+      - name: reference
+        in: query
+        description: String. Search specifically across page's references. Supports Boolean operators, exact phrases with quotes, and wildcards for matching title variations.
+        required: false
+        schema:
+          type: string
+      - name: id
+        in: query
+        description: String Array. Retrieve specific pages by their unique Perigon identifiers. Multiple IDs can be provided to return a collection of specific pages.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: wikiPageId
+        in: query
+        description: Integer Array. Retrieve specific pages by their Wikipedia identifiers. These are unique only in a combination with `wikiCode` parameter. Multiple IDs can be provided to return a collection of specific pages.
+        required: false
+        schema:
+          type: array
+          items:
+            type: integer
+            format: int32
+      - name: wikiRevisionId
+        in: query
+        description: Integer Array. Retrieve specific pages by their Wikipedia revision identifiers. These are unique only in a combination with `wikiCode` parameter. Multiple IDs can be provided to return a collection of specific pages. This ID changes each time a page is edited.
+        required: false
+        schema:
+          type: array
+          items:
+            type: integer
+            format: int32
+      - name: wikiCode
+        in: query
+        description: String Array. Retrieve pages only from specified wiki projects. Currently, the only accepted value is `enwiki`.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: wikiNamespace
+        in: query
+        description: Integer Array. Retrieve pages only from specified wiki namespace. Currently, only the main namespace (0) is available.
+        required: false
+        schema:
+          type: array
+          items:
+            type: integer
+            format: int32
+      - name: wikidataId
+        in: query
+        description: String Array. Retrieve pages by the ids corresponding to their Wikidata entities.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: wikidataInstanceOfId
+        in: query
+        description: String Array. Retrieve all pages whose Wikidata entities are instances of these provided ids.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: wikidataInstanceOfLabel
+        in: query
+        description: String Array. Retrieve all pages whose Wikidata entities are instances of these ids (provided as labels).
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: category
+        in: query
+        description: String Array. Retrieve all pages for specified categories.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: sectionId
+        in: query
+        description: String Array. Retrieve pages containing provided section ids. Each section ID is unique.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: wikiRevisionFrom
+        in: query
+        description: Date. Retrieve pages modified after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - name: wikiRevisionTo
+        in: query
+        description: Date. Retrieve pages modified before this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - name: scrapedAtFrom
+        in: query
+        description: Date. Retrieve pages scraped after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - name: scrapedAtTo
+        in: query
+        description: Date. Retrieve pages scraped before this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - name: pageviewsFrom
+        in: query
+        description: Integer. Retrieve pages with the average number of views per day higher than the provided value.
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: pageviewsTo
+        in: query
+        description: Integer. Retrieve pages with the average number of views per day lower than the provided value.
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: withPageviews
+        in: query
+        description: Boolean. Retrieve pages that have any viewership statistics available for them. If `false` (the default) - return all pages.
+        required: false
+        schema:
+          type: boolean
+      - name: showNumResults
+        in: query
+        description: Boolean. Whether to show the total number of all matched pages. Default value is false which makes queries a bit more efficient but also counts up to 10000 pages.
+        required: false
+        schema:
+          type: boolean
+      - name: page
+        in: query
+        description: Integer. The specific page of results to retrieve in the paginated response. Starts at 0.
+        required: false
+        schema:
+          maximum: 10000
+          minimum: 0
+          type: integer
+          format: int32
+      - name: size
+        in: query
+        description: Integer. The number of articles to return per page in the paginated response.
+        required: false
+        schema:
+          maximum: 1000
+          minimum: 0
+          type: integer
+          format: int32
+      - name: sortBy
+        in: query
+        description: String. Determines the Wikipedia page sorting order. Options include relevance (default), revisionTsDesc (recently edited first), revisionTsAsc (recently edited last), pageViewsDesc (highest viewership first), pageViewsAsc (highest viewership last), scrapedAtDesc (recently scraped first), scrapedAtAsc (recently scraped last).
+        required: false
+        schema:
+          type: string
+          enum:
+          - relevance
+          - revisionTsDesc
+          - revisionTsAsc
+          - pageViewsDesc
+          - pageViewsAsc
+          - scrapedAtDesc
+          - scrapedAtAsc
+      responses:
+        '401':
+          description: 401 - Invalid API Key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 401
+                message: Invalid API key.
+                timestamp: 1681338367402
+        '500':
+          description: 500 - Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 500
+                message: Internal error. Please contact the support to resolve the problem. We apologize for any inconvenience :)
+                timestamp: 1681338367402
+        '400':
+          description: 400 - Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 400
+                message: Errors during parameter validation.
+                timestamp: 1681338367402
+        '200':
+          description: 200 - Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WikipediaSearchResult'
+        '403':
+          description: 403 - Request Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 403
+                message: The number of allowed requests is exceeded.
+                timestamp: 1681338367402
+        '429':
+          description: 429 - Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 429
+                message: Exceeded request rate limit for your account.
+                timestamp: 1681338367402
+      security:
+      - apiKeyAuth: []
+    servers:
+    - url: https://api.perigon.io
+      description: Generated server url
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        message:
+          type:
+          - string
+          - 'null'
+        timestamp:
+          type:
+          - integer
+          - 'null'
+          format: int64
+    VectorData:
+      type: object
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          description: Numeric values in the vector embedding.
+          items:
+            type: number
+            description: Numeric values in the vector embedding.
+            format: float
+        version:
+          type:
+          - integer
+          - 'null'
+          description: Version of the embedding representation.
+          format: int32
+      description: Vector embeddings associated with the article, when requested.
+    WikiData:
+      type: object
+      properties:
+        pageId:
+          type:
+          - string
+          - 'null'
+        sectionId:
+          type:
+          - string
+          - 'null'
+        wikiPageId:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        wikiRevisionId:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        wikiRevisionTs:
+          type:
+          - string
+          - 'null'
+        wikiCode:
+          type:
+          - string
+          - 'null'
+        wikiNamespace:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        wikiTitle:
+          type:
+          - string
+          - 'null'
+        wikidataId:
+          type:
+          - string
+          - 'null'
+        wikidataInstanceOf:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/WikidataLabelHolder'
+        redirectTitles:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        pageviews:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        title:
+          type:
+          - string
+          - 'null'
+        styleLevel:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        content:
+          type:
+          - string
+          - 'null'
+    WikipediaSearchFilter:
+      type: object
+      properties:
+        pageId:
+          type:
+          - array
+          - 'null'
+          description: Filter by specific Perigon page identifiers. Accepts either a single ID or an array of IDs. Returns only pages matching these IDs.
+          example:
+          - ''
+          items:
+            type: string
+        sectionId:
+          type:
+          - array
+          - 'null'
+          description: Filter by specific section identifiers. Accepts either a single ID or an array of IDs. Returns only pages containing these sections.
+          example:
+          - ''
+          items:
+            type: string
+        wikiPageId:
+          type:
+          - array
+          - 'null'
+          description: Filter by specific Wikipedia page identifiers. Accepts either a single ID or an array of IDs. Returns only pages matching these IDs.
+          example:
+          - 0
+          items:
+            type: integer
+            format: int64
+        wikiRevisionId:
+          type:
+          - array
+          - 'null'
+          description: Filter by specific Perigon page revision identifiers. Accepts either a single ID or an array of IDs. Returns only pages matching these IDs.
+          example:
+          - 0
+          items:
+            type: integer
+            format: int64
+        wikiCode:
+          type:
+          - array
+          - 'null'
+          description: Filter by specific Wikipedia project codes. Returns only pages matching these projects.
+          example:
+          - ''
+          items:
+            type: string
+        wikiNamespace:
+          type:
+          - array
+          - 'null'
+          description: Filter by specific Wikipedia namespaces. Returns only pages matching these namespaces.
+          example:
+          - 0
+          items:
+            type: integer
+            format: int64
+        wikidataId:
+          type:
+          - array
+          - 'null'
+          description: Filter by specific Wikidata entity IDs. Returns only pages whose Wikidata entities match those ids.
+          example:
+          - ''
+          items:
+            type: string
+        wikidataInstanceOfId:
+          type:
+          - array
+          - 'null'
+          description: Filter by specific Wikidata entity IDs. Returns only pages whose Wikidata entities are instances of provided ids.
+          example:
+          - ''
+          items:
+            type: string
+        wikidataInstanceOfLabel:
+          type:
+          - array
+          - 'null'
+          description: Filter by specific Wikidata entity labels. Returns only pages whose Wikidata entities are instances of these labels.
+          example:
+          - ''
+          items:
+            type: string
+        AND:
+          type:
+          - array
+          - 'null'
+          description: Adds additional AND filter objects. These objects must be of the same type as the original filter object and will be combined with the existing filter using the AND logical operator.
+          example:
+          - {}
+          items:
+            $ref: '#/components/schemas/WikipediaSearchFilter'
+        OR:
+          type:
+          - array
+          - 'null'
+          description: Adds additional OR filter objects. These objects must be of the same type as the original filter object and will be combined with the existing filter using the OR logical operator.
+          example:
+          - {}
+          items:
+            $ref: '#/components/schemas/WikipediaSearchFilter'
+        NOT:
+          type:
+          - array
+          - 'null'
+          description: A filter object for logical NOT operations
+          example:
+          - {}
+          items:
+            $ref: '#/components/schemas/WikipediaSearchFilter'
+      description: Complex filter structure for Wikipedia page searches that supports nested logical operations (AND, OR, NOT) and multiple filtering criteria.
+    WikipediaSearchResult:
+      required:
+      - numResults
+      - results
+      - status
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+        numResults:
+          type: integer
+          format: int64
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/WikiPage'
+      description: Wikipedia search result
+      example:
+        status: 200
+        numResults: 10000
+        results:
+        - id: a9e264ec1f6a4c049e3be8e997e24d2f
+          scrapedAt: '2025-07-15T04:20:01.114925+00:00'
+          wikiPageId: 63988579
+          wikiRevisionId: 1300572396
+          wikiRevisionTs: '2025-07-15T04:19:25+00:00'
+          wikiCode: enwiki
+          wikiNamespace: 0
+          wikiTitle: Gigafactory Texas
+          url: https://en.wikipedia.org/wiki/Gigafactory_Texas
+          topImage: https://upload.wikimedia.org/wikipedia/commons/b/b6/Gigafactory_Texas_Building_1_June_2022.jpg
+          wikidataId: Q96379480
+          wikidataInstanceOf:
+          - wikidataId: Q83405
+            label: factory
+          redirectTitles:
+          - Giga Austin
+          - Gigafactory 5
+          - Tesla Gigafactory 5
+          - Terafactory
+          - Giga Texas
+          - Austin Gigafactory
+          summary: 'Gigafactory Texas (also known as Giga Texas, Giga Austin, or Gigafactory 5) is a Tesla, Inc. automotive manufacturing facility in unincorporated Travis County, Texas, just outside of Austin. Construction began in July 2020, limited production of Model Y began before the end of 2021, and initial deliveries of vehicles built at the factory took place at an opening party called "Cyber Rodeo" on April 7, 2022.
+
+            The factory produces Model Y cars for the Eastern United States and is also the main factory for the Cybertruck and the company''s next-generation vehicle. It also serves as the site of Tesla''s corporate headquarters. It is the country''s second biggest factory by size as well as the second-largest building by volume in the world after the Boeing Everett Factory.
+
+            Tesla originally planned to employ a staff of over 60,000 as production ramped up. However, in 2024, approx. 2,700 employees (12% of the factory''s workforce) were terminated in one of the largest layoffs in Austin history.'
+          sections:
+          - id: bc3387b303914a38b23f5ad1d149e897
+            title: History
+            styleLevel: 2
+            loc:
+            - 1
+          - id: 884ef99ea6514752890d08f5dfe9757b
+            title: Selection process
+            styleLevel: 3
+            loc:
+            - 1
+            - 1
+            textRaw: 'Tesla began considering locations across eight states in the central United States during 2019‒2020. Community groups and government officials in several areas of the US expressed interest in hosting what was expected to be a very large Tesla Gigafactory manufacturing facility. Some expressed interest in facilitating land procurement, getting over the regulatory obstacles, and considering potential tax incentives. Some aimed to reach Elon Musk directly through social media marketing.
+
+
+              By May 2020, a selection process was underway by Tesla. The short list included Austin, Nashville and Tulsa (Oklahoma). Two locations in the vicinity of Tulsa had been viewed by Tesla by mid-May. The Tulsa campaign was promoted by G. T. Bynum, the mayor of Tulsa. In May 2020 Bynum discussed the suitability of "Green Country" (Northeastern Oklahoma) and distributed a photomontage of the Cybertruck in Tulsa Police Department livery, with a suggestion of local purchasing, if the Gigafactory was to be situated near Tulsa. On May 20, 2020, wrap advertising was applied to the Golden Driller statue located at the Tulsa Expo Center creating a caricature of Elon Musk, with the word "Tulsa" on statue''s belt buckle replaced by the "Tesla" name. In July 2020, Tesla selected Austin as the site for the factory.'
+            textRich: 'Tesla began considering locations across eight states in the central United States during 2019‒2020. Community groups and government officials in several areas of the US expressed interest in hosting what was expected to be a very large Tesla Gigafactory manufacturing facility. Some expressed interest in facilitating land procurement, getting over the [regulatory obstacles](https://en.wikipedia.org/wiki/Regulatory_authority "Regulatory authority"), and considering potential [tax incentives](https://en.wikipedia.org/wiki/Tax_incentives "Tax incentives"). Some aimed to reach [Elon Musk](https://en.wikipedia.org/wiki/Elon_Musk "Elon Musk") directly through [social media marketing](https://en.wikipedia.org/wiki/Social_media_marketing "Social media marketing").
+
+
+              By May 2020, a selection process was underway by Tesla. The [short list](https://en.wikipedia.org/wiki/Short_list "Short list") included Austin, [Nashville](https://en.wikipedia.org/wiki/Nashville,_Tennessee "Nashville, Tennessee") and [Tulsa (Oklahoma)](https://en.wikipedia.org/wiki/Tulsa,_Oklahoma "Tulsa, Oklahoma"). Two locations in the vicinity of Tulsa had been viewed by Tesla by mid-May. The Tulsa campaign was promoted by [G. T. Bynum](https://en.wikipedia.org/wiki/G._T._Bynum "G. T. Bynum"), the [mayor of Tulsa](https://en.wikipedia.org/wiki/List_of_mayors_of_Tulsa,_Oklahoma "List of mayors of Tulsa, Oklahoma"). In May 2020 Bynum discussed the suitability of "[Green Country](https://en.wikipedia.org/wiki/Green_Country "Green Country")" (Northeastern Oklahoma) and distributed a [photomontage](https://en.wikipedia.org/wiki/Photomontage "Photomontage") of the Cybertruck in [Tulsa Police Department](https://en.wikipedia.org/wiki/Tulsa_Police_Department "Tulsa Police Department") livery, with a suggestion of [local purchasing](https://en.wikipedia.org/wiki/Local_purchasing "Local purchasing"), if the Gigafactory was to be situated near Tulsa. On May 20, 2020, [wrap advertising](https://en.wikipedia.org/wiki/Wrap_advertising "Wrap advertising") was applied to the [Golden Driller](https://en.wikipedia.org/wiki/Golden_Driller "Golden Driller") statue located at the [Tulsa Expo Center](https://en.wikipedia.org/wiki/Tulsa_Expo_Center "Tulsa Expo Center") creating a [caricature](https://en.wikipedia.org/wiki/Caricature "Caricature") of [Elon Musk](https://en.wikipedia.org/wiki/Elon_Musk "Elon Musk"), with the word "Tulsa" on statue''s [belt buckle](https://en.wikipedia.org/wiki/Belt_buckle "Belt buckle") replaced by the "Tesla" name. In July 2020, Tesla selected Austin as the site for the factory.'
+          - id: d3d9e592df354cb9abcac4d3c5d38065
+            title: Austin
+            styleLevel: 3
+            loc:
+            - 1
+            - 2
+            textRaw: "In 2014, Tesla evaluated a 1,500-acre (600 ha; 2 sq mi; 6 km2) manufacturing site on U.S. Route 79 at Frame Switch (30°32′N 97°30′W\uFEFF / \uFEFF30.54°N 97.5°W\uFEFF / 30.54; -97.5\uFEFF (Hutto MegaSite, (Frame Switch, Texas))), located between the towns of Hutto and Taylor, north-east of the Greater Austin center as its next factory. However, Tesla chose to build its first Gigafactory (now named Gigafactory Nevada) near Sparks, Nevada which is by Reno in 2014.\n\nBy June 2020, another location, one near the Del Valle area of Austin was being considered, a 2,100-acre (850 ha; 3.3 sq mi; 8.5 km2) site bordering Harold Green Road (later renamed Tesla Road) and Texas State Highway 130. On June 16, 2020, the Commissioners' court of Travis County discussed a possible incentives package for Tesla. In July 2020, the Del Valle Independent School District approved a tax incentives package worth $68 million, should the Tesla Gigafactory be built. On July 22, 2020, during Tesla's second quarter 2020 earnings call, the company announced that location had been selected for its fifth Gigafactory.\n\nBy the end of July 2020, construction had begun. The Tesla Gigafactory received state tax incentives worth about $50 million through the Texas Tax Code Chapter 313 program. Tesla announced a manufacturing training program in cooperation with Austin Community College District on June 15, 2021. The program was expected to start in August 2021 and the course was to last 14 weeks. The first fully completed Tesla Model Y rolled off the line at Giga Texas in the last week of August 2021 under trial production. In December 2021, Elon Musk estimated that Giga Texas will require a total investment of at least $10B and may employ as many as 20,000 employees within the company.\n\nIn early 2022 Tesla battery suppliers CATL and Panasonic were reportedly scouting sites for battery factories in North America, including Kansas, Oklahoma, Mexico and Canada. Panasonic announced in July 2022 that the company selected De Soto, Kansas (at the former Sunflower Army Ammunition Plant) to build a battery factory. Large subsidies and abatements were granted to Panasonic, organized by Governor Laura Kelly."
+            textRich: "In 2014, Tesla evaluated a 1,500-acre (600 ha; 2 sq mi; 6 km2) manufacturing site on [U.S. Route 79](https://en.wikipedia.org/wiki/U.S._Route_79_in_Texas \"U.S. Route 79 in Texas\") at [Frame Switch](https://en.wikipedia.org/wiki/Frame_Switch,_Texas \"Frame Switch, Texas\") ([30°32′N 97°30′W\uFEFF / \uFEFF30.54°N 97.5°W\uFEFF / 30.54; -97.5\uFEFF (Hutto MegaSite, (Frame Switch, Texas))](https://geohack.toolforge.org/geohack.php?pagename=Gigafactory_Texas&params=30.54_N_97.5_W_dim:2000&title=Hutto+MegaSite%2C+%28Frame+Switch%2C+Texas%29)), located between the towns of [Hutto](https://en.wikipedia.org/wiki/Hutto,_Texas \"Hutto, Texas\") and [Taylor](https://en.wikipedia.org/wiki/Taylor,_Texas \"Taylor, Texas\"), north-east of the [Greater Austin](https://en.wikipedia.org/wiki/Greater_Austin \"Greater Austin\") center as its next factory. However, Tesla chose to build its first Gigafactory (now named [Gigafactory Nevada](https://en.wikipedia.org/wiki/Gigafactory_Nevada \"Gigafactory Nevada\")) near [Sparks, Nevada](https://en.wikipedia.org/wiki/Sparks,_Nevada \"Sparks, Nevada\") which is by [Reno](https://en.wikipedia.org/wiki/Reno,_Nevada \"Reno, Nevada\") in 2014.\n\nBy June 2020, another location, one near the [Del Valle area of Austin](https://en.wikipedia.org/wiki/Del_Valle,_Texas \"Del Valle, Texas\") was being considered, a 2,100-acre (850 ha; 3.3 sq mi; 8.5 km2) site bordering Harold Green Road (later renamed Tesla Road) and [Texas State Highway 130](https://en.wikipedia.org/wiki/Texas_State_Highway_130 \"Texas State Highway 130\"). On June 16, 2020, the [Commissioners' court](https://en.wikipedia.org/wiki/Commissioners'_court \"Commissioners' court\") of [Travis County](https://en.wikipedia.org/wiki/Travis_County,_Texas \"Travis County, Texas\") discussed a possible incentives package for Tesla. In July 2020, the [Del Valle Independent School District](https://en.wikipedia.org/wiki/Del_Valle_Independent_School_District \"Del Valle Independent School District\") approved a tax incentives package worth $68 million, should the Tesla Gigafactory be built. On July 22, 2020, during Tesla's second quarter 2020 earnings call, the company announced that location had been selected for its fifth Gigafactory.\n\nBy the end of July 2020, construction had begun. The Tesla Gigafactory received state tax incentives worth about $50 million through the [Texas Tax Code Chapter 313](https://en.wikipedia.org/wiki/Texas_Tax_Code_Chapter_313 \"Texas Tax Code Chapter 313\") program. Tesla announced a manufacturing training program in cooperation with [Austin Community College District](https://en.wikipedia.org/wiki/Austin_Community_College_District \"Austin Community College District\") on June 15, 2021. The program was expected to start in August 2021 and the course was to last 14 weeks. The first fully completed Tesla Model Y rolled off the line at Giga Texas in the last week of August 2021 under trial production. In December 2021, Elon Musk estimated that Giga Texas will require a total investment of at least $10B and may employ as many as 20,000 employees within the company.\n\nIn early 2022 Tesla battery suppliers [CATL](https://en.wikipedia.org/wiki/Contemporary_Amperex_Technology \"Contemporary Amperex Technology\") and [Panasonic](https://en.wikipedia.org/wiki/Panasonic \"Panasonic\") were reportedly scouting sites for battery factories in North America, including Kansas, Oklahoma, Mexico and Canada. Panasonic announced in July 2022 that the company selected [De Soto, Kansas](https://en.wikipedia.org/wiki/De_Soto,_Kansas \"De Soto, Kansas\") (at the former [Sunflower Army Ammunition Plant](https://en.wikipedia.org/wiki/Sunflower_Army_Ammunition_Plant \"Sunflower Army Ammunition Plant\")) to build a battery factory. Large subsidies and abatements were granted to Panasonic, organized by Governor [Laura Kelly](https://en.wikipedia.org/wiki/Laura_Kelly \"Laura Kelly\")."
+          - id: 778fca8fa13a49a49445d77a8e0f0b82
+            title: Equipment
+            styleLevel: 3
+            loc:
+            - 1
+            - 3
+          - id: 744a7887b3f24650b2435bc51b922aef
+            title: Die casting
+            styleLevel: 4
+            loc:
+            - 1
+            - 3
+            - 1
+            textRaw: 'During the night of January 18/19, 2021, concrete foundations for three Giga Press high-press die-casting machines were poured at the north-east corner Giga Texas factory location. On January 21, 2021, the first Giga Press components started to arrive on site in crates and shipping containers.
+
+              On January 22, 2021, the base frame of the first Giga Press was unboxed and craned into position.'
+            textRich: 'During the night of January 18/19, 2021, concrete foundations for three [Giga Press](https://en.wikipedia.org/wiki/Giga_Press "Giga Press") high-press die-casting machines were poured at the north-east corner Giga Texas factory location. On January 21, 2021, the first Giga Press components started to arrive on site in crates and [shipping containers](https://en.wikipedia.org/wiki/Intermodal_container "Intermodal container").
+
+              On January 22, 2021, the base frame of the first Giga Press was unboxed and craned into position.'
+          - id: 8f03a1f30a054ba4a763a543139a3082
+            title: Ramp-up
+            styleLevel: 3
+            loc:
+            - 1
+            - 4
+            textRaw: Some time in late June 2022, Gigafactory Texas reached a run rate of 1,000 units a week. On December 15, 2022, Gigafactory Texas reached a run rate of 3,000 units a week.
+            textRich: Some time in late June 2022, Gigafactory Texas reached a run rate of 1,000 units a week. On December 15, 2022, Gigafactory Texas reached a run rate of 3,000 units a week.
+          categories:
+          - All Wikipedia articles written in American English
+          - All pages needing factual verification
+          - Articles with short description
+          - Commons category link is on Wikidata
+          - Coordinates on Wikidata
+          - Corporate headquarters in the United States
+          - Giga Press
+          - Infobox mapframe without OSM relation ID on Wikidata
+          - Manufacturing plants in the United States
+          - Motor vehicle assembly plants in Texas
+          - Pages using gadget WikiMiniAtlas
+          - Pages using the Kartographer extension
+          - Short description is different from Wikidata
+          - Tesla factories
+          - Use American English from June 2020
+          - Use mdy dates from September 2023
+          - Wikipedia articles needing factual verification from August 2023
+          externalLinks:
+          - https://www.cnet.com/roadshow/news/tesla-cybertruck-police-vehicle-tulsa-mayor-plant/
+          - https://apnews.com/0a9fd1530e5cb8ddcd94143eae641248
+          - https://www.cnet.com/roadshow/news/tesla-cybertruck-production-austin-tulsa-us-gigafactory/
+          - https://techcrunch.com/2020/03/10/tesla-is-searching-central-u-s-for-a-cybertruck-gigafactory-site/
+          - https://ktul.com/news/local/golden-driller-transformed-into-elon-musk
+          - https://www.krmg.com/news/local/golden-driller-mysteriously-sporting-tesla-logos/t3B0huJexNpGzR6DzP5n9M/
+          - https://www.reuters.com/article/us-tesla-texas/tesla-negotiating-incentives-for-possible-texas-vehicle-assembly-plant-report-idUSKBN23M2ON
+          - https://web.archive.org/web/20200615192535/https://www.statesman.com/business/20200615/breaking-travis-county-considering-tesla-incentives-deal
+          - https://www.statesman.com/business/20200615/breaking-travis-county-considering-tesla-incentives-deal
+          - https://www.cnet.com/roadshow/news/elon-musk-tesla-cybertruck-factory-texas-tulsa/
+          - https://www.kxan.com/news/business/del-valle-isd-approves-land-usage-for-tesla-gigafactory-to-be-built/
+          - https://communityimpact.com/austin/news/2014/09/03/hutto-falls-short-in-bid-for-tesla-battery-factory-2/
+          - https://www.austinchamber.com/economic-development/real-estate/featured-industrial/huttomegasite
+          - https://web.archive.org/web/20200710101020/https://www.kxan.com/news/business/del-valle-isd-approves-land-usage-for-tesla-gigafactory-to-be-built/
+          - https://web.archive.org/web/20200519113224/https://apnews.com/0a9fd1530e5cb8ddcd94143eae641248
+          - https://web.archive.org/web/20200519134353/https://www.cnet.com/roadshow/news/tesla-cybertruck-production-austin-tulsa-us-gigafactory/
+          - https://web.archive.org/web/20200621140632/https://www.cnet.com/roadshow/news/elon-musk-tesla-cybertruck-factory-texas-tulsa/
+          - https://web.archive.org/web/20200615185315/https://www.reuters.com/article/us-tesla-texas/tesla-negotiating-incentives-for-possible-texas-vehicle-assembly-plant-report-idUSKBN23M2ON
+          - https://web.archive.org/web/20200523115610/https://communityimpact.com/austin/news/2014/09/03/hutto-falls-short-in-bid-for-tesla-battery-factory-2/
+          - https://web.archive.org/web/20200524122519/https://www.austinchamber.com/economic-development/real-estate/featured-industrial/huttomegasite
+          - https://web.archive.org/web/20200517232032/https://techcrunch.com/2020/03/10/tesla-is-searching-central-u-s-for-a-cybertruck-gigafactory-site/
+          - https://web.archive.org/web/20200519115539/https://www.cnet.com/roadshow/news/tesla-cybertruck-police-vehicle-tulsa-mayor-plant/
+          - https://web.archive.org/web/20200529105632/https://ktul.com/news/local/golden-driller-transformed-into-elon-musk
+          - https://web.archive.org/web/20200526144605/https://www.krmg.com/news/local/golden-driller-mysteriously-sporting-tesla-logos/t3B0huJexNpGzR6DzP5n9M/
+          - https://www.foxnews.com/auto/tesla-cybertruck-texas-interplanetary-update
+          - https://www.cnbc.com/2020/07/22/tesla-will-build-its-next-gigafactory-near-austin-texas.html
+          - https://electrek.co/2020/07/25/tesla-starts-construction-gigafactory-texas-drone-video/
+          - https://www.cnn.com/2020/03/11/business/tesla-cybertruck-plant-location/index.html
+          - https://www.businessinsider.com/joplin-missouri-pitch-musk-tesla-cybertruck-factory-1-billion-incentives-2020-4
+          - https://www.bizjournals.com/kansascity/news/2020/04/29/wichita-makes-pitch-for-tesla-cybertruck-factory.html
+          - https://www.dallasnews.com/business/technology/2020/05/15/report-tesla-to-build-factory-in-austin-and-produce-model-y-vehicles-by-end-of-2020/
+          - https://www.theverge.com/2020/7/22/21334860/tesla-cybertruck-factory-austin-texas-location-model-y
+          - https://thedriven.io/2020/07/23/giga-texas-austin-revealed-as-location-for-teslas-new-us-gigafactory/
+          - https://abc.austintexas.gov/web/permit/public-search-other?t_detail=1&t_selected_folderrsn=12520107
+          - https://comptroller.texas.gov/economy/local/ch313/agreement-docs-details.php?id=1496
+          - https://www.youtube.com/watch?v=dLunLvjdSkQ&t=4m30s
+          - https://www.youtube.com/watch?v=WhNY3J6FHRA&t=16m30s
+          - https://www.youtube.com/watch?v=tNv_log3NQU&t=9m48s&
+          - https://www.youtube.com/watch?v=sn09PLpZMjQ&t=21m42s
+          - https://www.youtube.com/channel/UCDmfM1DRiTC9E7fuBbul2SQ/videos
+          - https://www.kvue.com/article/money/economy/boomtown-2040/tesla-launches-manufacturing-training-program-at-austin-community-college/269-f9dd833b-bd72-4821-9028-69cb9e51d4c9
+          - https://www.tesla.com/careers/tesla-start
+          - https://www.austincc.edu/news/2021/06/tesla-launches-national-manufacturing-technician-program-austin-community-college
+          - https://www.youtube.com/c/MyTeslaWeekend/videos
+          - https://web.archive.org/web/20210721190229/https://twitter.com/elonmusk/status/1382876290663927808
+          - https://web.archive.org/web/20210709185841/https://twitter.com/accdistrict/status/1404817234183311374
+          - https://www.bbc.co.uk/news/technology-58838874
+          - https://insideevs.com/news/529462/first-tesla-modely-giga-austin/
+          - https://web.archive.org/web/20210309232909/https://electrek.co/2020/07/25/tesla-starts-construction-gigafactory-texas-drone-video/
+          - https://web.archive.org/web/20210415150355/https://www.foxnews.com/auto/tesla-cybertruck-texas-interplanetary-update
+          - https://web.archive.org/web/20210323145102/https://www.cnbc.com/2020/07/22/tesla-will-build-its-next-gigafactory-near-austin-texas.html
+          - https://web.archive.org/web/20210101213306/https://thedriven.io/2020/07/23/giga-texas-austin-revealed-as-location-for-teslas-new-us-gigafactory/
+          - https://web.archive.org/web/20211008064327/https://www.bbc.co.uk/news/technology-58838874
+          - https://web.archive.org/web/20210709185112/https://www.kvue.com/article/money/economy/boomtown-2040/tesla-launches-manufacturing-training-program-at-austin-community-college/269-f9dd833b-bd72-4821-9028-69cb9e51d4c9
+          - https://web.archive.org/web/20210709183643/https://www.tesla.com/careers/tesla-start
+          - https://web.archive.org/web/20210709185621/https://www.austincc.edu/news/2021/06/tesla-launches-national-manufacturing-technician-program-austin-community-college
+          - https://web.archive.org/web/20200830154730/https://www.cnn.com/2020/03/11/business/tesla-cybertruck-plant-location/index.html
+          - https://web.archive.org/web/20200610134133/https://www.businessinsider.com/joplin-missouri-pitch-musk-tesla-cybertruck-factory-1-billion-incentives-2020-4
+          - https://web.archive.org/web/20210413061152/https://www.bizjournals.com/kansascity/news/2020/04/29/wichita-makes-pitch-for-tesla-cybertruck-factory.html
+          - https://web.archive.org/web/20200811225459/https://www.dallasnews.com/business/technology/2020/05/15/report-tesla-to-build-factory-in-austin-and-produce-model-y-vehicles-by-end-of-2020/
+          - https://web.archive.org/web/20200823002907/https://www.theverge.com/2020/7/22/21334860/tesla-cybertruck-factory-austin-texas-location-model-y
+          - https://web.archive.org/web/20210125083851/https://comptroller.texas.gov/economy/local/ch313/agreement-docs-details.php?id=1496
+          - https://web.archive.org/web/20211010184955/https://insideevs.com/news/529462/first-tesla-modely-giga-austin/
+          - https://www.bloomberg.com/news/articles/2022-03-19/tesla-supplier-catl-weighs-sites-for-5-billion-battery-plant
+          - https://electrek.co/2022/03/03/panasoni-large-battery-cell-factory-in-us-supply-tesla-demand-repor/
+          - https://teslanorth.com/2022/04/06/first-texas-made-tesla-model-y-deliveries-to-take-place-at-cyber-rodeo-cybertruck-spotted-driving-on-site-video/
+          - https://www.forbes.com/sites/alanohnsman/2022/04/07/elon-musk-opens-teslas-giga-texas-that--he-says-is-the-biggest-us-plant/
+          - https://electrek.co/2022/06/29/tesla-ramps-up-gigafactory-texas-new-model-y-version/
+          - https://twitter.com/Tesla/status/1603478891728887822
+          - https://geohack.toolforge.org/geohack.php?pagename=Gigafactory_Texas&params=30.54_N_97.5_W_dim:2000&title=Hutto+MegaSite,+(Frame+Switch,+Texas)
+          - https://geohack.toolforge.org/geohack.php?pagename=Gigafactory_Texas&params=30.220874637588_N_97.618649634283_W_region:US-TX_type:landmark_dim:2000&title=Gigafactory+Texas
+          - http://tesla.com/giga-texas
+          - https://www.axios.com/2023/09/08/walter-isaacson-elon-musk-book-excerpt
+          - https://www.bizjournals.com/austin/news/2023/09/20/tesla-exec-manufacturing-expo-presentation.html
+          - https://x.com/elonmusk/status/1382876290663927808
+          - https://x.com/accdistrict/status/1404817234183311374
+          - https://x.com/elonmusk/status/1471556384667979777
+          - https://x.com/AustinTeslaClub/status/1352410094747709441
+          - https://www.austintexas.gov/sites/default/files/files/Finance/Financial%20Transparency/CAFR/FY2024-City-of-Austin-ACFR.pdf
+          - https://www.mysanantonio.com/business/article/tesla-texas-layoffs-19418016.php
+          - http://web.archive.org/web/20250306101319/https://www.mysanantonio.com/business/article/tesla-texas-layoffs-19418016.php
+          references:
+          - 2025 Tesla vandalism
+          - Advanced driver-assistance system
+          - Andrej Karpathy
+          - Arnnon Geshuri
+          - Artificial intelligence
+          - Associated Press
+          - Austin, Texas
+          - Austin American-Statesman
+          - Austin Community College District
+          - Automotive industry
+          - Axios (website)
+          - BNSF Railway
+          - Belt buckle
+          - Bloomberg News
+          - Boeing Everett Factory
+          - CNET
+          - Caricature
+          - Central United States
+          - Chris Lattner
+          - Commissioners' court
+          - Contemporary Amperex Technology
+          - Criticism of Tesla, Inc.
+          - De Soto, Kansas
+          - DeepScale
+          - Deepak Ahuja
+          - Del Valle, Texas
+          - Del Valle Independent School District
+          - Drew Baglino
+          - East Coast of the United States
+          - Eastern United States
+          - Electric vehicle
+          - Elon Musk
+          - Elon Musk's Tesla Roadster
+          - Everyone Hates Elon
+          - Executive session
+          - Fox News
+          - Frame Switch, Texas
+          - Franz von Holzhausen
+          - G. T. Bynum
+          - Geographic coordinate system
+          - Giga Press
+          - Gigafactory Berlin-Brandenburg
+          - Gigafactory Mexico
+          - Gigafactory Nevada
+          - Gigafactory New York
+          - Gigafactory Shanghai
+          - Golden Driller
+          - Greater Austin
+          - Green Country
+          - Green Country (Oklahoma)
+          - Hibar Systems
+          - Hiromichi Mizuno
+          - History of Tesla, Inc.
+          - Hornsdale Power Reserve
+          - Hutto, Texas
+          - Intermodal container
+          - J. B. Straubel
+          - James Murdoch
+          - Jay Vijayan
+          - Jerome Guillen
+          - Jim Keller (engineer)
+          - Joe Gebbia
+          - KRMG-FM
+          - KTUL
+          - KXAN-TV
+          - Kathleen Wilson-Thompson
+          - Kimbal Musk
+          - Larry Ellison
+          - Laura Kelly
+          - Layoffs
+          - List of Class I railroads
+          - List of Easter eggs in Tesla products
+          - List of Tesla Autopilot crashes
+          - List of Tesla factories
+          - List of largest buildings
+          - List of lawsuits involving Tesla, Inc.
+          - List of mayors of Tulsa, Oklahoma
+          - Local purchasing
+          - Marc Tarpenning
+          - Martin Eberhard
+          - Maxwell Technologies
+          - Mercedes-Benz B-Class Electric Drive
+          - Mercedes A-Class E-Cell
+          - Nashville, Tennessee
+          - Nikola Tesla
+          - North American Charging Standard
+          - Optimus (robot)
+          - Owen Diaz v. Tesla
+          - Panasonic
+          - Photomontage
+          - Property tax
+          - Regulatory authority
+          - Reno, Nevada
+          - Robotics
+          - Robyn Denholm
+          - San Antonio Express-News
+          - Short list
+          - Smart electric drive
+          - Social media marketing
+          - SolarCity
+          - Sparks, Nevada
+          - State of Texas
+          - Steve Jurvetson
+          - Sunflower Army Ammunition Plant
+          - Supercomputer
+          - TSLAQ
+          - Tax credits
+          - Tax incentives
+          - Taylor, Texas
+          - TechCrunch
+          - Tesla, Inc.
+          - Tesla Automation
+          - Tesla Autopilot
+          - Tesla Autopilot hardware
+          - Tesla Cybercab
+          - Tesla Cyberquad
+          - Tesla Cybertruck
+          - Tesla Dojo
+          - Tesla Energy
+          - Tesla Fremont Factory
+          - Tesla Megacharger
+          - Tesla Megapack
+          - Tesla Model 3
+          - Tesla Model S
+          - Tesla Model X
+          - Tesla Model Y
+          - Tesla Powerpack
+          - Tesla Powerwall
+          - Tesla Roadster (first generation)
+          - Tesla Roadster (second generation)
+          - Tesla Robotaxi
+          - Tesla Robovan
+          - Tesla Semi
+          - Tesla Solar Roof
+          - Tesla Supercharger
+          - Tesla Takedown
+          - Tesla US dealership disputes
+          - Tesla and unions
+          - Tesla battery station
+          - Tesla facilities in Tilburg
+          - Tesla next-generation vehicle
+          - Tesla next-generation vehicle platform
+          - Tesla solar panels
+          - Texas State Highway 130
+          - Texas Tax Code Chapter 313
+          - Tom Zhu
+          - Toyota RAV4 EV
+          - Travis County, Texas
+          - Tulsa, Oklahoma
+          - Tulsa Expo Center
+          - Tulsa Police Department
+          - Tweet (social media)
+          - Twitter
+          - U.S. Route 79 in Texas
+          - Union Pacific Railroad
+          - United Auto Workers
+          - United States
+          - Vaibhav Taneja
+          - Walter Isaacson
+          - Williamson County, Texas
+          - Wrap advertising
+          - Zach Kirkhorn
+          - Ze'ev Drori
+          - Zep Solar
+          pageviews: 339
+    WikidataLabelHolder:
+      type: object
+      properties:
+        wikidataId:
+          type:
+          - string
+          - 'null'
+        label:
+          type:
+          - string
+          - 'null'
+    WikiPageSectionHolder:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+        title:
+          type:
+          - string
+          - 'null'
+        styleLevel:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        loc:
+          type:
+          - array
+          - 'null'
+          items:
+            type: integer
+            format: int32
+        textRaw:
+          type:
+          - string
+          - 'null'
+        textRich:
+          type:
+          - string
+          - 'null'
+    WikipediaSearchParams:
+      required:
+      - prompt
+      type: object
+      properties:
+        prompt:
+          maxLength: 1024
+          minLength: 0
+          type: string
+          description: Natural language query to search the Wikipedia pages database
+          example: Enter your prompt
+        filter:
+          allOf:
+          - $ref: '#/components/schemas/WikipediaSearchFilter'
+        wikiRevisionFrom:
+          type:
+          - string
+          - 'null'
+          description: '''wikiRevisionFrom'' filter, will search pages modified after the specified date, the date could be passed as ISO or ''yyyy-mm-dd''. Date time in ISO format, ie. 2024-01-01T00:00:00.'
+          format: date-time
+          example: '2024-01-01T00:00:00Z'
+        wikiRevisionTo:
+          type:
+          - string
+          - 'null'
+          description: '''wikiRevisionFrom'' filter, will search pages modified before the specified date, the date could be passed as ISO or ''yyyy-mm-dd''. Date time in ISO format, ie. 2024-01-01T00:00:00.'
+          format: date-time
+          example: '2024-12-31T23:59:59Z'
+        pageviewsFrom:
+          type:
+          - integer
+          - 'null'
+          description: '''pageviewsFrom'' filter, will search pages with at least the provided number of views per day.'
+          format: int64
+          example: 0
+        pageviewsTo:
+          type:
+          - integer
+          - 'null'
+          description: '''pageviewsFrom'' filter, will search pages with at most the provided number of views per day.'
+          format: int64
+          example: 0
+        size:
+          maximum: 100
+          minimum: 1
+          type:
+          - integer
+          - 'null'
+          description: The number of items per page.
+          format: int32
+          default: 10
+        page:
+          maximum: 10000
+          minimum: 0
+          type:
+          - integer
+          - 'null'
+          description: The page number to retrieve.
+          format: int32
+          default: 0
+    WikipediaVectorSearchResult:
+      required:
+      - results
+      - status
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScoredDataWikiData'
+      description: Wikipedia vector search result
+      example:
+        status: 200
+        results:
+        - score: 0.6632843
+          data:
+            pageId: a9e264ec1f6a4c049e3be8e997e24d2f
+            sectionId: d3d9e592df354cb9abcac4d3c5d38065
+            wikiPageId: 63988579
+            wikiRevisionId: 1300572396
+            wikiRevisionTs: '2025-07-15T04:19:25Z'
+            wikiCode: enwiki
+            wikiNamespace: 0
+            wikiTitle: Gigafactory Texas
+            wikidataId: Q96379480
+            wikidataInstanceOf:
+            - wikidataId: Q83405
+              label: factory
+            redirectTitles:
+            - Giga Austin
+            - Gigafactory 5
+            - Tesla Gigafactory 5
+            - Terafactory
+            - Giga Texas
+            - Austin Gigafactory
+            pageviews: 339
+            title: Austin
+            styleLevel: 3
+            content: "In 2014, Tesla evaluated a 1,500-acre (600 ha; 2 sq mi; 6 km2) manufacturing site on U.S. Route 79 at Frame Switch (30°32′N 97°30′W\uFEFF / \uFEFF30.54°N 97.5°W\uFEFF / 30.54; -97.5\uFEFF (Hutto MegaSite, (Frame Switch, Texas))), located between the towns of Hutto and Taylor, north-east of the Greater Austin center as its next factory. However, Tesla chose to build its first Gigafactory (now named Gigafactory Nevada) near Sparks, Nevada which is by Reno in 2014.\n\nBy June 2020, another location, one near the Del Valle area of Austin was being considered, a 2,100-acre (850 ha; 3.3 sq mi; 8.5 km2) site bordering Harold Green Road (later renamed Tesla Road) and Texas State Highway 130. On June 16, 2020, the Commissioners' court of Travis County discussed a possible incentives package for Tesla. In July 2020, the Del Valle Independent School District approved a tax incentives package worth $68 million, should the Tesla Gigafactory be built. On July 22, 2020, during Tesla's second quarter 2020 earnings call, the company announced that location had been selected for its fifth Gigafactory.\n\nBy the end of July 2020, construction had begun. The Tesla Gigafactory received state tax incentives worth about $50 million through the Texas Tax Code Chapter 313 program. Tesla announced a manufacturing training program in cooperation with Austin Community College District on June 15, 2021. The program was expected to start in August 2021 and the course was to last 14 weeks. The first fully completed Tesla Model Y rolled off the line at Giga Texas in the last week of August 2021 under trial production. In December 2021, Elon Musk estimated that Giga Texas will require a total investment of at least $10B and may employ as many as 20,000 employees within the company.\n\nIn early 2022 Tesla battery suppliers CATL and Panasonic were reportedly scouting sites for battery factories in North America, including Kansas, Oklahoma, Mexico and Canada. Panasonic announced in July 2022 that the company selected De Soto, Kansas (at the former Sunflower Army Ammunition Plant) to build a battery factory. Large subsidies and abatements were granted to Panasonic, organized by Governor Laura Kelly."
+    WikiPage:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+        scrapedAt:
+          type:
+          - string
+          - 'null'
+        wikiPageId:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        wikiRevisionId:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        wikiRevisionTs:
+          type:
+          - string
+          - 'null'
+        wikiCode:
+          type:
+          - string
+          - 'null'
+        wikiNamespace:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        wikiTitle:
+          type:
+          - string
+          - 'null'
+        url:
+          type:
+          - string
+          - 'null'
+        topImage:
+          type:
+          - string
+          - 'null'
+        wikidataId:
+          type:
+          - string
+          - 'null'
+        wikidataInstanceOf:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/WikidataLabelHolder'
+        redirectTitles:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        summary:
+          type:
+          - string
+          - 'null'
+        sections:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/WikiPageSectionHolder'
+        categories:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        externalLinks:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        references:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        pageviews:
+          type:
+          - integer
+          - 'null'
+          format: int64
+    ScoredDataWikiData:
+      type: object
+      properties:
+        score:
+          type:
+          - number
+          - 'null'
+          format: float
+        data:
+          allOf:
+          - $ref: '#/components/schemas/WikiData'
+        vectors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/VectorData'
+  securitySchemes:
+    apiKeyAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- perigon-openapi.json
+- perigon-openapi.yml

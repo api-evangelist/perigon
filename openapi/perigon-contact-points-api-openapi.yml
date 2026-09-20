@@ -1,0 +1,647 @@
+openapi: 3.2.0
+info:
+  title: Perigon Contact Points API
+  version: 1.0.0
+  contact:
+    name: Perigon Support
+    url: https://docs.perigon.io/
+    email: data@perigon.io
+  description: 'Operations tagged Contact Points across 2 of this provider''s published API definitions: perigon-openapi.json, perigon-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.perigon.io
+  description: Generated server url
+security:
+- apiKeyAuth: []
+tags:
+- name: Contact Points
+  description: Manage contact points used to deliver monitor notifications. Contact points define where and how monitor events are delivered (e.g. webhooks). Only WEBHOOK contact points can be created and managed via the API.
+paths:
+  /v1/api/contactPoints:
+    get:
+      tags:
+      - Contact Points
+      summary: List contact points
+      description: List contact points owned by the organization associated with the API key. Supports filtering by status and type. FASTN contact points are excluded from results.
+      operationId: list-contact-points
+      parameters:
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - ACTIVE
+            - STOPPED
+            - FAILING
+            - ARCHIVED
+      - name: type
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - EMAIL
+            - FASTN
+            - WEBHOOK
+      - name: sortBy
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/ContactPointSortBy'
+      - name: page
+        in: query
+        description: Zero-based page number to retrieve. Defaults to 0.
+        required: false
+        schema:
+          minimum: 0
+          type: integer
+          description: Zero-based page number to retrieve. Defaults to 0.
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        description: Number of results per page. Must be between 1 and 100; defaults to 10.
+        required: false
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          description: Number of results per page. Must be between 1 and 100; defaults to 10.
+          format: int32
+          default: 10
+      - name: sortOrder
+        in: query
+        description: Required direction used to sort results. Accepts asc or desc.
+        required: true
+        schema:
+          type: string
+          description: Required direction used to sort results. Accepts asc or desc.
+          enum:
+          - asc
+          - desc
+      - name: nulls
+        in: query
+        description: Placement of null values in sorted results. Accepts first or last.
+        required: false
+        schema:
+          type: string
+          description: Placement of null values in sorted results. Accepts first or last.
+          enum:
+          - first
+          - last
+      responses:
+        '401':
+          description: 401 - Invalid API Key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 401
+                message: Invalid API key.
+                timestamp: 1681338367402
+        '500':
+          description: 500 - Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 500
+                message: Internal error. Please contact the support to resolve the problem. We apologize for any inconvenience :)
+                timestamp: 1681338367402
+        '400':
+          description: 400 - Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 400
+                message: Errors during parameter validation.
+                timestamp: 1681338367402
+        '403':
+          description: 403 - Request Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 403
+                message: The number of allowed requests is exceeded.
+                timestamp: 1681338367402
+        '200':
+          description: 200 - Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactPointListResult'
+        '429':
+          description: 429 - Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 429
+                message: Exceeded request rate limit for your account.
+                timestamp: 1681338367402
+      security:
+      - apiKeyAuth: []
+    post:
+      tags:
+      - Contact Points
+      summary: Create contact point
+      description: Create a new contact point under the organization associated with the API key. Only WEBHOOK contact points can be created via the API.
+      operationId: create-contact-point
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContactPointRequestBody'
+        required: true
+      responses:
+        '401':
+          description: 401 - Invalid API Key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 401
+                message: Invalid API key.
+                timestamp: 1681338367402
+        '500':
+          description: 500 - Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 500
+                message: Internal error. Please contact the support to resolve the problem. We apologize for any inconvenience :)
+                timestamp: 1681338367402
+        '400':
+          description: 400 - Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 400
+                message: Errors during parameter validation.
+                timestamp: 1681338367402
+        '200':
+          description: 200 - Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactPointResult'
+        '403':
+          description: 403 - Request Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 403
+                message: The number of allowed requests is exceeded.
+                timestamp: 1681338367402
+        '429':
+          description: 429 - Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 429
+                message: Exceeded request rate limit for your account.
+                timestamp: 1681338367402
+      security:
+      - apiKeyAuth: []
+    servers:
+    - url: https://api.perigon.io
+      description: Generated server url
+  /v1/api/contactPoints/{uuid}:
+    get:
+      tags:
+      - Contact Points
+      summary: Get contact point
+      description: Retrieve a contact point by UUID. Only returns contact points owned by the organization associated with the API key. FASTN contact points are not accessible via this endpoint.
+      operationId: get-contact-point
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '401':
+          description: 401 - Invalid API Key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 401
+                message: Invalid API key.
+                timestamp: 1681338367402
+        '500':
+          description: 500 - Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 500
+                message: Internal error. Please contact the support to resolve the problem. We apologize for any inconvenience :)
+                timestamp: 1681338367402
+        '400':
+          description: 400 - Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 400
+                message: Errors during parameter validation.
+                timestamp: 1681338367402
+        '200':
+          description: 200 - Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactPointResult'
+        '403':
+          description: 403 - Request Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 403
+                message: The number of allowed requests is exceeded.
+                timestamp: 1681338367402
+        '429':
+          description: 429 - Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 429
+                message: Exceeded request rate limit for your account.
+                timestamp: 1681338367402
+      security:
+      - apiKeyAuth: []
+    delete:
+      tags:
+      - Contact Points
+      summary: Delete contact point
+      description: Delete a contact point owned by the organization associated with the API key. Contact points with historical notifications are archived rather than hard-deleted.
+      operationId: delete-contact-point
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '401':
+          description: 401 - Invalid API Key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 401
+                message: Invalid API key.
+                timestamp: 1681338367402
+        '500':
+          description: 500 - Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 500
+                message: Internal error. Please contact the support to resolve the problem. We apologize for any inconvenience :)
+                timestamp: 1681338367402
+        '400':
+          description: 400 - Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 400
+                message: Errors during parameter validation.
+                timestamp: 1681338367402
+        '200':
+          description: 200 - Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactPointResult'
+        '403':
+          description: 403 - Request Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 403
+                message: The number of allowed requests is exceeded.
+                timestamp: 1681338367402
+        '429':
+          description: 429 - Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 429
+                message: Exceeded request rate limit for your account.
+                timestamp: 1681338367402
+      security:
+      - apiKeyAuth: []
+    patch:
+      tags:
+      - Contact Points
+      summary: Update contact point
+      description: Partially update a contact point owned by the organization associated with the API key. Only provided fields will be updated.
+      operationId: update-contact-point
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContactPointUpdateBody'
+        required: true
+      responses:
+        '401':
+          description: 401 - Invalid API Key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 401
+                message: Invalid API key.
+                timestamp: 1681338367402
+        '500':
+          description: 500 - Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 500
+                message: Internal error. Please contact the support to resolve the problem. We apologize for any inconvenience :)
+                timestamp: 1681338367402
+        '400':
+          description: 400 - Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 400
+                message: Errors during parameter validation.
+                timestamp: 1681338367402
+        '200':
+          description: 200 - Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactPointResult'
+        '403':
+          description: 403 - Request Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 403
+                message: The number of allowed requests is exceeded.
+                timestamp: 1681338367402
+        '429':
+          description: 429 - Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                status: 429
+                message: Exceeded request rate limit for your account.
+                timestamp: 1681338367402
+      security:
+      - apiKeyAuth: []
+    servers:
+    - url: https://api.perigon.io
+      description: Generated server url
+components:
+  schemas:
+    ContactPointRequestBody:
+      required:
+      - name
+      - type
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - EMAIL
+          - FASTN
+          - WEBHOOK
+        name:
+          type: string
+        email:
+          type:
+          - string
+          - 'null'
+        webhook:
+          type:
+          - string
+          - 'null'
+    ContactPointSortBy:
+      type: string
+      enum:
+      - createdAt
+      - updatedAt
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        message:
+          type:
+          - string
+          - 'null'
+        timestamp:
+          type:
+          - integer
+          - 'null'
+          format: int64
+    ContactPointListResult:
+      required:
+      - data
+      - total
+      type: object
+      properties:
+        total:
+          type: integer
+          description: Total number of matching contact points across all pages.
+          format: int64
+        data:
+          type: array
+          description: Contact points returned for the requested page.
+          items:
+            $ref: '#/components/schemas/ContactPointApiDto'
+      description: Paginated list of contact points.
+      example:
+        total: 1
+        data:
+        - uuid: f47ac10b-58cc-4372-a567-0e02b2c3d479
+          createdAt: '2025-07-15T11:20:00.000Z'
+          updatedAt: '2025-07-15T11:25:00.000Z'
+          type: WEBHOOK
+          status: ACTIVE
+          name: Ops webhook
+          webhookUrl: https://hooks.example.com/perigon/monitors
+          webhookSecret: whsec_example_secret
+          isVerified: true
+          verifiedAt: '2025-07-15T11:25:00.000Z'
+    ContactPointResult:
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ContactPointApiDto'
+      description: Single contact point response.
+      example:
+        data:
+          uuid: f47ac10b-58cc-4372-a567-0e02b2c3d479
+          createdAt: '2025-07-15T11:20:00.000Z'
+          updatedAt: '2025-07-15T11:25:00.000Z'
+          type: WEBHOOK
+          status: ACTIVE
+          name: Ops webhook
+          webhookUrl: https://hooks.example.com/perigon/monitors
+          webhookSecret: whsec_example_secret
+          isVerified: true
+          verifiedAt: '2025-07-15T11:25:00.000Z'
+    ContactPointUpdateBody:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+        status:
+          type:
+          - string
+          - 'null'
+          enum:
+          - ACTIVE
+          - STOPPED
+          - FAILING
+          - ARCHIVED
+        webhook:
+          type:
+          - string
+          - 'null'
+    ContactPointApiDto:
+      type: object
+      properties:
+        uuid:
+          type:
+          - string
+          - 'null'
+          description: Unique identifier for the contact point.
+          format: uuid
+        createdAt:
+          type:
+          - string
+          - 'null'
+          description: Date and time the contact point was created, in ISO 8601 format.
+          format: date-time
+        updatedAt:
+          type:
+          - string
+          - 'null'
+          description: Date and time the contact point was last updated, in ISO 8601 format.
+          format: date-time
+        type:
+          type:
+          - string
+          - 'null'
+          description: Delivery channel type. API-managed contact points use WEBHOOK.
+          enum:
+          - EMAIL
+          - FASTN
+          - WEBHOOK
+        status:
+          type:
+          - string
+          - 'null'
+          description: Current lifecycle status of the contact point.
+          enum:
+          - ACTIVE
+          - STOPPED
+          - FAILING
+          - ARCHIVED
+        name:
+          type:
+          - string
+          - 'null'
+          description: Display name for the contact point.
+        email:
+          type:
+          - string
+          - 'null'
+          description: Email address when the contact point type is email-based.
+        webhookUrl:
+          type:
+          - string
+          - 'null'
+          description: HTTPS webhook URL that receives monitor notifications.
+        webhookSecret:
+          type:
+          - string
+          - 'null'
+          description: Secret used to sign webhook deliveries.
+        verifiedAt:
+          type:
+          - string
+          - 'null'
+          description: Date and time the contact point was verified, in ISO 8601 format.
+          format: date-time
+        verified:
+          type:
+          - boolean
+          - 'null'
+      description: Contact point used to deliver monitor notifications.
+  securitySchemes:
+    apiKeyAuth:
+      type: http
+      scheme: bearer
+x-refined-from:
+- perigon-openapi.json
+- perigon-openapi.yml

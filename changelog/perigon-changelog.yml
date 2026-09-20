@@ -1,0 +1,32 @@
+generated: '2026-09-20'
+method: searched
+source: https://perigon.io/changelog
+url: https://perigon.io/changelog
+scheme: date-based entries, tagged Developer APIs / Monitors
+current_version: v1
+entries:
+- version: null
+  date: '2026-07-09'
+  breaking: false
+  highlights:
+  - New Usage & Limits API endpoint GET /v1/limits (quota-exempt, not rate-limited; optional API key validation)
+- version: null
+  date: '2026-07-07'
+  breaking: false
+  highlights:
+  - 'Insights: chat, artifacts and MCP access over Signals data'
+- version: null
+  date: '2026-05-13'
+  breaking: false
+  highlights:
+  - View matched articles on the Signal dashboard
+- version: null
+  date: '2026-05-11'
+  breaking: false
+  highlights:
+  - New optional minSourceDiversity parameter on the Stories endpoint
+- version: null
+  date: '2026-04-02'
+  breaking: false
+  highlights:
+  - 'Watchlists: custom and 25 pre-built curated lists to filter Signals'

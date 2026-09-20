@@ -1,0 +1,40 @@
+generated: '2026-09-20'
+method: searched
+source: https://perigon.io/docs/api/perigon-sdks
+packages:
+- name: '@goperigon/perigon-ts'
+  registry: npm
+  url: https://www.npmjs.com/package/@goperigon/perigon-ts
+  language: TypeScript
+  official: true
+  version: 4.10.0
+  published: '2026-06-03'
+  repo: https://github.com/goperigon/perigon-ts
+  note: version/date from registry.npmjs.org (200)
+- name: perigon
+  registry: pypi
+  url: https://pypi.org/project/perigon/
+  language: Python
+  official: true
+  version: 1.7.0
+  published: '2026-05-07'
+  repo: https://github.com/goperigon/perigon-python
+  note: version/date from pypi.org/pypi/perigon/json (200); author Perigon Support
+- name: github.com/goperigon/perigon-go-sdk/v2
+  registry: go
+  url: https://pkg.go.dev/github.com/goperigon/perigon-go-sdk/v2
+  language: Go
+  official: true
+  version: v2.14.0
+  published: '2026-05-07'
+  repo: https://github.com/goperigon/perigon-go-sdk
+  note: proxy.golang.org @latest for the /v2 module (200). The docs install line names the unsuffixed module path,
+    whose latest is v1.0.1 (2025-05-05).
+- name: n8n-nodes-perigon
+  registry: github
+  url: https://github.com/goperigon/n8n-nodes-perigon
+  language: TypeScript
+  official: true
+  version: null
+  published: null
+  note: n8n community node in the provider org; registry version not checked, repo last pushed 2026-02-18.

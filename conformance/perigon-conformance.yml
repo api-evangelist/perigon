@@ -1,0 +1,39 @@
+generated: '2026-09-20'
+method: searched
+source: https://perigon.io/api-policy
+standards:
+- id: rfc9745-deprecation-header
+  conforms: true
+  evidence: https://perigon.io/api-policy — "affected responses may include the HTTP Deprecation header defined
+    by RFC 9745"
+- id: rfc8594-sunset-header
+  conforms: true
+  evidence: https://perigon.io/api-policy — "may include the Sunset header defined by RFC 8594"
+- id: ratelimit-headers
+  conforms: true
+  evidence: https://perigon.io/api-policy — RateLimit-Policy, RateLimit and Retry-After on authenticated REST responses
+    (IETF draft httpapi-ratelimit-headers field names)
+- id: rfc9728-oauth-protected-resource
+  conforms: true
+  evidence: https://perigon.io/.well-known/oauth-protected-resource (200, JSON)
+- id: rfc8414-oauth-authorization-server-metadata
+  conforms: true
+  evidence: https://perigon.io/.well-known/oauth-authorization-server (200, JSON)
+- id: mcp
+  conforms: true
+  evidence: https://perigon.io/.well-known/mcp/server-card.json (200) + https://mcp.perigon.io/v1/mcp (401 without
+    key)
+- id: pagination
+  conforms: true
+  evidence: https://perigon.io/docs/api/pagination — page/size parameters on all endpoints
+- id: rfc9457
+  conforms: false
+  evidence: https://perigon.io/docs/api/troubleshooting — custom error envelope {status, message, timestamp}, not
+    application/problem+json
+- id: oauth2
+  conforms: false
+  evidence: OpenAPI securitySchemes declares only http bearer (API key); OAuth metadata documents dashboard login,
+    API calls use API keys (https://perigon.io/auth.md)
+- id: idempotency
+  conforms: false
+  evidence: No Idempotency-Key header in openapi/perigon-openapi.yml (no header parameters at all) or docs

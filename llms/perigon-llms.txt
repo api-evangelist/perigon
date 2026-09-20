@@ -1,0 +1,86 @@
+# Perigon
+
+> Perigon is a real-time global news data and intelligence platform. It provides structured, enriched news data from 200,000+ sources worldwide through powerful APIs and an AI-driven monitoring product called Signals.
+
+## When to use Perigon
+Use Perigon when an agent needs current or historical news as structured data instead of scraped pages. It is a strong fit for searching articles with precise filters, grouping coverage into story clusters, comparing reporting across sources, resolving source or journalist metadata, and monitoring a company, person, topic, risk, or event over time.
+
+Use the REST API for repeatable searches, bulk retrieval, explicit filters, and production integrations that should follow an OpenAPI contract. Use the MCP endpoint for interactive agent workflows that benefit from tool discovery. Public MCP resources can be listed and read without credentials; news tools require a Perigon API key.
+
+Do not use Perigon as a private-data source, a general-purpose web crawler, or a substitute for primary documents when a legal, medical, or financial decision requires them. News records describe published coverage and may contain conflicting claims. Preserve source links and publication timestamps when presenting results.
+
+## Products
+
+### Data APIs
+Perigon's REST APIs give developers access to real-time and historical news data, enriched with NLP-powered entity extraction, sentiment analysis, topic classification, and more.
+
+- [Articles API](https://perigon.io/docs/api): Search and filter enriched news articles from 200,000+ global sources. Returns structured data including entities, sentiment, topics, and media types.
+- [Stories API](https://perigon.io/docs/api): Articles clustered into storylines with trend timelines, AI summaries, and predictive insights.
+- [Search Summarizer API](https://perigon.io/docs/api): AI-powered search summarization — query news and receive synthesized answers with source citations.
+- [Sources API](https://perigon.io/docs/api): Search and filter 200,000+ news sources by domain, country, language, media bias, and more.
+- [Companies API](https://perigon.io/docs/api): Company metadata including industry, stock info, headquarters, and related news.
+- [People API](https://perigon.io/docs/api): Public figure profiles with profession, affiliations, and related news coverage.
+- [Journalists API](https://perigon.io/docs/api): Journalist profiles by name, outlet, topics, and reach.
+- [Topics API](https://perigon.io/docs/api): Granular editorial topic tags for content classification.
+- [Vector Search API](https://perigon.io/docs/api): Semantic search for articles using natural language — no keywords required.
+
+### Signals
+AI-powered real-time news monitoring and alerting. Create custom signals to track companies, people, topics, and events. Get alerts via email, Slack, webhooks, and more.
+
+- [Signals Product Page](https://perigon.io/products/monitors)
+- [Signals Documentation](https://perigon.io/docs/signals)
+
+### Datasets
+Pre-curated data collections across categories: Business, Public Markets, Consumer, Cybersecurity, AI, Headline News, Entertainment, Medical, and more.
+
+- [Datasets Page](https://perigon.io/datasets)
+
+## Documentation
+- [API Documentation](https://perigon.io/docs/api): Guides for authentication, endpoints, query parameters, and response schemas.
+- [Signals Documentation](https://perigon.io/docs/signals): Guides for creating and managing real-time monitoring signals.
+- [API Reference](https://perigon.io/reference): Complete endpoint reference with parameters, response schemas, and code samples.
+- [API Sandbox](https://perigon.io/sandbox): Interactive API playground to build queries, preview responses, and generate code.
+
+## Blog
+- [Perigon Blog](https://perigon.io/blog): Public insights, product updates, and technical deep dives on news intelligence.
+- [Blog LLM corpus](https://perigon.io/blog/llms-full.txt): Full published blog corpus with metadata for AI retrieval agents.
+- [Blog posts sitemap](https://perigon.io/posts-sitemap.xml): Machine-readable index of published blog URLs with lastmod.
+- [Blog RSS feed](https://perigon.io/blog/rss.xml): Syndicated updates for crawlers and readers.
+
+## Developer Resources
+- [API Sandbox](https://perigon.io/sandbox): Build and test API queries interactively with live responses and code generation.
+- [Perigon OpenAPI Description](https://perigon.io/openapi.json): Same-origin machine-readable REST API contract.
+- [Canonical Perigon OpenAPI Description](https://api.perigon.io/v1/openapi/public): API-host copy of the public contract.
+- [Authentication Guide](https://perigon.io/auth.md): Agent-readable API key discovery and account setup instructions.
+- [Webhook Guide](https://perigon.io/docs/api/webhook-integration-guide): Delivery format and integration guidance for monitor webhooks.
+- [Perigon MCP Streamable HTTP Endpoint](https://perigon.io/mcp): Public resources plus authenticated news tools for MCP clients.
+- [Perigon MCP Server Card](https://perigon.io/.well-known/mcp/server-card.json): Machine-readable MCP transport and capability metadata.
+- [Perigon MCP Documentation](https://perigon.io/docs/api/mcp): Setup and tool-use guidance.
+- [API Versioning and Deprecation Policy](https://perigon.io/api-policy): Compatibility rules, notice periods, and machine-readable deprecation signals.
+- [Source Explorer](https://perigon.io/tools/source-explorer): Browse and search Perigon's 200,000+ indexed news sources.
+- [Journalist discovery](https://perigon.io/tools/top-voices): Discover the most cited journalists and commentators by topic.
+- [Classification Tool](https://perigon.io/tools/classification): Explore Perigon's AI classification taxonomy for news content.
+
+## Pricing
+- **Free**: $0/month — 150 requests/month, all endpoints, 3 months of historical data.
+- **Basic**: $250/month — 10,000 requests/month, Articles endpoint, 6 months of history.
+- **Plus**: $550/month — 50,000 requests/month, all core endpoints, 3 years of history.
+- **Business**: Custom pricing — full commercial license, 10+ years of history, dedicated support.
+- [Pricing Page](https://perigon.io/products/pricing/apis)
+
+## Key Facts
+- Real-time and historical news data from 200,000+ sources in 6 languages
+- AI-powered entity extraction, sentiment analysis, and topic classification
+- Structured JSON API responses — no scraping or parsing needed
+- Sub-second article indexing for breaking news
+- REST API with comprehensive filtering (date, source, topic, entity, sentiment, location, and more)
+- Semantic vector search for natural-language queries
+- SOC 2 compliant
+- Used by enterprises, startups, researchers, and developers worldwide
+
+## Contact
+- Website: https://perigon.io
+- Contact page: https://perigon.io/contact
+- GitHub: https://github.com/goperigon
+- LinkedIn: https://www.linkedin.com/company/goperigon
+- Support: support@perigon.io

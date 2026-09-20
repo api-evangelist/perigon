@@ -1,0 +1,57 @@
+generated: '2026-09-20'
+method: searched
+source: https://perigon.io/docs/api/troubleshooting
+docs:
+- https://perigon.io/docs/api/troubleshooting
+- https://github.com/goperigon/skills/blob/main/skills/perigon-api-best-practices/references/error-handling.md
+format: custom-json
+envelope:
+  fields:
+  - status
+  - message
+  - timestamp
+  example:
+    status: 400
+    message: Some error has occured
+    timestamp: 1641221877389
+problems:
+- status: 400
+  title: Bad Request
+  type: null
+  description: Invalid parameters.
+  remediation: Check your query syntax, parameter names, and values.
+- status: 401
+  title: Unauthorized
+  type: null
+  description: No API key / invalid or missing API key.
+  remediation: Make sure the API key is valid; check the apiKey parameter or the request header for typos.
+- status: 403
+  title: Forbidden
+  type: null
+  description: No access to the resource; the plan does not include the feature, or the account email is unverified.
+  remediation: Check your plan and verify the email address used to create the account.
+- status: 404
+  title: Not Found
+  type: null
+  description: Requested resource (e.g. journalist record) is not present.
+  remediation: Check the ID for typos or extra characters.
+- status: 429
+  title: Too Many Requests
+  type: null
+  description: Rate limit exceeded.
+  remediation: Honor Retry-After, back off with jitter, avoid parallel retries.
+- status: 500
+  title: Internal error
+  type: null
+  description: Badly formatted request or back-end error (invalid from/to dates, unclosed quote, unbalanced parentheses).
+  remediation: Dates must be YYYY-MM-DD; balance quotes and parentheses; otherwise retry with exponential backoff.
+- status: 502
+  title: Bad Gateway
+  type: null
+  description: Temporary infrastructure issue.
+  remediation: Retry after a short delay.
+- status: 503
+  title: Service Unavailable
+  type: null
+  description: Service temporarily down.
+  remediation: Retry with exponential backoff.

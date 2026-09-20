@@ -1,23 +1,290 @@
 aid: perigon
 name: Perigon
-description: 'Perigon is a company surfaced via the API Evangelist harvest backlog (source: news) and
-  added to the network as a stub for full-pipeline profiling.'
+description: Perigon is a real-time global news data and intelligence platform. It provides structured, enriched news data
+  from 200,000+ sources worldwide through REST APIs — articles, clustered stories, AI search summaries, semantic vector search,
+  sources, companies, people, journalists, topics and Wikipedia — plus Signals, an AI-driven monitoring product with monitors,
+  watchlists, contact points and signed webhooks. Perigon publishes an OpenAPI description, a hosted remote MCP server, official
+  TypeScript, Python and Go SDKs, Agent Skills, and an API versioning and deprecation policy.
 url: https://raw.githubusercontent.com/api-evangelist/perigon/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:news
-x-tier: stub
-x-tier-reason: harvest
+x-tier: profiled
+x-tier-reason: enrichment pass 2026-09-20 (local-v4; was harvest)
 specificationVersion: '0.20'
 created: '2026-09-20'
 modified: '2026-09-20'
 tags:
 - Company
-apis: []
+- News
+- Media Monitoring
+- Search
+- Artificial Intelligence
+- Data
+- MCP
+- Webhooks
+apis:
+- aid: perigon:perigon-mcp
+  name: Perigon MCP Server
+  description: >-
+    Hosted remote Model Context Protocol server (Streamable HTTP, with an SSE variant) exposing Perigon
+    news search, analytics and monitor tools to AI clients. Authenticates with a Perigon API key as a
+    bearer token; a same-origin endpoint at https://perigon.io/mcp serves public resources and a server
+    card.
+  humanURL: https://perigon.io/docs/api/mcp
+  baseURL: https://mcp.perigon.io/v1/mcp
+  tags:
+  - MCP
+  - AI Agents
+  - News
+  properties:
+  - type: Documentation
+    url: https://perigon.io/docs/api/mcp
+  - type: SourceCode
+    url: https://github.com/goperigon/perigon-mcp-server
+  image: https://perigon.io/apple-touch-icon.png
+- aid: perigon:perigon-ai-advanced-search-api
+  name: Perigon AI & Advanced Search API
+  description: >-
+    These endpoints enable semantic search beyond traditional keyword matching, content summarization,
+    and advanced information retrieval across articles
+  humanURL: https://perigon.io/docs/api/intro
+  baseURL: https://api.perigon.io
+  tags:
+  - AI & Advanced Search
+  properties:
+  - type: OpenAPI
+    url: openapi/perigon-ai-advanced-search-api-openapi.yml
+  - type: Documentation
+    url: https://perigon.io/docs/api/intro
+  - type: APIReference
+    url: https://perigon.io/reference
+  - type: GettingStarted
+    url: https://perigon.io/docs/api/getting-started
+- aid: perigon:perigon-contact-points-api
+  name: Perigon Contact Points API
+  description: >-
+    Manage contact points used to deliver monitor notifications. Contact points define where and how monitor
+    events are delivered (e.g. webhooks). Only WEBHOOK contact points can be created and managed via the
+    API.
+  humanURL: https://perigon.io/docs/api/intro
+  baseURL: https://api.perigon.io
+  tags:
+  - Contact Points
+  properties:
+  - type: OpenAPI
+    url: openapi/perigon-contact-points-api-openapi.yml
+  - type: Documentation
+    url: https://perigon.io/docs/api/intro
+  - type: APIReference
+    url: https://perigon.io/reference
+  - type: GettingStarted
+    url: https://perigon.io/docs/api/getting-started
+- aid: perigon:perigon-monitors-api
+  name: Perigon Monitors API
+  description: >-
+    Manage AI Monitors — configurable monitors that continuously scan news content for topics, entities,
+    and events of interest. Monitors run asynchronously and emit structured events and AI-generated summaries
+    that can be delivered to contact points.
+  humanURL: https://perigon.io/docs/api/intro
+  baseURL: https://api.perigon.io
+  tags:
+  - Monitors
+  properties:
+  - type: OpenAPI
+    url: openapi/perigon-monitors-api-openapi.yml
+  - type: Documentation
+    url: https://perigon.io/docs/api/intro
+  - type: APIReference
+    url: https://perigon.io/reference
+  - type: GettingStarted
+    url: https://perigon.io/docs/api/getting-started
+- aid: perigon:perigon-news-stories-api
+  name: Perigon News & Stories API
+  description: Endpoints for accessing news articles and stories
+  humanURL: https://perigon.io/docs/api/intro
+  baseURL: https://api.perigon.io
+  tags:
+  - News & Stories
+  properties:
+  - type: OpenAPI
+    url: openapi/perigon-news-stories-api-openapi.yml
+  - type: Documentation
+    url: https://perigon.io/docs/api/intro
+  - type: APIReference
+    url: https://perigon.io/reference
+  - type: GettingStarted
+    url: https://perigon.io/docs/api/getting-started
+- aid: perigon:perigon-source-groups-api
+  name: Perigon Source Groups API
+  description: >-
+    Manage custom source groups for organizing and filtering news sources. Source groups allow grouping
+    domains together for use in search queries and monitors.
+  humanURL: https://perigon.io/docs/api/intro
+  baseURL: https://api.perigon.io
+  tags:
+  - Source Groups
+  properties:
+  - type: OpenAPI
+    url: openapi/perigon-source-groups-api-openapi.yml
+  - type: Documentation
+    url: https://perigon.io/docs/api/intro
+  - type: APIReference
+    url: https://perigon.io/reference
+  - type: GettingStarted
+    url: https://perigon.io/docs/api/getting-started
+- aid: perigon:perigon-supplemental-endpoints-api
+  name: Perigon Supplemental Endpoints API
+  description: Additional endpoints for metadata and related information
+  humanURL: https://perigon.io/docs/api/intro
+  baseURL: https://api.perigon.io
+  tags:
+  - Supplemental Endpoints
+  properties:
+  - type: OpenAPI
+    url: openapi/perigon-supplemental-endpoints-api-openapi.yml
+  - type: Documentation
+    url: https://perigon.io/docs/api/intro
+  - type: APIReference
+    url: https://perigon.io/reference
+  - type: GettingStarted
+    url: https://perigon.io/docs/api/getting-started
+- aid: perigon:perigon-utilities-api
+  name: Perigon Utilities API
+  description: The Utilities API from Perigon — 1 operation(s) for utilities.
+  humanURL: https://perigon.io/docs/api/intro
+  baseURL: https://api.perigon.io
+  tags:
+  - Utilities
+  properties:
+  - type: OpenAPI
+    url: openapi/perigon-utilities-api-openapi.yml
+  - type: Documentation
+    url: https://perigon.io/docs/api/intro
+  - type: APIReference
+    url: https://perigon.io/reference
+  - type: GettingStarted
+    url: https://perigon.io/docs/api/getting-started
+- aid: perigon:perigon-watchlists-api
+  name: Perigon Watchlists API
+  description: >-
+    Manage watchlists of people and companies for use with monitors. Watchlists can contain up to 100
+    combined entities and are used to track mentions across news content.
+  humanURL: https://perigon.io/docs/api/intro
+  baseURL: https://api.perigon.io
+  tags:
+  - Watchlists
+  properties:
+  - type: OpenAPI
+    url: openapi/perigon-watchlists-api-openapi.yml
+  - type: Documentation
+    url: https://perigon.io/docs/api/intro
+  - type: APIReference
+    url: https://perigon.io/reference
+  - type: GettingStarted
+    url: https://perigon.io/docs/api/getting-started
+- aid: perigon:perigon-wikipedia-api
+  name: Perigon Wikipedia API
+  description: >-
+    Endpoints for searching ingested Wikipedia content. Provides keyword and filtered search capabilities
+    along with vector-based semantic search across Wikipedia pages.
+  humanURL: https://perigon.io/docs/api/intro
+  baseURL: https://api.perigon.io
+  tags:
+  - Wikipedia
+  properties:
+  - type: OpenAPI
+    url: openapi/perigon-wikipedia-api-openapi.yml
+  - type: Documentation
+    url: https://perigon.io/docs/api/intro
+  - type: APIReference
+    url: https://perigon.io/reference
+  - type: GettingStarted
+    url: https://perigon.io/docs/api/getting-started
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: AgenticAccess
+  url: agentic-access/perigon-agentic-access.yml
+- type: RateLimits
+  url: rate-limits/perigon-rate-limits.yml
+- type: Plans
+  url: plans/perigon-plans-pricing.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Webhooks
+  url: asyncapi/perigon-webhooks.yml
+- type: DataModel
+  url: data-model/perigon-data-model.yml
+- type: ChangeLog
+  url: changelog/perigon-changelog.yml
+- type: Conventions
+  url: conventions/perigon-conventions.yml
+- type: Authentication
+  url: authentication/perigon-authentication.yml
+- type: Deprecation
+  url: https://perigon.io/api-policy
+- type: StatusPage
+  url: https://status.perigon.io/
+- type: Lifecycle
+  url: lifecycle/perigon-lifecycle.yml
+- type: ErrorCatalog
+  url: errors/perigon-problem-types.yml
+- type: Conformance
+  url: conformance/perigon-conformance.yml
+- type: Overlay
+  url: overlays/perigon-openapi-overlay.yaml
+- type: LLMsTxt
+  url: llms/perigon-llms.txt
+- type: ToolCrosswalk
+  url: mcp/perigon-tool-crosswalk.yml
+- type: MCPServer
+  url: mcp/perigon-mcp.yml
+- type: WellKnown
+  url: well-known/perigon-well-known.yml
+- type: SDKs
+  url: packages/perigon-packages.yml
+- type: Packages
+  url: packages/perigon-packages.yml
+- type: DomainSecurity
+  url: security/perigon-domain-security.yml
 - type: Website
   url: https://perigon.io/
+- type: DeveloperPortal
+  url: https://perigon.io/docs/api/intro
+- type: Documentation
+  url: https://perigon.io/docs/api/intro
+- type: APIReference
+  url: https://perigon.io/reference
+- type: GettingStarted
+  url: https://perigon.io/docs/api/getting-started
+- type: Support
+  url: https://perigon.io/contact
+- type: FAQ
+  url: https://perigon.io/docs/api/faqs
+- type: Blog
+  url: https://perigon.io/blog
+- type: BlogRSS
+  url: https://perigon.io/blog/rss.xml
+- type: GitHubOrganization
+  url: https://github.com/goperigon
+- type: Pricing
+  url: https://perigon.io/products/pricing/apis
+- type: SignUp
+  url: https://perigon.io/sign-up
+- type: TermsOfService
+  url: https://perigon.io/terms
+- type: PrivacyPolicy
+  url: https://perigon.io/privacy
+- type: LinkedIn
+  url: https://www.linkedin.com/company/goperigon
+- type: Playground
+  url: https://perigon.io/sandbox
+image: https://perigon.io/apple-touch-icon.png
+x-enrichment:
+  date: '2026-09-20'
+  status: enriched
+  artifacts_added: 22
+  pass: local-v4

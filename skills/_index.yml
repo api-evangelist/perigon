@@ -1,0 +1,56 @@
+generated: '2026-09-20'
+method: generated
+source: 'Generated from openapi/perigon-openapi.yml operationIds plus docs conventions. Provider-published Agent
+  Skills (https://github.com/goperigon/skills, install: npx skills add goperigon/skills) are saved verbatim under
+  skills/provider/.'
+skills:
+- file: perigon-search-news-and-stories.md
+  name: Search news articles and clustered stories
+  api: openapi/perigon-openapi.yml
+  operations:
+  - search-articles
+  - search-stories
+  - get-story-history
+  - get-story-counts
+- file: perigon-semantic-search-and-summarize.md
+  name: Semantic search and AI summary
+  api: openapi/perigon-openapi.yml
+  operations:
+  - vector-search-articles
+  - vector-search-wikipedia
+  - search-summarizer
+- file: perigon-create-monitor-with-webhook.md
+  name: Create a monitor that delivers to a webhook
+  api: openapi/perigon-openapi.yml
+  operations:
+  - create-contact-point
+  - get-contact-point
+  - create-monitor-api
+  - activate-monitor-api
+  - list-monitor-events-api
+  - pause-monitor-api
+  - archive-monitor-api
+- file: perigon-check-usage-and-keys.md
+  name: Check usage, limits and key validity
+  api: openapi/perigon-openapi.yml
+  operations:
+  - get-limits
+- file: perigon-build-watchlist-and-source-group.md
+  name: Build a watchlist and a source group
+  api: openapi/perigon-openapi.yml
+  operations:
+  - create-watchlist
+  - resolve-watchlists
+  - create-source-group
+  - resolve-source-groups
+  - search-companies
+  - search-people
+  - search-sources
+  - search-articles
+provider_skills:
+- file: provider/perigon-api-best-practices.md
+  source: https://github.com/goperigon/skills/blob/main/skills/perigon-api-best-practices/SKILL.md
+  method: searched
+- file: provider/perigon-sdks.md
+  source: https://github.com/goperigon/skills/blob/main/skills/perigon-sdks/SKILL.md
+  method: searched

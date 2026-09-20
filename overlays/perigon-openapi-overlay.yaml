@@ -1,0 +1,46 @@
+overlay: 1.0.0
+info:
+  title: Perigon API — API Evangelist enrichment overlay
+  version: 1.0.0
+extends: ../openapi/_original/perigon-openapi.yml
+x-generated: '2026-09-20'
+x-method: generated
+actions:
+- target: $.info
+  update:
+    termsOfService: https://perigon.io/terms
+    x-api-evangelist:
+      changelog: https://perigon.io/changelog
+      status: https://status.perigon.io/
+      policy: https://perigon.io/api-policy
+      llms: https://perigon.io/llms.txt
+- target: $
+  update:
+    externalDocs:
+      description: Perigon API documentation
+      url: https://perigon.io/docs/api/intro
+- target: $.components.securitySchemes
+  update:
+    apiKeyHeader:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: Documented alternative to the bearer header (https://perigon.io/docs/api/account-usage)
+    apiKeyQuery:
+      type: apiKey
+      in: query
+      name: apiKey
+      description: Documented alternative (https://perigon.io/docs/api/account-usage)
+- target: $.paths[*][*].responses["429"]
+  update:
+    headers:
+      Retry-After:
+        schema:
+          type: integer
+        description: Seconds to pause (https://perigon.io/api-policy)
+      RateLimit:
+        schema:
+          type: string
+      RateLimit-Policy:
+        schema:
+          type: string

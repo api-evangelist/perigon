@@ -1,0 +1,41 @@
+{
+  "provider": "perigon",
+  "sources": [
+    "_original/perigon-openapi.json",
+    "perigon-openapi.yml"
+  ],
+  "outputs": [
+    "perigon-ai-advanced-search-api-openapi.yml",
+    "perigon-contact-points-api-openapi.yml",
+    "perigon-monitors-api-openapi.yml",
+    "perigon-news-stories-api-openapi.yml",
+    "perigon-source-groups-api-openapi.yml",
+    "perigon-supplemental-endpoints-api-openapi.yml",
+    "perigon-utilities-api-openapi.yml",
+    "perigon-watchlists-api-openapi.yml",
+    "perigon-wikipedia-api-openapi.yml"
+  ],
+  "archived": [
+    "archived openapi/perigon-openapi.yml"
+  ],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "perigon-openapi.json: upgraded openapi 3.0.1 -> OpenAPI 3.2.0",
+    "perigon-openapi.json: declared missing tag: Utilities",
+    "perigon-openapi.yml: upgraded openapi 3.0.1 -> OpenAPI 3.2.0",
+    "perigon-openapi.yml: declared missing tag: Utilities",
+    "tag 'AI & Advanced Search' spans 2 source specs (perigon-openapi.json, perigon-openapi.yml): per-path servers applied",
+    "tag 'Contact Points' spans 2 source specs (perigon-openapi.json, perigon-openapi.yml): per-path servers applied",
+    "tag 'Monitors' spans 2 source specs (perigon-openapi.json, perigon-openapi.yml): per-path servers applied",
+    "tag 'News & Stories' spans 2 source specs (perigon-openapi.json, perigon-openapi.yml): per-path servers applied",
+    "tag 'Source Groups' spans 2 source specs (perigon-openapi.json, perigon-openapi.yml): per-path servers applied",
+    "tag 'Supplemental Endpoints' spans 2 source specs (perigon-openapi.json, perigon-openapi.yml): per-path servers applied",
+    "tag 'Utilities' spans 2 source specs (perigon-openapi.json, perigon-openapi.yml): per-path servers applied",
+    "tag 'Watchlists' spans 2 source specs (perigon-openapi.json, perigon-openapi.yml): per-path servers applied",
+    "tag 'Wikipedia' spans 2 source specs (perigon-openapi.json, perigon-openapi.yml): per-path servers applied",
+    "apis.yml register: written (+9 apis, 10 total)"
+  ],
+  "skipped": []
+}
