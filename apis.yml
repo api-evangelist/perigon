@@ -21,6 +21,15 @@ tags:
 - Artificial Intelligence
 - Data
 - MCP
+- Webhook
+tags_raw:
+- Company
+- News
+- Media Monitoring
+- Search
+- Artificial Intelligence
+- Data
+- MCP
 - Webhooks
 apis:
 - aid: perigon:perigon-mcp
@@ -172,6 +181,8 @@ apis:
   humanURL: https://perigon.io/docs/api/intro
   baseURL: https://api.perigon.io
   tags:
+  - Watchlist
+  tags_raw:
   - Watchlists
   properties:
   - type: OpenAPI
