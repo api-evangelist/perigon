@@ -1,12 +1,12 @@
 openapi: 3.2.0
 info:
   title: Perigon Supplemental Endpoints API
-  version: 1.0.0
+  description: The Perigon API provides access to comprehensive news and web content data. To use the API, simply sign up for a Perigon Business Solutions account to obtain your API key. Your available features may vary based on your plan. See the Authentication section for details on how to use your API key.
   contact:
     name: Perigon Support
     url: https://docs.perigon.io/
     email: data@perigon.io
-  description: 'Operations tagged Supplemental Endpoints across 2 of this provider''s published API definitions: perigon-openapi.json, perigon-openapi.yml. Each path carries the servers of the definition it was published in.'
+  version: 1.0.0
 servers:
 - url: https://api.perigon.io
   description: Generated server url
@@ -202,9 +202,6 @@ paths:
                 timestamp: 1681338367402
       security:
       - apiKeyAuth: []
-    servers:
-    - url: https://api.perigon.io
-      description: Generated server url
   /v1/journalists/all:
     get:
       tags:
@@ -435,9 +432,6 @@ paths:
                 timestamp: 1681338367402
       security:
       - apiKeyAuth: []
-    servers:
-    - url: https://api.perigon.io
-      description: Generated server url
   /v1/journalists/{id}:
     get:
       tags:
@@ -621,9 +615,6 @@ paths:
                 timestamp: 1681338367402
       security:
       - apiKeyAuth: []
-    servers:
-    - url: https://api.perigon.io
-      description: Generated server url
   /v1/people/all:
     get:
       tags:
@@ -736,9 +727,6 @@ paths:
                 timestamp: 1681338367402
       security:
       - apiKeyAuth: []
-    servers:
-    - url: https://api.perigon.io
-      description: Generated server url
   /v1/sources/all:
     get:
       tags:
@@ -987,9 +975,6 @@ paths:
                 timestamp: 1681338367402
       security:
       - apiKeyAuth: []
-    servers:
-    - url: https://api.perigon.io
-      description: Generated server url
   /v1/topics/all:
     get:
       tags:
@@ -1091,11 +1076,19 @@ paths:
                 timestamp: 1681338367402
       security:
       - apiKeyAuth: []
-    servers:
-    - url: https://api.perigon.io
-      description: Generated server url
 components:
   schemas:
+    TopicLabels:
+      type: object
+      properties:
+        category:
+          type:
+          - string
+          - 'null'
+        subcategory:
+          type:
+          - string
+          - 'null'
     Company:
       type: object
       properties:
@@ -1247,410 +1240,6 @@ components:
       - relevance
       - monthlyVisits
       - avgMonthlyPosts
-    ErrorResponse:
-      type: object
-      properties:
-        status:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        message:
-          type:
-          - string
-          - 'null'
-        timestamp:
-          type:
-          - integer
-          - 'null'
-          format: int64
-    TopicSearchResult:
-      required:
-      - data
-      - total
-      type: object
-      properties:
-        total:
-          type: integer
-          format: int64
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/TopicDto'
-      description: Topic search result
-      example:
-        total: 901
-        data:
-        - id: 42
-          createdAt: '2023-12-15T13:54:06.556208Z'
-          updatedAt: '2023-12-15T13:54:06.556213Z'
-          name: AI
-          labels:
-            category: Broad
-            subcategory: Tech
-    JournalistsSortBy:
-      type: string
-      enum:
-      - avgMonthlyPosts
-      - linkedinConnections
-      - linkedinFollowers
-    WebResources:
-      type: object
-      properties:
-        careers:
-          type:
-          - string
-          - 'null'
-        about:
-          type:
-          - string
-          - 'null'
-        blog:
-          type:
-          - string
-          - 'null'
-        events:
-          type:
-          - string
-          - 'null'
-        sitemap:
-          type:
-          - string
-          - 'null'
-        updates:
-          type:
-          - string
-          - 'null'
-        linkedin:
-          type:
-          - string
-          - 'null'
-        facebook:
-          type:
-          - string
-          - 'null'
-        instagram:
-          type:
-          - string
-          - 'null'
-        medium:
-          type:
-          - string
-          - 'null'
-        reddit:
-          type:
-          - string
-          - 'null'
-        threads:
-          type:
-          - string
-          - 'null'
-        tiktok:
-          type:
-          - string
-          - 'null'
-        x:
-          type:
-          - string
-          - 'null'
-        wellfound:
-          type:
-          - string
-          - 'null'
-        youtube:
-          type:
-          - string
-          - 'null'
-        wikipedia:
-          type:
-          - string
-          - 'null'
-    WikidataPoliticalPartyHolder:
-      type: object
-      properties:
-        wikidataId:
-          type:
-          - string
-          - 'null'
-        label:
-          type:
-          - string
-          - 'null'
-        startTime:
-          allOf:
-          - $ref: '#/components/schemas/WikidataDateHolder'
-        endTime:
-          allOf:
-          - $ref: '#/components/schemas/WikidataDateHolder'
-    LocationHolder:
-      type: object
-      properties:
-        country:
-          type:
-          - string
-          - 'null'
-          description: Country central to the article.
-        state:
-          type:
-          - string
-          - 'null'
-          description: State or region central to the article.
-        county:
-          type:
-          - string
-          - 'null'
-          description: County central to the article.
-        city:
-          type:
-          - string
-          - 'null'
-          description: City central to the article.
-        area:
-          type:
-          - string
-          - 'null'
-          description: Neighborhood, borough, or district central to the article.
-      description: Locations most strongly associated with the story.
-    Person:
-      type: object
-      properties:
-        wikidataId:
-          type:
-          - string
-          - 'null'
-        createdAt:
-          type:
-          - string
-          - 'null'
-        updatedAt:
-          type:
-          - string
-          - 'null'
-        name:
-          type:
-          - string
-          - 'null'
-        gender:
-          allOf:
-          - $ref: '#/components/schemas/WikidataLabelHolder'
-        dateOfBirth:
-          allOf:
-          - $ref: '#/components/schemas/WikidataDateHolder'
-        dateOfDeath:
-          allOf:
-          - $ref: '#/components/schemas/WikidataDateHolder'
-        description:
-          type:
-          - string
-          - 'null'
-        aliases:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-        occupation:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/WikidataLabelHolder'
-        position:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/WikidataPositionHolder'
-        politicalParty:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/WikidataPoliticalPartyHolder'
-        image:
-          allOf:
-          - $ref: '#/components/schemas/ImageHolder'
-        abstract:
-          type:
-          - string
-          - 'null'
-    TopicDto:
-      type: object
-      properties:
-        id:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        createdAt:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        updatedAt:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        name:
-          type:
-          - string
-          - 'null'
-        labels:
-          allOf:
-          - $ref: '#/components/schemas/TopicLabels'
-    SourceSearchResult:
-      required:
-      - numResults
-      - results
-      - status
-      type: object
-      properties:
-        status:
-          type: integer
-          format: int32
-        numResults:
-          type: integer
-          format: int64
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Source'
-      description: Source search result
-      example:
-        status: 200
-        numResults: 10000
-        results:
-        - id: 372f1eb953ba4c9cbd3830c47db3342a
-          domain: cnn.com
-          name: CNN
-          updatedAt: '2025-08-10T00:30:03.716477+00:00'
-          altNames:
-          - CNN.com
-          - CNN News
-          - anderson
-          - anderson cooper
-          - CNN .com
-          - wolf blitzer
-          - erin burnett
-          - don lemon
-          - chris cuomo
-          - jake tapper
-          - brooke baldwin
-          - dana bash
-          - democrat
-          - democratic
-          - liberal
-          description: CNN is a major U.S.-based media organization that provides coverage of world news, weather, entertainment, politics, and health.
-          avgMonthlyPosts: 3129
-          paywall: false
-          location:
-            country: us
-            state: NY
-            city: New York
-            coordinates:
-              lat: 40.7127281
-              lon: -74.0060152
-          topCategories:
-          - name: Politics
-            count: 1218
-          - name: General
-            count: 801
-          - name: Entertainment
-            count: 545
-          - name: Lifestyle
-            count: 239
-          - name: Business
-            count: 237
-          - name: Sports
-            count: 233
-          - name: World
-            count: 209
-          - name: Health
-            count: 147
-          - name: Travel
-            count: 135
-          - name: Tech
-            count: 101
-          topTopics:
-          - name: TV
-            count: 331
-          - name: Podcasts
-            count: 328
-          - name: Russia-Ukraine War
-            count: 151
-          - name: US Politics
-            count: 142
-          - name: Crime
-            count: 126
-          - name: Media
-            count: 91
-          - name: Social Issues
-            count: 85
-          - name: Markets
-            count: 69
-          - name: Middle East
-            count: 68
-          - name: Epstein Case
-            count: 61
-          topCountries:
-          - name: us
-            count: 3153
-          topLabels:
-          - name: Non-news
-            count: 394
-          - name: Roundup
-            count: 327
-          - name: Paid News
-            count: 183
-          - name: Opinion
-            count: 127
-          - name: Feed
-            count: 41
-          - name: Pop Culture
-            count: 32
-          - name: Low Content
-            count: 29
-          - name: Fact Check
-            count: 4
-          avgBiasRating: leansLeft
-          adFontesBiasRating: Leans Left
-          allSidesBiasRating: Leans Left
-          mbfcBiasRating: Left
-          monthlyVisits: 471591456
-          globalRank: 86
-          logoLarge:
-            url: https://storage.googleapis.com/dev-dispatch-276213.appspot.com/CNN_Reg_1d0c9bc5eb/CNN-Reg_CNN_Reg_1d0c9bc5eb.png
-          logoFavIcon:
-            url: https://storage.googleapis.com/dev-dispatch-276213.appspot.com/CNN_Fav_Icon_5d54dfad8c/CNN-FavIcon_CNN_Fav_Icon_5d54dfad8c.png
-          logoSquare:
-            url: https://storage.googleapis.com/dev-dispatch-276213.appspot.com/CNN_Square_e9ef9ce7a8/CNN-Square_CNN_Square_e9ef9ce7a8.png
-    NameCount:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: Name of the aggregated value.
-        count:
-          type:
-          - integer
-          - 'null'
-          description: Number of matching records for the value.
-          format: int64
-      description: Countries most frequently associated with the journalist's articles.
-    WikidataLabelHolder:
-      type: object
-      properties:
-        wikidataId:
-          type:
-          - string
-          - 'null'
-        label:
-          type:
-          - string
-          - 'null'
     ImageHolder:
       type: object
       properties:
@@ -1658,104 +1247,6 @@ components:
           type:
           - string
           - 'null'
-    WikidataPositionHolder:
-      type: object
-      properties:
-        wikidataId:
-          type:
-          - string
-          - 'null'
-        label:
-          type:
-          - string
-          - 'null'
-        startTime:
-          allOf:
-          - $ref: '#/components/schemas/WikidataDateHolder'
-        endTime:
-          allOf:
-          - $ref: '#/components/schemas/WikidataDateHolder'
-        employer:
-          allOf:
-          - $ref: '#/components/schemas/WikidataLabelHolder'
-    CompanySearchResult:
-      required:
-      - numResults
-      - results
-      - status
-      type: object
-      properties:
-        status:
-          type: integer
-          format: int32
-        numResults:
-          type: integer
-          format: int64
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Company'
-      description: Company search result
-      example:
-        status: 200
-        numResults: 89660
-        results:
-        - id: eeee660a046242b8bf99f45fdc95cc32
-          name: Tesla, Inc.
-          updatedAt: '2025-08-02T06:28:15.799842+00:00'
-          altNames:
-          - Tesla
-          domains:
-          - tesla.com
-          monthlyVisits: 24914157
-          globalRank: 1322
-          description: Tesla, Inc. designs, develops, manufactures, leases, and sells electric vehicles, and energy generation and storage systems in the United States, China, and internationally. It operates in two segments, Automotive, and Energy Generation and Storage. The Automotive segment offers electric vehicles, as well as sells automotive regulatory credits; and non-warranty after-sales vehicle, used vehicles, retail merchandise, and vehicle insurance services. This segment also provides sedans and sport utility vehicles through direct and used vehicle sales, a network of Tesla Superchargers, and in-app upgrades; purchase financing and leasing services; services for electric vehicles through its company-owned service locations and Tesla mobile service technicians; and vehicle limited warranties and extended service plans. The Energy Generation and Storage segment engages in the design, manufacture, installation, sale, and leasing of solar energy generation and energy storage products, and related services to residential, commercial, and industrial customers and utilities through its website, stores, and galleries, as well as through a network of channel partners; and provision of service and repairs to its energy product customers, including under warranty, as well as various financing options to its solar customers. The company was formerly known as Tesla Motors, Inc. and changed its name to Tesla, Inc. in February 2017. Tesla, Inc. was incorporated in 2003 and is headquartered in Austin, Texas.
-          ceo: Elon R. Musk
-          industry: Auto - Manufacturers
-          sector: Consumer Cyclical
-          country: us
-          fullTimeEmployees: 125665
-          address: 1 Tesla Road
-          city: Austin
-          state: TX
-          zip: '78725'
-          logo: https://company-api-assets.s3.us-east-2.amazonaws.com/images/TSLA.jpg
-          favicon: https://company-api-assets.s3.us-east-2.amazonaws.com/favicons/eeee660a046242b8bf99f45fdc95cc32.ico
-          isEtf: false
-          isActivelyTrading: true
-          isFund: false
-          isAdr: false
-          symbols:
-          - symbol: TSLA
-            exchange: NASDAQ Global Select
-            exchangeShortName: NASDAQ
-            ipoDate: '2010-06-29'
-          - symbol: TL0.DE
-            exchange: XETRA
-            exchangeShortName: XETRA
-            ipoDate: '2010-06-29'
-          naics: '8111'
-          sic: '7538'
-          yearFounded: 2003
-          revenue: over-1b
-          webResources:
-            careers: null
-            about: null
-            blog: null
-            events: null
-            sitemap: null
-            updates: null
-            linkedin: https://www.linkedin.com/company/15564
-            facebook: https://www.facebook.com/tesla/
-            instagram: null
-            medium: null
-            reddit: null
-            threads: null
-            tiktok: null
-            x: http://www.twitter.com/tesla
-            wellfound: http://angel.co/tesla-motors
-            youtube: null
-            wikipedia: null
     Journalist:
       type: object
       properties:
@@ -1914,155 +1405,17 @@ components:
           - 'null'
           description: YouTube channel URL for the journalist.
       description: Expanded journalist details, when requested and available.
-    WikidataDateHolder:
+    WikidataLabelHolder:
       type: object
       properties:
-        time:
+        wikidataId:
           type:
           - string
           - 'null'
-        precision:
+        label:
           type:
           - string
           - 'null'
-    SymbolHolder:
-      type: object
-      properties:
-        symbol:
-          type:
-          - string
-          - 'null'
-        exchange:
-          type:
-          - string
-          - 'null'
-        exchangeShortName:
-          type:
-          - string
-          - 'null'
-        ipoDate:
-          type:
-          - string
-          - 'null'
-        isin:
-          type:
-          - string
-          - 'null'
-        cusip:
-          type:
-          - string
-          - 'null'
-    PeopleSearchResult:
-      required:
-      - numResults
-      - results
-      - status
-      type: object
-      properties:
-        status:
-          type: integer
-          format: int32
-        numResults:
-          type: integer
-          format: int64
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Person'
-      description: Person search result
-      example:
-        status: 200
-        numResults: 773198
-        results:
-        - wikidataId: Q317521
-          updatedAt: '2025-08-06T05:17:13.358689+00:00'
-          name: Elon Musk
-          gender:
-            wikidataId: Q6581097
-            label: male
-          dateOfBirth:
-            time: '1971-06-28T00:00:00+00:00'
-            precision: day
-          dateOfDeath: null
-          description: South African-Canadian-American businessman, engineer, inventor and political figure
-          aliases:
-          - Elon Reeve Musk
-          occupation:
-          - wikidataId: Q5482740
-            label: programmer
-          - wikidataId: Q81096
-            label: engineer
-          - wikidataId: Q131524
-            label: entrepreneur
-          - wikidataId: Q557880
-            label: investor
-          - wikidataId: Q43845
-            label: businessperson
-          - wikidataId: Q82955
-            label: politician
-          - wikidataId: Q212238
-            label: civil servant
-          - wikidataId: Q133253419
-            label: technology entrepreneur
-          - wikidataId: Q205375
-            label: inventor
-          position:
-          - wikidataId: Q484876
-            label: chief executive officer
-            startTime:
-              time: '2002-01-01T00:00:00+00:00'
-              precision: year
-            endTime: null
-            employer: null
-          - wikidataId: Q140686
-            label: chairperson
-            startTime:
-              time: '2008-01-01T00:00:00+00:00'
-              precision: year
-            endTime:
-              time: '2018-11-01T00:00:00+00:00'
-              precision: month
-            employer: null
-          - wikidataId: Q484876
-            label: chief executive officer
-            startTime:
-              time: '2008-10-01T00:00:00+00:00'
-              precision: month
-            endTime: null
-            employer: null
-          - wikidataId: Q105490190
-            label: co-president
-            startTime:
-              time: '2016-07-01T00:00:00+00:00'
-              precision: month
-            endTime: null
-            employer: null
-          - wikidataId: Q484876
-            label: chief executive officer
-            startTime:
-              time: '2022-10-28T00:00:00+00:00'
-              precision: day
-            endTime:
-              time: '2023-06-05T00:00:00+00:00'
-              precision: day
-            employer: null
-          - wikidataId: Q7450652
-            label: Senior Advisor to the President of the United States
-            startTime:
-              time: '2025-01-20T00:00:00+00:00'
-              precision: day
-            endTime:
-              time: '2025-05-30T00:00:00+00:00'
-              precision: day
-            employer: null
-          politicalParty:
-          - wikidataId: Q135219011
-            label: America Party
-            startTime: null
-            endTime: null
-          image:
-            url: https://people-api-assets.s3.amazonaws.com/images/wikidata/Q317521.jpg
-          abstract: Elon Reeve Musk is a businessman. He is known for his leadership of Tesla, SpaceX, X, and the Department of Government Efficiency (DOGE). Musk has been considered the wealthiest person in the world since 2021; as of May 2025, Forbes estimates his net worth to be US$424.7 billion.
     JournalistSearchResult:
       required:
       - numResults
@@ -2185,6 +1538,416 @@ components:
           blogUrl: null
           tumblrUrl: http://itsathingandyoucandoit.tumblr.com
           youtubeUrl: null
+    WikidataPositionHolder:
+      type: object
+      properties:
+        wikidataId:
+          type:
+          - string
+          - 'null'
+        label:
+          type:
+          - string
+          - 'null'
+        startTime:
+          allOf:
+          - $ref: '#/components/schemas/WikidataDateHolder'
+        endTime:
+          allOf:
+          - $ref: '#/components/schemas/WikidataDateHolder'
+        employer:
+          allOf:
+          - $ref: '#/components/schemas/WikidataLabelHolder'
+    WebResources:
+      type: object
+      properties:
+        careers:
+          type:
+          - string
+          - 'null'
+        about:
+          type:
+          - string
+          - 'null'
+        blog:
+          type:
+          - string
+          - 'null'
+        events:
+          type:
+          - string
+          - 'null'
+        sitemap:
+          type:
+          - string
+          - 'null'
+        updates:
+          type:
+          - string
+          - 'null'
+        linkedin:
+          type:
+          - string
+          - 'null'
+        facebook:
+          type:
+          - string
+          - 'null'
+        instagram:
+          type:
+          - string
+          - 'null'
+        medium:
+          type:
+          - string
+          - 'null'
+        reddit:
+          type:
+          - string
+          - 'null'
+        threads:
+          type:
+          - string
+          - 'null'
+        tiktok:
+          type:
+          - string
+          - 'null'
+        x:
+          type:
+          - string
+          - 'null'
+        wellfound:
+          type:
+          - string
+          - 'null'
+        youtube:
+          type:
+          - string
+          - 'null'
+        wikipedia:
+          type:
+          - string
+          - 'null'
+    PeopleSearchResult:
+      required:
+      - numResults
+      - results
+      - status
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+        numResults:
+          type: integer
+          format: int64
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Person'
+      description: Person search result
+      example:
+        status: 200
+        numResults: 773198
+        results:
+        - wikidataId: Q317521
+          updatedAt: '2025-08-06T05:17:13.358689+00:00'
+          name: Elon Musk
+          gender:
+            wikidataId: Q6581097
+            label: male
+          dateOfBirth:
+            time: '1971-06-28T00:00:00+00:00'
+            precision: day
+          dateOfDeath: null
+          description: South African-Canadian-American businessman, engineer, inventor and political figure
+          aliases:
+          - Elon Reeve Musk
+          occupation:
+          - wikidataId: Q5482740
+            label: programmer
+          - wikidataId: Q81096
+            label: engineer
+          - wikidataId: Q131524
+            label: entrepreneur
+          - wikidataId: Q557880
+            label: investor
+          - wikidataId: Q43845
+            label: businessperson
+          - wikidataId: Q82955
+            label: politician
+          - wikidataId: Q212238
+            label: civil servant
+          - wikidataId: Q133253419
+            label: technology entrepreneur
+          - wikidataId: Q205375
+            label: inventor
+          position:
+          - wikidataId: Q484876
+            label: chief executive officer
+            startTime:
+              time: '2002-01-01T00:00:00+00:00'
+              precision: year
+            endTime: null
+            employer: null
+          - wikidataId: Q140686
+            label: chairperson
+            startTime:
+              time: '2008-01-01T00:00:00+00:00'
+              precision: year
+            endTime:
+              time: '2018-11-01T00:00:00+00:00'
+              precision: month
+            employer: null
+          - wikidataId: Q484876
+            label: chief executive officer
+            startTime:
+              time: '2008-10-01T00:00:00+00:00'
+              precision: month
+            endTime: null
+            employer: null
+          - wikidataId: Q105490190
+            label: co-president
+            startTime:
+              time: '2016-07-01T00:00:00+00:00'
+              precision: month
+            endTime: null
+            employer: null
+          - wikidataId: Q484876
+            label: chief executive officer
+            startTime:
+              time: '2022-10-28T00:00:00+00:00'
+              precision: day
+            endTime:
+              time: '2023-06-05T00:00:00+00:00'
+              precision: day
+            employer: null
+          - wikidataId: Q7450652
+            label: Senior Advisor to the President of the United States
+            startTime:
+              time: '2025-01-20T00:00:00+00:00'
+              precision: day
+            endTime:
+              time: '2025-05-30T00:00:00+00:00'
+              precision: day
+            employer: null
+          politicalParty:
+          - wikidataId: Q135219011
+            label: America Party
+            startTime: null
+            endTime: null
+          image:
+            url: https://people-api-assets.s3.amazonaws.com/images/wikidata/Q317521.jpg
+          abstract: Elon Reeve Musk is a businessman. He is known for his leadership of Tesla, SpaceX, X, and the Department of Government Efficiency (DOGE). Musk has been considered the wealthiest person in the world since 2021; as of May 2025, Forbes estimates his net worth to be US$424.7 billion.
+    SourceSearchResult:
+      required:
+      - numResults
+      - results
+      - status
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+        numResults:
+          type: integer
+          format: int64
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Source'
+      description: Source search result
+      example:
+        status: 200
+        numResults: 10000
+        results:
+        - id: 372f1eb953ba4c9cbd3830c47db3342a
+          domain: cnn.com
+          name: CNN
+          updatedAt: '2025-08-10T00:30:03.716477+00:00'
+          altNames:
+          - CNN.com
+          - CNN News
+          - anderson
+          - anderson cooper
+          - CNN .com
+          - wolf blitzer
+          - erin burnett
+          - don lemon
+          - chris cuomo
+          - jake tapper
+          - brooke baldwin
+          - dana bash
+          - democrat
+          - democratic
+          - liberal
+          description: CNN is a major U.S.-based media organization that provides coverage of world news, weather, entertainment, politics, and health.
+          avgMonthlyPosts: 3129
+          paywall: false
+          location:
+            country: us
+            state: NY
+            city: New York
+            coordinates:
+              lat: 40.7127281
+              lon: -74.0060152
+          topCategories:
+          - name: Politics
+            count: 1218
+          - name: General
+            count: 801
+          - name: Entertainment
+            count: 545
+          - name: Lifestyle
+            count: 239
+          - name: Business
+            count: 237
+          - name: Sports
+            count: 233
+          - name: World
+            count: 209
+          - name: Health
+            count: 147
+          - name: Travel
+            count: 135
+          - name: Tech
+            count: 101
+          topTopics:
+          - name: TV
+            count: 331
+          - name: Podcasts
+            count: 328
+          - name: Russia-Ukraine War
+            count: 151
+          - name: US Politics
+            count: 142
+          - name: Crime
+            count: 126
+          - name: Media
+            count: 91
+          - name: Social Issues
+            count: 85
+          - name: Markets
+            count: 69
+          - name: Middle East
+            count: 68
+          - name: Epstein Case
+            count: 61
+          topCountries:
+          - name: us
+            count: 3153
+          topLabels:
+          - name: Non-news
+            count: 394
+          - name: Roundup
+            count: 327
+          - name: Paid News
+            count: 183
+          - name: Opinion
+            count: 127
+          - name: Feed
+            count: 41
+          - name: Pop Culture
+            count: 32
+          - name: Low Content
+            count: 29
+          - name: Fact Check
+            count: 4
+          avgBiasRating: leansLeft
+          adFontesBiasRating: Leans Left
+          allSidesBiasRating: Leans Left
+          mbfcBiasRating: Left
+          monthlyVisits: 471591456
+          globalRank: 86
+          logoLarge:
+            url: https://storage.googleapis.com/dev-dispatch-276213.appspot.com/CNN_Reg_1d0c9bc5eb/CNN-Reg_CNN_Reg_1d0c9bc5eb.png
+          logoFavIcon:
+            url: https://storage.googleapis.com/dev-dispatch-276213.appspot.com/CNN_Fav_Icon_5d54dfad8c/CNN-FavIcon_CNN_Fav_Icon_5d54dfad8c.png
+          logoSquare:
+            url: https://storage.googleapis.com/dev-dispatch-276213.appspot.com/CNN_Square_e9ef9ce7a8/CNN-Square_CNN_Square_e9ef9ce7a8.png
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        message:
+          type:
+          - string
+          - 'null'
+        timestamp:
+          type:
+          - integer
+          - 'null'
+          format: int64
+    WikidataDateHolder:
+      type: object
+      properties:
+        time:
+          type:
+          - string
+          - 'null'
+        precision:
+          type:
+          - string
+          - 'null'
+    LocationHolder:
+      type: object
+      properties:
+        country:
+          type:
+          - string
+          - 'null'
+          description: Country central to the article.
+        state:
+          type:
+          - string
+          - 'null'
+          description: State or region central to the article.
+        county:
+          type:
+          - string
+          - 'null'
+          description: County central to the article.
+        city:
+          type:
+          - string
+          - 'null'
+          description: City central to the article.
+        area:
+          type:
+          - string
+          - 'null'
+          description: Neighborhood, borough, or district central to the article.
+      description: Locations most strongly associated with the story.
+    TopicDto:
+      type: object
+      properties:
+        id:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        createdAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        updatedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        name:
+          type:
+          - string
+          - 'null'
+        labels:
+          allOf:
+          - $ref: '#/components/schemas/TopicLabels'
     Source:
       type: object
       properties:
@@ -2204,14 +1967,233 @@ components:
           - 'null'
           description: Title of the supporting source, when available.
       description: Sources used to populate the field.
-    TopicLabels:
+    WikidataPoliticalPartyHolder:
       type: object
       properties:
-        category:
+        wikidataId:
           type:
           - string
           - 'null'
-        subcategory:
+        label:
+          type:
+          - string
+          - 'null'
+        startTime:
+          allOf:
+          - $ref: '#/components/schemas/WikidataDateHolder'
+        endTime:
+          allOf:
+          - $ref: '#/components/schemas/WikidataDateHolder'
+    NameCount:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: Name of the aggregated value.
+        count:
+          type:
+          - integer
+          - 'null'
+          description: Number of matching records for the value.
+          format: int64
+      description: Countries most frequently associated with the journalist's articles.
+    SymbolHolder:
+      type: object
+      properties:
+        symbol:
+          type:
+          - string
+          - 'null'
+        exchange:
+          type:
+          - string
+          - 'null'
+        exchangeShortName:
+          type:
+          - string
+          - 'null'
+        ipoDate:
+          type:
+          - string
+          - 'null'
+        isin:
+          type:
+          - string
+          - 'null'
+        cusip:
+          type:
+          - string
+          - 'null'
+    JournalistsSortBy:
+      type: string
+      enum:
+      - avgMonthlyPosts
+      - linkedinConnections
+      - linkedinFollowers
+    CompanySearchResult:
+      required:
+      - numResults
+      - results
+      - status
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+        numResults:
+          type: integer
+          format: int64
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Company'
+      description: Company search result
+      example:
+        status: 200
+        numResults: 89660
+        results:
+        - id: eeee660a046242b8bf99f45fdc95cc32
+          name: Tesla, Inc.
+          updatedAt: '2025-08-02T06:28:15.799842+00:00'
+          altNames:
+          - Tesla
+          domains:
+          - tesla.com
+          monthlyVisits: 24914157
+          globalRank: 1322
+          description: Tesla, Inc. designs, develops, manufactures, leases, and sells electric vehicles, and energy generation and storage systems in the United States, China, and internationally. It operates in two segments, Automotive, and Energy Generation and Storage. The Automotive segment offers electric vehicles, as well as sells automotive regulatory credits; and non-warranty after-sales vehicle, used vehicles, retail merchandise, and vehicle insurance services. This segment also provides sedans and sport utility vehicles through direct and used vehicle sales, a network of Tesla Superchargers, and in-app upgrades; purchase financing and leasing services; services for electric vehicles through its company-owned service locations and Tesla mobile service technicians; and vehicle limited warranties and extended service plans. The Energy Generation and Storage segment engages in the design, manufacture, installation, sale, and leasing of solar energy generation and energy storage products, and related services to residential, commercial, and industrial customers and utilities through its website, stores, and galleries, as well as through a network of channel partners; and provision of service and repairs to its energy product customers, including under warranty, as well as various financing options to its solar customers. The company was formerly known as Tesla Motors, Inc. and changed its name to Tesla, Inc. in February 2017. Tesla, Inc. was incorporated in 2003 and is headquartered in Austin, Texas.
+          ceo: Elon R. Musk
+          industry: Auto - Manufacturers
+          sector: Consumer Cyclical
+          country: us
+          fullTimeEmployees: 125665
+          address: 1 Tesla Road
+          city: Austin
+          state: TX
+          zip: '78725'
+          logo: https://company-api-assets.s3.us-east-2.amazonaws.com/images/TSLA.jpg
+          favicon: https://company-api-assets.s3.us-east-2.amazonaws.com/favicons/eeee660a046242b8bf99f45fdc95cc32.ico
+          isEtf: false
+          isActivelyTrading: true
+          isFund: false
+          isAdr: false
+          symbols:
+          - symbol: TSLA
+            exchange: NASDAQ Global Select
+            exchangeShortName: NASDAQ
+            ipoDate: '2010-06-29'
+          - symbol: TL0.DE
+            exchange: XETRA
+            exchangeShortName: XETRA
+            ipoDate: '2010-06-29'
+          naics: '8111'
+          sic: '7538'
+          yearFounded: 2003
+          revenue: over-1b
+          webResources:
+            careers: null
+            about: null
+            blog: null
+            events: null
+            sitemap: null
+            updates: null
+            linkedin: https://www.linkedin.com/company/15564
+            facebook: https://www.facebook.com/tesla/
+            instagram: null
+            medium: null
+            reddit: null
+            threads: null
+            tiktok: null
+            x: http://www.twitter.com/tesla
+            wellfound: http://angel.co/tesla-motors
+            youtube: null
+            wikipedia: null
+    TopicSearchResult:
+      required:
+      - data
+      - total
+      type: object
+      properties:
+        total:
+          type: integer
+          format: int64
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TopicDto'
+      description: Topic search result
+      example:
+        total: 901
+        data:
+        - id: 42
+          createdAt: '2023-12-15T13:54:06.556208Z'
+          updatedAt: '2023-12-15T13:54:06.556213Z'
+          name: AI
+          labels:
+            category: Broad
+            subcategory: Tech
+    Person:
+      type: object
+      properties:
+        wikidataId:
+          type:
+          - string
+          - 'null'
+        createdAt:
+          type:
+          - string
+          - 'null'
+        updatedAt:
+          type:
+          - string
+          - 'null'
+        name:
+          type:
+          - string
+          - 'null'
+        gender:
+          allOf:
+          - $ref: '#/components/schemas/WikidataLabelHolder'
+        dateOfBirth:
+          allOf:
+          - $ref: '#/components/schemas/WikidataDateHolder'
+        dateOfDeath:
+          allOf:
+          - $ref: '#/components/schemas/WikidataDateHolder'
+        description:
+          type:
+          - string
+          - 'null'
+        aliases:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        occupation:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/WikidataLabelHolder'
+        position:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/WikidataPositionHolder'
+        politicalParty:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/WikidataPoliticalPartyHolder'
+        image:
+          allOf:
+          - $ref: '#/components/schemas/ImageHolder'
+        abstract:
           type:
           - string
           - 'null'
@@ -2219,6 +2201,3 @@ components:
     apiKeyAuth:
       type: http
       scheme: bearer
-x-refined-from:
-- perigon-openapi.json
-- perigon-openapi.yml

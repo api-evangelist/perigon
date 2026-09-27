@@ -1,8 +1,7 @@
 {
   "provider": "perigon",
   "sources": [
-    "_original/perigon-openapi.json",
-    "perigon-openapi.yml"
+    "_original/perigon-openapi.json"
   ],
   "outputs": [
     "perigon-ai-advanced-search-api-openapi.yml",
@@ -15,27 +14,26 @@
     "perigon-watchlists-api-openapi.yml",
     "perigon-wikipedia-api-openapi.yml"
   ],
-  "archived": [
-    "archived openapi/perigon-openapi.yml"
-  ],
+  "archived": [],
   "errors": [],
   "warnings": [],
   "notes": [
+    "1 archived document(s) dropped as subsets of other archived documents",
     "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
     "perigon-openapi.json: upgraded openapi 3.0.1 -> OpenAPI 3.2.0",
     "perigon-openapi.json: declared missing tag: Utilities",
-    "perigon-openapi.yml: upgraded openapi 3.0.1 -> OpenAPI 3.2.0",
-    "perigon-openapi.yml: declared missing tag: Utilities",
-    "tag 'AI & Advanced Search' spans 2 source specs (perigon-openapi.json, perigon-openapi.yml): per-path servers applied",
-    "tag 'Contact Points' spans 2 source specs (perigon-openapi.json, perigon-openapi.yml): per-path servers applied",
-    "tag 'Monitors' spans 2 source specs (perigon-openapi.json, perigon-openapi.yml): per-path servers applied",
-    "tag 'News & Stories' spans 2 source specs (perigon-openapi.json, perigon-openapi.yml): per-path servers applied",
-    "tag 'Source Groups' spans 2 source specs (perigon-openapi.json, perigon-openapi.yml): per-path servers applied",
-    "tag 'Supplemental Endpoints' spans 2 source specs (perigon-openapi.json, perigon-openapi.yml): per-path servers applied",
-    "tag 'Utilities' spans 2 source specs (perigon-openapi.json, perigon-openapi.yml): per-path servers applied",
-    "tag 'Watchlists' spans 2 source specs (perigon-openapi.json, perigon-openapi.yml): per-path servers applied",
-    "tag 'Wikipedia' spans 2 source specs (perigon-openapi.json, perigon-openapi.yml): per-path servers applied",
-    "apis.yml register: written (+9 apis, 10 total)"
+    "apis.yml register: already-registered"
   ],
-  "skipped": []
+  "skipped": [
+    "_original/perigon-openapi.yml: archived document superseded by a larger archived document",
+    "perigon-ai-advanced-search-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "perigon-contact-points-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "perigon-monitors-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "perigon-news-stories-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "perigon-source-groups-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "perigon-supplemental-endpoints-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "perigon-utilities-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "perigon-watchlists-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "perigon-wikipedia-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

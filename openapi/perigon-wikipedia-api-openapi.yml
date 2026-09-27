@@ -1,12 +1,12 @@
 openapi: 3.2.0
 info:
   title: Perigon Wikipedia API
-  version: 1.0.0
+  description: The Perigon API provides access to comprehensive news and web content data. To use the API, simply sign up for a Perigon Business Solutions account to obtain your API key. Your available features may vary based on your plan. See the Authentication section for details on how to use your API key.
   contact:
     name: Perigon Support
     url: https://docs.perigon.io/
     email: data@perigon.io
-  description: 'Operations tagged Wikipedia across 2 of this provider''s published API definitions: perigon-openapi.json, perigon-openapi.yml. Each path carries the servers of the definition it was published in.'
+  version: 1.0.0
 servers:
 - url: https://api.perigon.io
   description: Generated server url
@@ -88,9 +88,6 @@ paths:
                 timestamp: 1681338367402
       security:
       - apiKeyAuth: []
-    servers:
-    - url: https://api.perigon.io
-      description: Generated server url
   /v1/wikipedia/all:
     get:
       tags:
@@ -357,28 +354,50 @@ paths:
                 timestamp: 1681338367402
       security:
       - apiKeyAuth: []
-    servers:
-    - url: https://api.perigon.io
-      description: Generated server url
 components:
   schemas:
-    ErrorResponse:
+    WikipediaVectorSearchResult:
+      required:
+      - results
+      - status
       type: object
       properties:
         status:
-          type:
-          - integer
-          - 'null'
+          type: integer
           format: int32
-        message:
-          type:
-          - string
-          - 'null'
-        timestamp:
-          type:
-          - integer
-          - 'null'
-          format: int64
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScoredDataWikiData'
+      description: Wikipedia vector search result
+      example:
+        status: 200
+        results:
+        - score: 0.6632843
+          data:
+            pageId: a9e264ec1f6a4c049e3be8e997e24d2f
+            sectionId: d3d9e592df354cb9abcac4d3c5d38065
+            wikiPageId: 63988579
+            wikiRevisionId: 1300572396
+            wikiRevisionTs: '2025-07-15T04:19:25Z'
+            wikiCode: enwiki
+            wikiNamespace: 0
+            wikiTitle: Gigafactory Texas
+            wikidataId: Q96379480
+            wikidataInstanceOf:
+            - wikidataId: Q83405
+              label: factory
+            redirectTitles:
+            - Giga Austin
+            - Gigafactory 5
+            - Tesla Gigafactory 5
+            - Terafactory
+            - Giga Texas
+            - Austin Gigafactory
+            pageviews: 339
+            title: Austin
+            styleLevel: 3
+            content: "In 2014, Tesla evaluated a 1,500-acre (600 ha; 2 sq mi; 6 km2) manufacturing site on U.S. Route 79 at Frame Switch (30°32′N 97°30′W\uFEFF / \uFEFF30.54°N 97.5°W\uFEFF / 30.54; -97.5\uFEFF (Hutto MegaSite, (Frame Switch, Texas))), located between the towns of Hutto and Taylor, north-east of the Greater Austin center as its next factory. However, Tesla chose to build its first Gigafactory (now named Gigafactory Nevada) near Sparks, Nevada which is by Reno in 2014.\n\nBy June 2020, another location, one near the Del Valle area of Austin was being considered, a 2,100-acre (850 ha; 3.3 sq mi; 8.5 km2) site bordering Harold Green Road (later renamed Tesla Road) and Texas State Highway 130. On June 16, 2020, the Commissioners' court of Travis County discussed a possible incentives package for Tesla. In July 2020, the Del Valle Independent School District approved a tax incentives package worth $68 million, should the Tesla Gigafactory be built. On July 22, 2020, during Tesla's second quarter 2020 earnings call, the company announced that location had been selected for its fifth Gigafactory.\n\nBy the end of July 2020, construction had begun. The Tesla Gigafactory received state tax incentives worth about $50 million through the Texas Tax Code Chapter 313 program. Tesla announced a manufacturing training program in cooperation with Austin Community College District on June 15, 2021. The program was expected to start in August 2021 and the course was to last 14 weeks. The first fully completed Tesla Model Y rolled off the line at Giga Texas in the last week of August 2021 under trial production. In December 2021, Elon Musk estimated that Giga Texas will require a total investment of at least $10B and may employ as many as 20,000 employees within the company.\n\nIn early 2022 Tesla battery suppliers CATL and Panasonic were reportedly scouting sites for battery factories in North America, including Kansas, Oklahoma, Mexico and Canada. Panasonic announced in July 2022 that the company selected De Soto, Kansas (at the former Sunflower Army Ammunition Plant) to build a battery factory. Large subsidies and abatements were granted to Panasonic, organized by Governor Laura Kelly."
     VectorData:
       type: object
       properties:
@@ -398,193 +417,6 @@ components:
           description: Version of the embedding representation.
           format: int32
       description: Vector embeddings associated with the article, when requested.
-    WikiData:
-      type: object
-      properties:
-        pageId:
-          type:
-          - string
-          - 'null'
-        sectionId:
-          type:
-          - string
-          - 'null'
-        wikiPageId:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        wikiRevisionId:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        wikiRevisionTs:
-          type:
-          - string
-          - 'null'
-        wikiCode:
-          type:
-          - string
-          - 'null'
-        wikiNamespace:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        wikiTitle:
-          type:
-          - string
-          - 'null'
-        wikidataId:
-          type:
-          - string
-          - 'null'
-        wikidataInstanceOf:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/WikidataLabelHolder'
-        redirectTitles:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-        pageviews:
-          type:
-          - integer
-          - 'null'
-          format: int64
-        title:
-          type:
-          - string
-          - 'null'
-        styleLevel:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        content:
-          type:
-          - string
-          - 'null'
-    WikipediaSearchFilter:
-      type: object
-      properties:
-        pageId:
-          type:
-          - array
-          - 'null'
-          description: Filter by specific Perigon page identifiers. Accepts either a single ID or an array of IDs. Returns only pages matching these IDs.
-          example:
-          - ''
-          items:
-            type: string
-        sectionId:
-          type:
-          - array
-          - 'null'
-          description: Filter by specific section identifiers. Accepts either a single ID or an array of IDs. Returns only pages containing these sections.
-          example:
-          - ''
-          items:
-            type: string
-        wikiPageId:
-          type:
-          - array
-          - 'null'
-          description: Filter by specific Wikipedia page identifiers. Accepts either a single ID or an array of IDs. Returns only pages matching these IDs.
-          example:
-          - 0
-          items:
-            type: integer
-            format: int64
-        wikiRevisionId:
-          type:
-          - array
-          - 'null'
-          description: Filter by specific Perigon page revision identifiers. Accepts either a single ID or an array of IDs. Returns only pages matching these IDs.
-          example:
-          - 0
-          items:
-            type: integer
-            format: int64
-        wikiCode:
-          type:
-          - array
-          - 'null'
-          description: Filter by specific Wikipedia project codes. Returns only pages matching these projects.
-          example:
-          - ''
-          items:
-            type: string
-        wikiNamespace:
-          type:
-          - array
-          - 'null'
-          description: Filter by specific Wikipedia namespaces. Returns only pages matching these namespaces.
-          example:
-          - 0
-          items:
-            type: integer
-            format: int64
-        wikidataId:
-          type:
-          - array
-          - 'null'
-          description: Filter by specific Wikidata entity IDs. Returns only pages whose Wikidata entities match those ids.
-          example:
-          - ''
-          items:
-            type: string
-        wikidataInstanceOfId:
-          type:
-          - array
-          - 'null'
-          description: Filter by specific Wikidata entity IDs. Returns only pages whose Wikidata entities are instances of provided ids.
-          example:
-          - ''
-          items:
-            type: string
-        wikidataInstanceOfLabel:
-          type:
-          - array
-          - 'null'
-          description: Filter by specific Wikidata entity labels. Returns only pages whose Wikidata entities are instances of these labels.
-          example:
-          - ''
-          items:
-            type: string
-        AND:
-          type:
-          - array
-          - 'null'
-          description: Adds additional AND filter objects. These objects must be of the same type as the original filter object and will be combined with the existing filter using the AND logical operator.
-          example:
-          - {}
-          items:
-            $ref: '#/components/schemas/WikipediaSearchFilter'
-        OR:
-          type:
-          - array
-          - 'null'
-          description: Adds additional OR filter objects. These objects must be of the same type as the original filter object and will be combined with the existing filter using the OR logical operator.
-          example:
-          - {}
-          items:
-            $ref: '#/components/schemas/WikipediaSearchFilter'
-        NOT:
-          type:
-          - array
-          - 'null'
-          description: A filter object for logical NOT operations
-          example:
-          - {}
-          items:
-            $ref: '#/components/schemas/WikipediaSearchFilter'
-      description: Complex filter structure for Wikipedia page searches that supports nested logical operations (AND, OR, NOT) and multiple filtering criteria.
     WikipediaSearchResult:
       required:
       - numResults
@@ -954,17 +786,193 @@ components:
           - Ze'ev Drori
           - Zep Solar
           pageviews: 339
-    WikidataLabelHolder:
+    WikiData:
       type: object
       properties:
+        pageId:
+          type:
+          - string
+          - 'null'
+        sectionId:
+          type:
+          - string
+          - 'null'
+        wikiPageId:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        wikiRevisionId:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        wikiRevisionTs:
+          type:
+          - string
+          - 'null'
+        wikiCode:
+          type:
+          - string
+          - 'null'
+        wikiNamespace:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        wikiTitle:
+          type:
+          - string
+          - 'null'
         wikidataId:
           type:
           - string
           - 'null'
-        label:
+        wikidataInstanceOf:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/WikidataLabelHolder'
+        redirectTitles:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        pageviews:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        title:
           type:
           - string
           - 'null'
+        styleLevel:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        content:
+          type:
+          - string
+          - 'null'
+    WikipediaSearchFilter:
+      type: object
+      properties:
+        pageId:
+          type:
+          - array
+          - 'null'
+          description: Filter by specific Perigon page identifiers. Accepts either a single ID or an array of IDs. Returns only pages matching these IDs.
+          example:
+          - ''
+          items:
+            type: string
+        sectionId:
+          type:
+          - array
+          - 'null'
+          description: Filter by specific section identifiers. Accepts either a single ID or an array of IDs. Returns only pages containing these sections.
+          example:
+          - ''
+          items:
+            type: string
+        wikiPageId:
+          type:
+          - array
+          - 'null'
+          description: Filter by specific Wikipedia page identifiers. Accepts either a single ID or an array of IDs. Returns only pages matching these IDs.
+          example:
+          - 0
+          items:
+            type: integer
+            format: int64
+        wikiRevisionId:
+          type:
+          - array
+          - 'null'
+          description: Filter by specific Perigon page revision identifiers. Accepts either a single ID or an array of IDs. Returns only pages matching these IDs.
+          example:
+          - 0
+          items:
+            type: integer
+            format: int64
+        wikiCode:
+          type:
+          - array
+          - 'null'
+          description: Filter by specific Wikipedia project codes. Returns only pages matching these projects.
+          example:
+          - ''
+          items:
+            type: string
+        wikiNamespace:
+          type:
+          - array
+          - 'null'
+          description: Filter by specific Wikipedia namespaces. Returns only pages matching these namespaces.
+          example:
+          - 0
+          items:
+            type: integer
+            format: int64
+        wikidataId:
+          type:
+          - array
+          - 'null'
+          description: Filter by specific Wikidata entity IDs. Returns only pages whose Wikidata entities match those ids.
+          example:
+          - ''
+          items:
+            type: string
+        wikidataInstanceOfId:
+          type:
+          - array
+          - 'null'
+          description: Filter by specific Wikidata entity IDs. Returns only pages whose Wikidata entities are instances of provided ids.
+          example:
+          - ''
+          items:
+            type: string
+        wikidataInstanceOfLabel:
+          type:
+          - array
+          - 'null'
+          description: Filter by specific Wikidata entity labels. Returns only pages whose Wikidata entities are instances of these labels.
+          example:
+          - ''
+          items:
+            type: string
+        AND:
+          type:
+          - array
+          - 'null'
+          description: Adds additional AND filter objects. These objects must be of the same type as the original filter object and will be combined with the existing filter using the AND logical operator.
+          example:
+          - {}
+          items:
+            $ref: '#/components/schemas/WikipediaSearchFilter'
+        OR:
+          type:
+          - array
+          - 'null'
+          description: Adds additional OR filter objects. These objects must be of the same type as the original filter object and will be combined with the existing filter using the OR logical operator.
+          example:
+          - {}
+          items:
+            $ref: '#/components/schemas/WikipediaSearchFilter'
+        NOT:
+          type:
+          - array
+          - 'null'
+          description: A filter object for logical NOT operations
+          example:
+          - {}
+          items:
+            $ref: '#/components/schemas/WikipediaSearchFilter'
+      description: Complex filter structure for Wikipedia page searches that supports nested logical operations (AND, OR, NOT) and multiple filtering criteria.
     WikiPageSectionHolder:
       type: object
       properties:
@@ -1056,48 +1064,6 @@ components:
           description: The page number to retrieve.
           format: int32
           default: 0
-    WikipediaVectorSearchResult:
-      required:
-      - results
-      - status
-      type: object
-      properties:
-        status:
-          type: integer
-          format: int32
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/ScoredDataWikiData'
-      description: Wikipedia vector search result
-      example:
-        status: 200
-        results:
-        - score: 0.6632843
-          data:
-            pageId: a9e264ec1f6a4c049e3be8e997e24d2f
-            sectionId: d3d9e592df354cb9abcac4d3c5d38065
-            wikiPageId: 63988579
-            wikiRevisionId: 1300572396
-            wikiRevisionTs: '2025-07-15T04:19:25Z'
-            wikiCode: enwiki
-            wikiNamespace: 0
-            wikiTitle: Gigafactory Texas
-            wikidataId: Q96379480
-            wikidataInstanceOf:
-            - wikidataId: Q83405
-              label: factory
-            redirectTitles:
-            - Giga Austin
-            - Gigafactory 5
-            - Tesla Gigafactory 5
-            - Terafactory
-            - Giga Texas
-            - Austin Gigafactory
-            pageviews: 339
-            title: Austin
-            styleLevel: 3
-            content: "In 2014, Tesla evaluated a 1,500-acre (600 ha; 2 sq mi; 6 km2) manufacturing site on U.S. Route 79 at Frame Switch (30°32′N 97°30′W\uFEFF / \uFEFF30.54°N 97.5°W\uFEFF / 30.54; -97.5\uFEFF (Hutto MegaSite, (Frame Switch, Texas))), located between the towns of Hutto and Taylor, north-east of the Greater Austin center as its next factory. However, Tesla chose to build its first Gigafactory (now named Gigafactory Nevada) near Sparks, Nevada which is by Reno in 2014.\n\nBy June 2020, another location, one near the Del Valle area of Austin was being considered, a 2,100-acre (850 ha; 3.3 sq mi; 8.5 km2) site bordering Harold Green Road (later renamed Tesla Road) and Texas State Highway 130. On June 16, 2020, the Commissioners' court of Travis County discussed a possible incentives package for Tesla. In July 2020, the Del Valle Independent School District approved a tax incentives package worth $68 million, should the Tesla Gigafactory be built. On July 22, 2020, during Tesla's second quarter 2020 earnings call, the company announced that location had been selected for its fifth Gigafactory.\n\nBy the end of July 2020, construction had begun. The Tesla Gigafactory received state tax incentives worth about $50 million through the Texas Tax Code Chapter 313 program. Tesla announced a manufacturing training program in cooperation with Austin Community College District on June 15, 2021. The program was expected to start in August 2021 and the course was to last 14 weeks. The first fully completed Tesla Model Y rolled off the line at Giga Texas in the last week of August 2021 under trial production. In December 2021, Elon Musk estimated that Giga Texas will require a total investment of at least $10B and may employ as many as 20,000 employees within the company.\n\nIn early 2022 Tesla battery suppliers CATL and Panasonic were reportedly scouting sites for battery factories in North America, including Kansas, Oklahoma, Mexico and Canada. Panasonic announced in July 2022 that the company selected De Soto, Kansas (at the former Sunflower Army Ammunition Plant) to build a battery factory. Large subsidies and abatements were granted to Panasonic, organized by Governor Laura Kelly."
     WikiPage:
       type: object
       properties:
@@ -1193,6 +1159,34 @@ components:
           - integer
           - 'null'
           format: int64
+    WikidataLabelHolder:
+      type: object
+      properties:
+        wikidataId:
+          type:
+          - string
+          - 'null'
+        label:
+          type:
+          - string
+          - 'null'
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        message:
+          type:
+          - string
+          - 'null'
+        timestamp:
+          type:
+          - integer
+          - 'null'
+          format: int64
     ScoredDataWikiData:
       type: object
       properties:
@@ -1214,6 +1208,3 @@ components:
     apiKeyAuth:
       type: http
       scheme: bearer
-x-refined-from:
-- perigon-openapi.json
-- perigon-openapi.yml

@@ -1,12 +1,12 @@
 openapi: 3.2.0
 info:
   title: Perigon Utilities API
-  version: 1.0.0
+  description: The Perigon API provides access to comprehensive news and web content data. To use the API, simply sign up for a Perigon Business Solutions account to obtain your API key. Your available features may vary based on your plan. See the Authentication section for details on how to use your API key.
   contact:
     name: Perigon Support
     url: https://docs.perigon.io/
     email: data@perigon.io
-  description: 'Operations tagged Utilities across 2 of this provider''s published API definitions: perigon-openapi.json, perigon-openapi.yml. Each path carries the servers of the definition it was published in.'
+  version: 1.0.0
 servers:
 - url: https://api.perigon.io
   description: Generated server url
@@ -98,9 +98,6 @@ paths:
                 timestamp: 1681338367402
       security:
       - apiKeyAuth: []
-    servers:
-    - url: https://api.perigon.io
-      description: Generated server url
 components:
   schemas:
     LimitsResult:
@@ -129,23 +126,6 @@ components:
             enabled: true
             subscriptionActive: true
             requestCount: 320
-    ErrorResponse:
-      type: object
-      properties:
-        status:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        message:
-          type:
-          - string
-          - 'null'
-        timestamp:
-          type:
-          - integer
-          - 'null'
-          format: int64
     ApiKeyStatus:
       type: object
       properties:
@@ -176,6 +156,23 @@ components:
           description: Approx number of requests made with this API key in this billing cycle.
           format: int64
       description: Validity and status of a single API key.
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        message:
+          type:
+          - string
+          - 'null'
+        timestamp:
+          type:
+          - integer
+          - 'null'
+          format: int64
     ApiLimitsDto:
       type: object
       properties:
@@ -250,6 +247,3 @@ components:
     apiKeyAuth:
       type: http
       scheme: bearer
-x-refined-from:
-- perigon-openapi.json
-- perigon-openapi.yml

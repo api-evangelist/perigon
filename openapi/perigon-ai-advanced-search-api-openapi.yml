@@ -1,12 +1,12 @@
 openapi: 3.2.0
 info:
   title: Perigon AI & Advanced Search API
-  version: 1.0.0
+  description: The Perigon API provides access to comprehensive news and web content data. To use the API, simply sign up for a Perigon Business Solutions account to obtain your API key. Your available features may vary based on your plan. See the Authentication section for details on how to use your API key.
   contact:
     name: Perigon Support
     url: https://docs.perigon.io/
     email: data@perigon.io
-  description: 'Operations tagged AI & Advanced Search across 2 of this provider''s published API definitions: perigon-openapi.json, perigon-openapi.yml. Each path carries the servers of the definition it was published in.'
+  version: 1.0.0
 servers:
 - url: https://api.perigon.io
   description: Generated server url
@@ -814,11 +814,1024 @@ paths:
                 timestamp: 1681338367402
       security:
       - apiKeyAuth: []
-    servers:
-    - url: https://api.perigon.io
-      description: Generated server url
 components:
   schemas:
+    KeywordHolder:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: Keyword extracted from the article.
+        weight:
+          type:
+          - number
+          - 'null'
+          description: Relative relevance weight of the keyword.
+          format: float
+      description: Keywords extracted from the article with their relevance weights.
+    TopicHolder:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: Topic assigned to the article.
+      description: Topics most strongly associated with the story.
+    Question:
+      type: object
+      properties:
+        question:
+          type:
+          - string
+          - 'null'
+          description: Question generated from the story content.
+        answer:
+          type:
+          - string
+          - 'null'
+          description: Answer generated from the story content.
+        references:
+          type:
+          - array
+          - 'null'
+          description: Article IDs supporting the answer.
+          items:
+            type: string
+            description: Article IDs supporting the answer.
+      description: Questions and answers generated from the story content.
+    Journalist:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          description: Unique Perigon identifier for the journalist.
+        primaryRecordId:
+          type:
+          - string
+          - 'null'
+        name:
+          type:
+          - string
+          - 'null'
+          description: Common display name of the journalist.
+        fullName:
+          type:
+          - string
+          - 'null'
+          description: Full name of the journalist.
+        headline:
+          type:
+          - string
+          - 'null'
+          description: Professional headline associated with the journalist.
+        description:
+          type:
+          - string
+          - 'null'
+          description: Biographical description of the journalist.
+        title:
+          type:
+          - string
+          - 'null'
+          description: Professional title of the journalist.
+        email:
+          type:
+          - string
+          - 'null'
+          description: Journalist's email.
+        locations:
+          type:
+          - array
+          - 'null'
+          description: Locations associated with the journalist.
+          items:
+            $ref: '#/components/schemas/LocationHolder'
+        updatedAt:
+          type:
+          - string
+          - 'null'
+          description: Date and time the journalist record was last refreshed, in ISO 8601 format.
+        topTopics:
+          type:
+          - array
+          - 'null'
+          description: Topics most frequently covered by the journalist.
+          items:
+            $ref: '#/components/schemas/NameCount'
+        topSources:
+          type:
+          - array
+          - 'null'
+          description: Publishers most frequently associated with the journalist.
+          items:
+            $ref: '#/components/schemas/NameCount'
+        topCategories:
+          type:
+          - array
+          - 'null'
+          description: Categories most frequently covered by the journalist.
+          items:
+            $ref: '#/components/schemas/NameCount'
+        topLabels:
+          type:
+          - array
+          - 'null'
+          description: Editorial labels most frequently associated with the journalist's articles.
+          items:
+            $ref: '#/components/schemas/NameCount'
+        topCountries:
+          type:
+          - array
+          - 'null'
+          description: Countries most frequently associated with the journalist's articles.
+          items:
+            $ref: '#/components/schemas/NameCount'
+        avgMonthlyPosts:
+          type:
+          - integer
+          - 'null'
+          description: Average number of articles published by the journalist per month.
+          format: int32
+        twitterHandle:
+          type:
+          - string
+          - 'null'
+          description: Journalist's X or Twitter handle.
+        twitterBio:
+          type:
+          - string
+          - 'null'
+          description: Biography from the journalist's X or Twitter profile.
+        imageUrl:
+          type:
+          - string
+          - 'null'
+          description: Profile image URL for the journalist.
+        linkedinUrl:
+          type:
+          - string
+          - 'null'
+          description: LinkedIn profile URL for the journalist.
+        linkedinConnections:
+          type:
+          - integer
+          - 'null'
+          description: LinkedIn connection count for the journalist, when available.
+          format: int32
+        linkedinFollowers:
+          type:
+          - integer
+          - 'null'
+          description: LinkedIn follower count for the journalist, when available.
+          format: int32
+        facebookUrl:
+          type:
+          - string
+          - 'null'
+          description: Facebook profile URL for the journalist.
+        instagramUrl:
+          type:
+          - string
+          - 'null'
+          description: Instagram profile URL for the journalist.
+        websiteUrl:
+          type:
+          - string
+          - 'null'
+          description: Personal or professional website URL for the journalist.
+        blogUrl:
+          type:
+          - string
+          - 'null'
+          description: Blog URL for the journalist.
+        tumblrUrl:
+          type:
+          - string
+          - 'null'
+          description: Tumblr profile URL for the journalist.
+        youtubeUrl:
+          type:
+          - string
+          - 'null'
+          description: YouTube channel URL for the journalist.
+      description: Expanded journalist details, when requested and available.
+    SourceHolder:
+      type: object
+      properties:
+        domain:
+          type:
+          - string
+          - 'null'
+          description: Publisher domain.
+        paywall:
+          type:
+          - boolean
+          - 'null'
+          description: Whether the publisher uses a paywall, when known.
+        location:
+          allOf:
+          - $ref: '#/components/schemas/SourceLocation'
+      description: Publisher information for the selected story image.
+    EntityHolder:
+      type: object
+      properties:
+        data:
+          type:
+          - string
+          - 'null'
+          description: Text value of the extracted entity.
+        type:
+          type:
+          - string
+          - 'null'
+          description: Entity type, such as PERSON, ORGANIZATION, or LOCATION.
+        mentions:
+          type:
+          - integer
+          - 'null'
+          description: Number of times the entity appears in the article.
+          format: int32
+      description: Named entities extracted from the article.
+    CategoryWithScoreHolder:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: Full taxonomy category path.
+        score:
+          type:
+          - number
+          - 'null'
+          description: Confidence score for the category assignment.
+          format: double
+      description: Google Content Categories assigned to the article with confidence scores.
+    CompanyHolder:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          description: Unique Perigon identifier for the company.
+        name:
+          type:
+          - string
+          - 'null'
+          description: Company name.
+        domains:
+          type:
+          - array
+          - 'null'
+          description: Domains associated with the company.
+          items:
+            type: string
+            description: Domains associated with the company.
+        symbols:
+          type:
+          - array
+          - 'null'
+          description: Stock symbols associated with the company.
+          items:
+            type: string
+            description: Stock symbols associated with the company.
+      description: Companies most strongly associated with the story.
+    VectorData:
+      type: object
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          description: Numeric values in the vector embedding.
+          items:
+            type: number
+            description: Numeric values in the vector embedding.
+            format: float
+        version:
+          type:
+          - integer
+          - 'null'
+          description: Version of the embedding representation.
+          format: int32
+      description: Vector embeddings associated with the article, when requested.
+    NewsCluster:
+      type: object
+      properties:
+        createdAt:
+          type:
+          - string
+          - 'null'
+          description: Date and time the story was created, in ISO 8601 format.
+        updatedAt:
+          type:
+          - string
+          - 'null'
+          description: Date and time the story was last updated, in ISO 8601 format.
+        initializedAt:
+          type:
+          - string
+          - 'null'
+          description: Date and time the story became initialized and visible, in ISO 8601 format.
+        id:
+          type:
+          - string
+          - 'null'
+          description: Unique identifier for the story cluster.
+        duplicateOf:
+          type:
+          - string
+          - 'null'
+          description: Identifier of the original story when this story is a duplicate.
+        slug:
+          type:
+          - string
+          - 'null'
+          description: URL-safe identifier for the story.
+        name:
+          type:
+          - string
+          - 'null'
+          description: Generated story title.
+        summary:
+          type:
+          - string
+          - 'null'
+          description: Generated story summary.
+        shortSummary:
+          type:
+          - string
+          - 'null'
+          description: Short generated story summary, when available.
+        summaryReferences:
+          type:
+          - array
+          - 'null'
+          description: Article IDs supporting the story summary.
+          items:
+            type: string
+            description: Article IDs supporting the story summary.
+        imageSource:
+          allOf:
+          - $ref: '#/components/schemas/SourceHolder'
+        imageUrl:
+          type:
+          - string
+          - 'null'
+          description: Primary image URL selected for the story.
+        keyPoints:
+          type:
+          - array
+          - 'null'
+          description: Key facts and developments identified in the story.
+          items:
+            $ref: '#/components/schemas/KeyPoint'
+        questions:
+          type:
+          - array
+          - 'null'
+          description: Questions and answers generated from the story content.
+          items:
+            $ref: '#/components/schemas/Question'
+        uniqueSources:
+          type:
+          - array
+          - 'null'
+          description: Distinct publisher domains represented in the story.
+          items:
+            type: string
+            description: Distinct publisher domains represented in the story.
+        selectedArticles:
+          type:
+          - array
+          - 'null'
+          description: Representative articles selected for the story.
+          items:
+            $ref: '#/components/schemas/Article'
+        sentiment:
+          allOf:
+          - $ref: '#/components/schemas/SentimentHolder'
+        uniqueCount:
+          type:
+          - integer
+          - 'null'
+          description: Number of unique articles in the story.
+          format: int32
+        reprintCount:
+          type:
+          - integer
+          - 'null'
+          description: Number of reprinted articles in the story.
+          format: int32
+        totalCount:
+          type:
+          - integer
+          - 'null'
+          description: Total article count including reprints.
+          format: int32
+        countries:
+          type:
+          - array
+          - 'null'
+          description: Countries associated with the story and their article counts.
+          items:
+            $ref: '#/components/schemas/RecordStatHolder'
+        topCountries:
+          type:
+          - array
+          - 'null'
+          description: Countries most strongly associated with the story.
+          items:
+            type: string
+            description: Countries most strongly associated with the story.
+        topics:
+          type:
+          - array
+          - 'null'
+          description: Topics associated with the story and their article counts.
+          items:
+            $ref: '#/components/schemas/RecordStatHolder'
+        topTopics:
+          type:
+          - array
+          - 'null'
+          description: Topics most strongly associated with the story.
+          items:
+            $ref: '#/components/schemas/TopicHolder'
+        categories:
+          type:
+          - array
+          - 'null'
+          description: Categories associated with the story and their article counts.
+          items:
+            $ref: '#/components/schemas/RecordStatHolder'
+        topCategories:
+          type:
+          - array
+          - 'null'
+          description: Categories most strongly associated with the story.
+          items:
+            $ref: '#/components/schemas/CategoryHolder'
+        taxonomies:
+          type:
+          - array
+          - 'null'
+          description: Google Content Categories associated with the story and their article counts.
+          items:
+            $ref: '#/components/schemas/RecordStatHolder'
+        topTaxonomies:
+          type:
+          - array
+          - 'null'
+          description: Google Content Categories most strongly associated with the story.
+          items:
+            $ref: '#/components/schemas/CategoryHolder'
+        people:
+          type:
+          - array
+          - 'null'
+          description: People associated with the story and their article counts.
+          items:
+            $ref: '#/components/schemas/PersonCount'
+        topPeople:
+          type:
+          - array
+          - 'null'
+          description: People most strongly associated with the story.
+          items:
+            $ref: '#/components/schemas/PersonHolder'
+        companies:
+          type:
+          - array
+          - 'null'
+          description: Companies associated with the story and their article counts.
+          items:
+            $ref: '#/components/schemas/CompanyCount'
+        topCompanies:
+          type:
+          - array
+          - 'null'
+          description: Companies most strongly associated with the story.
+          items:
+            $ref: '#/components/schemas/CompanyHolder'
+        locations:
+          type:
+          - array
+          - 'null'
+          description: Locations associated with the story and their article counts.
+          items:
+            $ref: '#/components/schemas/LocationCount'
+        topLocations:
+          type:
+          - array
+          - 'null'
+          description: Locations most strongly associated with the story.
+          items:
+            $ref: '#/components/schemas/LocationHolder'
+        highlights:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: array
+            description: Matched text fragments grouped by story field.
+            items:
+              type: string
+              description: Matched text fragments grouped by story field.
+          description: Matched text fragments grouped by story field.
+        sourceDiversity:
+          type:
+          - number
+          - 'null'
+          description: Ratio of unique publisher domains to total articles in the story.
+          format: double
+      description: Expanded story cluster details, when requested and available.
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        message:
+          type:
+          - string
+          - 'null'
+        timestamp:
+          type:
+          - integer
+          - 'null'
+          format: int64
+    LabelHolder:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: Editorial label assigned to the article.
+      description: Editorial labels assigned to the article.
+    SourceLocation:
+      type: object
+      properties:
+        country:
+          type:
+          - string
+          - 'null'
+          description: Country where the publisher is located.
+        state:
+          type:
+          - string
+          - 'null'
+          description: State or region where the publisher is located.
+        county:
+          type:
+          - string
+          - 'null'
+          description: County where the publisher is located.
+        city:
+          type:
+          - string
+          - 'null'
+          description: City where the publisher is located.
+        coordinates:
+          allOf:
+          - $ref: '#/components/schemas/Coordinate'
+      description: Geographic location of the publisher, when available.
+    AllEndpointSortBy:
+      type: string
+      enum:
+      - relevance
+      - date
+      - reverseDate
+      - reverseAddDate
+      - addDate
+      - pubDate
+      - refreshDate
+    EventTypeHolder:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: Detected event name.
+        type:
+          type:
+          - string
+          - 'null'
+          description: Detected event classification.
+      description: Event types detected in the article.
+    LocationHolder:
+      type: object
+      properties:
+        country:
+          type:
+          - string
+          - 'null'
+          description: Country central to the article.
+        state:
+          type:
+          - string
+          - 'null'
+          description: State or region central to the article.
+        county:
+          type:
+          - string
+          - 'null'
+          description: County central to the article.
+        city:
+          type:
+          - string
+          - 'null'
+          description: City central to the article.
+        area:
+          type:
+          - string
+          - 'null'
+          description: Neighborhood, borough, or district central to the article.
+      description: Locations most strongly associated with the story.
+    PersonHolder:
+      type: object
+      properties:
+        wikidataId:
+          type:
+          - string
+          - 'null'
+          description: Wikidata identifier for the person.
+        name:
+          type:
+          - string
+          - 'null'
+          description: Person name.
+      description: People most strongly associated with the story.
+    CompanyCount:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          description: Unique Perigon identifier for the company.
+        name:
+          type:
+          - string
+          - 'null'
+          description: Company name.
+        domains:
+          type:
+          - array
+          - 'null'
+          description: Domains associated with the company.
+          items:
+            type: string
+            description: Domains associated with the company.
+        symbols:
+          type:
+          - array
+          - 'null'
+          description: Stock symbols associated with the company.
+          items:
+            type: string
+            description: Stock symbols associated with the company.
+        count:
+          type:
+          - integer
+          - 'null'
+          description: Number of story articles mentioning the company.
+          format: int32
+      description: Companies associated with the story and their article counts.
+    CategoryHolder:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: Content category assigned to the article.
+      description: Google Content Categories most strongly associated with the story.
+    NameCount:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: Name of the aggregated value.
+        count:
+          type:
+          - integer
+          - 'null'
+          description: Number of matching records for the value.
+          format: int64
+      description: Countries most frequently associated with the journalist's articles.
+    Article:
+      type: object
+      properties:
+        url:
+          type:
+          - string
+          - 'null'
+          description: Canonical URL of the article.
+        authorsByline:
+          type:
+          - string
+          - 'null'
+          description: Author byline as published by the source.
+        articleId:
+          type:
+          - string
+          - 'null'
+          description: Unique Perigon identifier for the article.
+        clusterId:
+          type:
+          - string
+          - 'null'
+          description: Identifier of the story cluster containing the article, when assigned.
+        source:
+          allOf:
+          - $ref: '#/components/schemas/SourceHolder'
+        imageUrl:
+          type:
+          - string
+          - 'null'
+          description: Primary image URL associated with the article.
+        country:
+          type:
+          - string
+          - 'null'
+          description: Two-character country code associated with the article.
+        language:
+          type:
+          - string
+          - 'null'
+          description: ISO 639 two-letter language code for the article.
+        pubDate:
+          type:
+          - string
+          - 'null'
+          description: Date and time the article was published, in ISO 8601 format.
+        addDate:
+          type:
+          - string
+          - 'null'
+          description: Date and time the article was added to Perigon, in ISO 8601 format.
+        refreshDate:
+          type:
+          - string
+          - 'null'
+          description: Date and time the article was last refreshed by Perigon, in ISO 8601 format.
+        score:
+          type:
+          - number
+          - 'null'
+          description: Search relevance score for the article, when applicable.
+          format: float
+        title:
+          type:
+          - string
+          - 'null'
+          description: Article headline.
+        description:
+          type:
+          - string
+          - 'null'
+          description: Article description or publisher-provided excerpt.
+        content:
+          type:
+          - string
+          - 'null'
+          description: Full article body available to Perigon.
+        enContentWordCount:
+          type:
+          - integer
+          - 'null'
+          description: Word count of the English article content, when available.
+          format: int32
+        medium:
+          type:
+          - string
+          - 'null'
+          description: Primary medium type, such as Article or Video.
+        links:
+          type:
+          - array
+          - 'null'
+          description: URLs linked from the article content.
+          items:
+            type: string
+            description: URLs linked from the article content.
+        labels:
+          type:
+          - array
+          - 'null'
+          description: Editorial labels assigned to the article.
+          items:
+            $ref: '#/components/schemas/LabelHolder'
+        eventTypes:
+          type:
+          - array
+          - 'null'
+          description: Event types detected in the article.
+          items:
+            $ref: '#/components/schemas/EventTypeHolder'
+        matchedAuthors:
+          type:
+          - array
+          - 'null'
+          description: Known journalist records matched to the article byline.
+          items:
+            $ref: '#/components/schemas/IdNameHolder'
+        claim:
+          type:
+          - string
+          - 'null'
+          description: Claim identified in fact-check content, when applicable.
+        verdict:
+          type:
+          - string
+          - 'null'
+          description: Verdict identified in fact-check content, when applicable.
+        keywords:
+          type:
+          - array
+          - 'null'
+          description: Keywords extracted from the article with their relevance weights.
+          items:
+            $ref: '#/components/schemas/KeywordHolder'
+        topics:
+          type:
+          - array
+          - 'null'
+          description: Topics assigned to the article.
+          items:
+            $ref: '#/components/schemas/TopicHolder'
+        categories:
+          type:
+          - array
+          - 'null'
+          description: Broad content categories assigned to the article.
+          items:
+            $ref: '#/components/schemas/CategoryHolder'
+        taxonomies:
+          type:
+          - array
+          - 'null'
+          description: Google Content Categories assigned to the article with confidence scores.
+          items:
+            $ref: '#/components/schemas/CategoryWithScoreHolder'
+        entities:
+          type:
+          - array
+          - 'null'
+          description: Named entities extracted from the article.
+          items:
+            $ref: '#/components/schemas/EntityHolder'
+        companies:
+          type:
+          - array
+          - 'null'
+          description: Companies identified in the article.
+          items:
+            $ref: '#/components/schemas/CompanyHolder'
+        sentiment:
+          allOf:
+          - $ref: '#/components/schemas/SentimentHolder'
+        summary:
+          type:
+          - string
+          - 'null'
+          description: Generated summary of the article, when available.
+        shortSummary:
+          type:
+          - string
+          - 'null'
+          description: Short generated summary of the article, when available.
+        translation:
+          type:
+          - string
+          - 'null'
+          description: Translated article content, when available.
+        translatedTitle:
+          type:
+          - string
+          - 'null'
+          description: English translation of the article title, when available.
+        translatedDescription:
+          type:
+          - string
+          - 'null'
+          description: English translation of the article description, when available.
+        translatedSummary:
+          type:
+          - string
+          - 'null'
+          description: English translation of the article summary, when available.
+        locations:
+          type:
+          - array
+          - 'null'
+          description: Locations identified as central to the article.
+          items:
+            $ref: '#/components/schemas/LocationHolder'
+        reprint:
+          type:
+          - boolean
+          - 'null'
+          description: Whether the article is a reprint of previously published content.
+        reprintGroupId:
+          type:
+          - string
+          - 'null'
+          description: Identifier grouping the original article with its known reprints.
+        places:
+          type:
+          - array
+          - 'null'
+          description: Structured geographic places extracted from the article.
+          items:
+            $ref: '#/components/schemas/Place'
+        people:
+          type:
+          - array
+          - 'null'
+          description: Known people identified in the article.
+          items:
+            $ref: '#/components/schemas/PersonHolder'
+        cluster:
+          allOf:
+          - $ref: '#/components/schemas/NewsCluster'
+        journalists:
+          type:
+          - array
+          - 'null'
+          description: Expanded journalist details, when requested and available.
+          items:
+            $ref: '#/components/schemas/Journalist'
+        highlights:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: array
+            description: Matched text fragments grouped by article field.
+            items:
+              type: string
+              description: Matched text fragments grouped by article field.
+          description: Matched text fragments grouped by article field.
+        vectors:
+          type:
+          - array
+          - 'null'
+          description: Vector embeddings associated with the article, when requested.
+          items:
+            $ref: '#/components/schemas/VectorData'
+    KeyPoint:
+      type: object
+      properties:
+        point:
+          type:
+          - string
+          - 'null'
+          description: A key fact or development identified in the content.
+        references:
+          type:
+          - array
+          - 'null'
+          description: Article IDs supporting the key point.
+          items:
+            type: string
+            description: Article IDs supporting the key point.
+      description: Key facts and developments identified in the story.
+    SentimentHolder:
+      type: object
+      properties:
+        positive:
+          type:
+          - number
+          - 'null'
+          description: Positive sentiment score from 0 to 1.
+          format: float
+        negative:
+          type:
+          - number
+          - 'null'
+          description: Negative sentiment score from 0 to 1.
+          format: float
+        neutral:
+          type:
+          - number
+          - 'null'
+          description: Neutral sentiment score from 0 to 1.
+          format: float
+      description: Aggregate sentiment scores for the story.
     SummarySearchResult:
       required:
       - numResults
@@ -1089,157 +2102,6 @@ components:
           description: Number of story articles mentioning the person.
           format: int32
       description: People associated with the story and their article counts.
-    ErrorResponse:
-      type: object
-      properties:
-        status:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        message:
-          type:
-          - string
-          - 'null'
-        timestamp:
-          type:
-          - integer
-          - 'null'
-          format: int64
-    VectorData:
-      type: object
-      properties:
-        data:
-          type:
-          - array
-          - 'null'
-          description: Numeric values in the vector embedding.
-          items:
-            type: number
-            description: Numeric values in the vector embedding.
-            format: float
-        version:
-          type:
-          - integer
-          - 'null'
-          description: Version of the embedding representation.
-          format: int32
-      description: Vector embeddings associated with the article, when requested.
-    CompanyHolder:
-      type: object
-      properties:
-        id:
-          type:
-          - string
-          - 'null'
-          description: Unique Perigon identifier for the company.
-        name:
-          type:
-          - string
-          - 'null'
-          description: Company name.
-        domains:
-          type:
-          - array
-          - 'null'
-          description: Domains associated with the company.
-          items:
-            type: string
-            description: Domains associated with the company.
-        symbols:
-          type:
-          - array
-          - 'null'
-          description: Stock symbols associated with the company.
-          items:
-            type: string
-            description: Stock symbols associated with the company.
-      description: Companies most strongly associated with the story.
-    Question:
-      type: object
-      properties:
-        question:
-          type:
-          - string
-          - 'null'
-          description: Question generated from the story content.
-        answer:
-          type:
-          - string
-          - 'null'
-          description: Answer generated from the story content.
-        references:
-          type:
-          - array
-          - 'null'
-          description: Article IDs supporting the answer.
-          items:
-            type: string
-            description: Article IDs supporting the answer.
-      description: Questions and answers generated from the story content.
-    EntityHolder:
-      type: object
-      properties:
-        data:
-          type:
-          - string
-          - 'null'
-          description: Text value of the extracted entity.
-        type:
-          type:
-          - string
-          - 'null'
-          description: Entity type, such as PERSON, ORGANIZATION, or LOCATION.
-        mentions:
-          type:
-          - integer
-          - 'null'
-          description: Number of times the entity appears in the article.
-          format: int32
-      description: Named entities extracted from the article.
-    TopicHolder:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: Topic assigned to the article.
-      description: Topics most strongly associated with the story.
-    CategoryWithScoreHolder:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: Full taxonomy category path.
-        score:
-          type:
-          - number
-          - 'null'
-          description: Confidence score for the category assignment.
-          format: double
-      description: Google Content Categories assigned to the article with confidence scores.
-    AllEndpointSortBy:
-      type: string
-      enum:
-      - relevance
-      - date
-      - reverseDate
-      - reverseAddDate
-      - addDate
-      - pubDate
-      - refreshDate
-    CategoryHolder:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: Content category assigned to the article.
-      description: Google Content Categories most strongly associated with the story.
     Coordinate:
       type: object
       properties:
@@ -1256,142 +2118,133 @@ components:
           description: Longitude in decimal degrees.
           format: double
       description: Geographic coordinates of the place.
-    LocationHolder:
+    Place:
+      type: object
+      properties:
+        osmId:
+          type:
+          - string
+          - 'null'
+          description: OpenStreetMap identifier for the place.
+        road:
+          type:
+          - string
+          - 'null'
+          description: Road associated with the place.
+        quarter:
+          type:
+          - string
+          - 'null'
+          description: Quarter associated with the place.
+        suburb:
+          type:
+          - string
+          - 'null'
+          description: Suburb associated with the place.
+        city:
+          type:
+          - string
+          - 'null'
+          description: City associated with the place.
+        town:
+          type:
+          - string
+          - 'null'
+          description: Town associated with the place.
+        county:
+          type:
+          - string
+          - 'null'
+          description: County associated with the place.
+        stateDistrict:
+          type:
+          - string
+          - 'null'
+          description: State district associated with the place.
+        state:
+          type:
+          - string
+          - 'null'
+          description: State or region associated with the place.
+        postcode:
+          type:
+          - string
+          - 'null'
+          description: Postal code associated with the place.
+        country:
+          type:
+          - string
+          - 'null'
+          description: Country associated with the place.
+        countryCode:
+          type:
+          - string
+          - 'null'
+          description: Two-character country code for the place.
+        amenity:
+          type:
+          - string
+          - 'null'
+          description: Named amenity associated with the place.
+        neighbourhood:
+          type:
+          - string
+          - 'null'
+          description: Neighborhood associated with the place.
+        coordinates:
+          allOf:
+          - $ref: '#/components/schemas/Coordinate'
+      description: Structured geographic places extracted from the article.
+    RecordStatHolder:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: Name of the aggregated value.
+        count:
+          type:
+          - integer
+          - 'null'
+          description: Number of matching articles for the value.
+          format: int32
+      description: Google Content Categories associated with the story and their article counts.
+    LocationCount:
       type: object
       properties:
         country:
           type:
           - string
           - 'null'
-          description: Country central to the article.
+          description: Country associated with the story.
         state:
           type:
           - string
           - 'null'
-          description: State or region central to the article.
+          description: State or region associated with the story.
         county:
           type:
           - string
           - 'null'
-          description: County central to the article.
+          description: County associated with the story.
         city:
           type:
           - string
           - 'null'
-          description: City central to the article.
+          description: City associated with the story.
         area:
           type:
           - string
           - 'null'
-          description: Neighborhood, borough, or district central to the article.
-      description: Locations most strongly associated with the story.
-    SentimentHolder:
-      type: object
-      properties:
-        positive:
-          type:
-          - number
-          - 'null'
-          description: Positive sentiment score from 0 to 1.
-          format: float
-        negative:
-          type:
-          - number
-          - 'null'
-          description: Negative sentiment score from 0 to 1.
-          format: float
-        neutral:
-          type:
-          - number
-          - 'null'
-          description: Neutral sentiment score from 0 to 1.
-          format: float
-      description: Aggregate sentiment scores for the story.
-    KeyPoint:
-      type: object
-      properties:
-        point:
-          type:
-          - string
-          - 'null'
-          description: A key fact or development identified in the content.
-        references:
-          type:
-          - array
-          - 'null'
-          description: Article IDs supporting the key point.
-          items:
-            type: string
-            description: Article IDs supporting the key point.
-      description: Key facts and developments identified in the story.
-    CompanyCount:
-      type: object
-      properties:
-        id:
-          type:
-          - string
-          - 'null'
-          description: Unique Perigon identifier for the company.
-        name:
-          type:
-          - string
-          - 'null'
-          description: Company name.
-        domains:
-          type:
-          - array
-          - 'null'
-          description: Domains associated with the company.
-          items:
-            type: string
-            description: Domains associated with the company.
-        symbols:
-          type:
-          - array
-          - 'null'
-          description: Stock symbols associated with the company.
-          items:
-            type: string
-            description: Stock symbols associated with the company.
+          description: Neighborhood, borough, or district associated with the story.
         count:
           type:
           - integer
           - 'null'
-          description: Number of story articles mentioning the company.
+          description: Number of story articles associated with the location.
           format: int32
-      description: Companies associated with the story and their article counts.
-    KeywordHolder:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: Keyword extracted from the article.
-        weight:
-          type:
-          - number
-          - 'null'
-          description: Relative relevance weight of the keyword.
-          format: float
-      description: Keywords extracted from the article with their relevance weights.
-    SourceHolder:
-      type: object
-      properties:
-        domain:
-          type:
-          - string
-          - 'null'
-          description: Publisher domain.
-        paywall:
-          type:
-          - boolean
-          - 'null'
-          description: Whether the publisher uses a paywall, when known.
-        location:
-          allOf:
-          - $ref: '#/components/schemas/SourceLocation'
-      description: Publisher information for the selected story image.
+      description: Locations associated with the story and their article counts.
     SummaryBody:
       type: object
       properties:
@@ -1486,545 +2339,6 @@ components:
           format: int32
           default: 2048
       description: Request body for the Search-Summarizer endpoint. Contains the user’s summary instructions, how many articles to include, which fields to use, the retrieval method, and LLM generation settings.
-    Journalist:
-      type: object
-      properties:
-        id:
-          type:
-          - string
-          - 'null'
-          description: Unique Perigon identifier for the journalist.
-        primaryRecordId:
-          type:
-          - string
-          - 'null'
-        name:
-          type:
-          - string
-          - 'null'
-          description: Common display name of the journalist.
-        fullName:
-          type:
-          - string
-          - 'null'
-          description: Full name of the journalist.
-        headline:
-          type:
-          - string
-          - 'null'
-          description: Professional headline associated with the journalist.
-        description:
-          type:
-          - string
-          - 'null'
-          description: Biographical description of the journalist.
-        title:
-          type:
-          - string
-          - 'null'
-          description: Professional title of the journalist.
-        email:
-          type:
-          - string
-          - 'null'
-          description: Journalist's email.
-        locations:
-          type:
-          - array
-          - 'null'
-          description: Locations associated with the journalist.
-          items:
-            $ref: '#/components/schemas/LocationHolder'
-        updatedAt:
-          type:
-          - string
-          - 'null'
-          description: Date and time the journalist record was last refreshed, in ISO 8601 format.
-        topTopics:
-          type:
-          - array
-          - 'null'
-          description: Topics most frequently covered by the journalist.
-          items:
-            $ref: '#/components/schemas/NameCount'
-        topSources:
-          type:
-          - array
-          - 'null'
-          description: Publishers most frequently associated with the journalist.
-          items:
-            $ref: '#/components/schemas/NameCount'
-        topCategories:
-          type:
-          - array
-          - 'null'
-          description: Categories most frequently covered by the journalist.
-          items:
-            $ref: '#/components/schemas/NameCount'
-        topLabels:
-          type:
-          - array
-          - 'null'
-          description: Editorial labels most frequently associated with the journalist's articles.
-          items:
-            $ref: '#/components/schemas/NameCount'
-        topCountries:
-          type:
-          - array
-          - 'null'
-          description: Countries most frequently associated with the journalist's articles.
-          items:
-            $ref: '#/components/schemas/NameCount'
-        avgMonthlyPosts:
-          type:
-          - integer
-          - 'null'
-          description: Average number of articles published by the journalist per month.
-          format: int32
-        twitterHandle:
-          type:
-          - string
-          - 'null'
-          description: Journalist's X or Twitter handle.
-        twitterBio:
-          type:
-          - string
-          - 'null'
-          description: Biography from the journalist's X or Twitter profile.
-        imageUrl:
-          type:
-          - string
-          - 'null'
-          description: Profile image URL for the journalist.
-        linkedinUrl:
-          type:
-          - string
-          - 'null'
-          description: LinkedIn profile URL for the journalist.
-        linkedinConnections:
-          type:
-          - integer
-          - 'null'
-          description: LinkedIn connection count for the journalist, when available.
-          format: int32
-        linkedinFollowers:
-          type:
-          - integer
-          - 'null'
-          description: LinkedIn follower count for the journalist, when available.
-          format: int32
-        facebookUrl:
-          type:
-          - string
-          - 'null'
-          description: Facebook profile URL for the journalist.
-        instagramUrl:
-          type:
-          - string
-          - 'null'
-          description: Instagram profile URL for the journalist.
-        websiteUrl:
-          type:
-          - string
-          - 'null'
-          description: Personal or professional website URL for the journalist.
-        blogUrl:
-          type:
-          - string
-          - 'null'
-          description: Blog URL for the journalist.
-        tumblrUrl:
-          type:
-          - string
-          - 'null'
-          description: Tumblr profile URL for the journalist.
-        youtubeUrl:
-          type:
-          - string
-          - 'null'
-          description: YouTube channel URL for the journalist.
-      description: Expanded journalist details, when requested and available.
-    PersonHolder:
-      type: object
-      properties:
-        wikidataId:
-          type:
-          - string
-          - 'null'
-          description: Wikidata identifier for the person.
-        name:
-          type:
-          - string
-          - 'null'
-          description: Person name.
-      description: People most strongly associated with the story.
-    Place:
-      type: object
-      properties:
-        osmId:
-          type:
-          - string
-          - 'null'
-          description: OpenStreetMap identifier for the place.
-        road:
-          type:
-          - string
-          - 'null'
-          description: Road associated with the place.
-        quarter:
-          type:
-          - string
-          - 'null'
-          description: Quarter associated with the place.
-        suburb:
-          type:
-          - string
-          - 'null'
-          description: Suburb associated with the place.
-        city:
-          type:
-          - string
-          - 'null'
-          description: City associated with the place.
-        town:
-          type:
-          - string
-          - 'null'
-          description: Town associated with the place.
-        county:
-          type:
-          - string
-          - 'null'
-          description: County associated with the place.
-        stateDistrict:
-          type:
-          - string
-          - 'null'
-          description: State district associated with the place.
-        state:
-          type:
-          - string
-          - 'null'
-          description: State or region associated with the place.
-        postcode:
-          type:
-          - string
-          - 'null'
-          description: Postal code associated with the place.
-        country:
-          type:
-          - string
-          - 'null'
-          description: Country associated with the place.
-        countryCode:
-          type:
-          - string
-          - 'null'
-          description: Two-character country code for the place.
-        amenity:
-          type:
-          - string
-          - 'null'
-          description: Named amenity associated with the place.
-        neighbourhood:
-          type:
-          - string
-          - 'null'
-          description: Neighborhood associated with the place.
-        coordinates:
-          allOf:
-          - $ref: '#/components/schemas/Coordinate'
-      description: Structured geographic places extracted from the article.
-    EventTypeHolder:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: Detected event name.
-        type:
-          type:
-          - string
-          - 'null'
-          description: Detected event classification.
-      description: Event types detected in the article.
-    Article:
-      type: object
-      properties:
-        url:
-          type:
-          - string
-          - 'null'
-          description: Canonical URL of the article.
-        authorsByline:
-          type:
-          - string
-          - 'null'
-          description: Author byline as published by the source.
-        articleId:
-          type:
-          - string
-          - 'null'
-          description: Unique Perigon identifier for the article.
-        clusterId:
-          type:
-          - string
-          - 'null'
-          description: Identifier of the story cluster containing the article, when assigned.
-        source:
-          allOf:
-          - $ref: '#/components/schemas/SourceHolder'
-        imageUrl:
-          type:
-          - string
-          - 'null'
-          description: Primary image URL associated with the article.
-        country:
-          type:
-          - string
-          - 'null'
-          description: Two-character country code associated with the article.
-        language:
-          type:
-          - string
-          - 'null'
-          description: ISO 639 two-letter language code for the article.
-        pubDate:
-          type:
-          - string
-          - 'null'
-          description: Date and time the article was published, in ISO 8601 format.
-        addDate:
-          type:
-          - string
-          - 'null'
-          description: Date and time the article was added to Perigon, in ISO 8601 format.
-        refreshDate:
-          type:
-          - string
-          - 'null'
-          description: Date and time the article was last refreshed by Perigon, in ISO 8601 format.
-        score:
-          type:
-          - number
-          - 'null'
-          description: Search relevance score for the article, when applicable.
-          format: float
-        title:
-          type:
-          - string
-          - 'null'
-          description: Article headline.
-        description:
-          type:
-          - string
-          - 'null'
-          description: Article description or publisher-provided excerpt.
-        content:
-          type:
-          - string
-          - 'null'
-          description: Full article body available to Perigon.
-        enContentWordCount:
-          type:
-          - integer
-          - 'null'
-          description: Word count of the English article content, when available.
-          format: int32
-        medium:
-          type:
-          - string
-          - 'null'
-          description: Primary medium type, such as Article or Video.
-        links:
-          type:
-          - array
-          - 'null'
-          description: URLs linked from the article content.
-          items:
-            type: string
-            description: URLs linked from the article content.
-        labels:
-          type:
-          - array
-          - 'null'
-          description: Editorial labels assigned to the article.
-          items:
-            $ref: '#/components/schemas/LabelHolder'
-        eventTypes:
-          type:
-          - array
-          - 'null'
-          description: Event types detected in the article.
-          items:
-            $ref: '#/components/schemas/EventTypeHolder'
-        matchedAuthors:
-          type:
-          - array
-          - 'null'
-          description: Known journalist records matched to the article byline.
-          items:
-            $ref: '#/components/schemas/IdNameHolder'
-        claim:
-          type:
-          - string
-          - 'null'
-          description: Claim identified in fact-check content, when applicable.
-        verdict:
-          type:
-          - string
-          - 'null'
-          description: Verdict identified in fact-check content, when applicable.
-        keywords:
-          type:
-          - array
-          - 'null'
-          description: Keywords extracted from the article with their relevance weights.
-          items:
-            $ref: '#/components/schemas/KeywordHolder'
-        topics:
-          type:
-          - array
-          - 'null'
-          description: Topics assigned to the article.
-          items:
-            $ref: '#/components/schemas/TopicHolder'
-        categories:
-          type:
-          - array
-          - 'null'
-          description: Broad content categories assigned to the article.
-          items:
-            $ref: '#/components/schemas/CategoryHolder'
-        taxonomies:
-          type:
-          - array
-          - 'null'
-          description: Google Content Categories assigned to the article with confidence scores.
-          items:
-            $ref: '#/components/schemas/CategoryWithScoreHolder'
-        entities:
-          type:
-          - array
-          - 'null'
-          description: Named entities extracted from the article.
-          items:
-            $ref: '#/components/schemas/EntityHolder'
-        companies:
-          type:
-          - array
-          - 'null'
-          description: Companies identified in the article.
-          items:
-            $ref: '#/components/schemas/CompanyHolder'
-        sentiment:
-          allOf:
-          - $ref: '#/components/schemas/SentimentHolder'
-        summary:
-          type:
-          - string
-          - 'null'
-          description: Generated summary of the article, when available.
-        shortSummary:
-          type:
-          - string
-          - 'null'
-          description: Short generated summary of the article, when available.
-        translation:
-          type:
-          - string
-          - 'null'
-          description: Translated article content, when available.
-        translatedTitle:
-          type:
-          - string
-          - 'null'
-          description: English translation of the article title, when available.
-        translatedDescription:
-          type:
-          - string
-          - 'null'
-          description: English translation of the article description, when available.
-        translatedSummary:
-          type:
-          - string
-          - 'null'
-          description: English translation of the article summary, when available.
-        locations:
-          type:
-          - array
-          - 'null'
-          description: Locations identified as central to the article.
-          items:
-            $ref: '#/components/schemas/LocationHolder'
-        reprint:
-          type:
-          - boolean
-          - 'null'
-          description: Whether the article is a reprint of previously published content.
-        reprintGroupId:
-          type:
-          - string
-          - 'null'
-          description: Identifier grouping the original article with its known reprints.
-        places:
-          type:
-          - array
-          - 'null'
-          description: Structured geographic places extracted from the article.
-          items:
-            $ref: '#/components/schemas/Place'
-        people:
-          type:
-          - array
-          - 'null'
-          description: Known people identified in the article.
-          items:
-            $ref: '#/components/schemas/PersonHolder'
-        cluster:
-          allOf:
-          - $ref: '#/components/schemas/NewsCluster'
-        journalists:
-          type:
-          - array
-          - 'null'
-          description: Expanded journalist details, when requested and available.
-          items:
-            $ref: '#/components/schemas/Journalist'
-        highlights:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            type: array
-            description: Matched text fragments grouped by article field.
-            items:
-              type: string
-              description: Matched text fragments grouped by article field.
-          description: Matched text fragments grouped by article field.
-        vectors:
-          type:
-          - array
-          - 'null'
-          description: Vector embeddings associated with the article, when requested.
-          items:
-            $ref: '#/components/schemas/VectorData'
-    RecordStatHolder:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: Name of the aggregated value.
-        count:
-          type:
-          - integer
-          - 'null'
-          description: Number of matching articles for the value.
-          format: int32
-      description: Google Content Categories associated with the story and their article counts.
     IdNameHolder:
       type: object
       properties:
@@ -2039,327 +2353,7 @@ components:
           - 'null'
           description: Display name of the matched record.
       description: Known journalist records matched to the article byline.
-    LocationCount:
-      type: object
-      properties:
-        country:
-          type:
-          - string
-          - 'null'
-          description: Country associated with the story.
-        state:
-          type:
-          - string
-          - 'null'
-          description: State or region associated with the story.
-        county:
-          type:
-          - string
-          - 'null'
-          description: County associated with the story.
-        city:
-          type:
-          - string
-          - 'null'
-          description: City associated with the story.
-        area:
-          type:
-          - string
-          - 'null'
-          description: Neighborhood, borough, or district associated with the story.
-        count:
-          type:
-          - integer
-          - 'null'
-          description: Number of story articles associated with the location.
-          format: int32
-      description: Locations associated with the story and their article counts.
-    NewsCluster:
-      type: object
-      properties:
-        createdAt:
-          type:
-          - string
-          - 'null'
-          description: Date and time the story was created, in ISO 8601 format.
-        updatedAt:
-          type:
-          - string
-          - 'null'
-          description: Date and time the story was last updated, in ISO 8601 format.
-        initializedAt:
-          type:
-          - string
-          - 'null'
-          description: Date and time the story became initialized and visible, in ISO 8601 format.
-        id:
-          type:
-          - string
-          - 'null'
-          description: Unique identifier for the story cluster.
-        duplicateOf:
-          type:
-          - string
-          - 'null'
-          description: Identifier of the original story when this story is a duplicate.
-        slug:
-          type:
-          - string
-          - 'null'
-          description: URL-safe identifier for the story.
-        name:
-          type:
-          - string
-          - 'null'
-          description: Generated story title.
-        summary:
-          type:
-          - string
-          - 'null'
-          description: Generated story summary.
-        shortSummary:
-          type:
-          - string
-          - 'null'
-          description: Short generated story summary, when available.
-        summaryReferences:
-          type:
-          - array
-          - 'null'
-          description: Article IDs supporting the story summary.
-          items:
-            type: string
-            description: Article IDs supporting the story summary.
-        imageSource:
-          allOf:
-          - $ref: '#/components/schemas/SourceHolder'
-        imageUrl:
-          type:
-          - string
-          - 'null'
-          description: Primary image URL selected for the story.
-        keyPoints:
-          type:
-          - array
-          - 'null'
-          description: Key facts and developments identified in the story.
-          items:
-            $ref: '#/components/schemas/KeyPoint'
-        questions:
-          type:
-          - array
-          - 'null'
-          description: Questions and answers generated from the story content.
-          items:
-            $ref: '#/components/schemas/Question'
-        uniqueSources:
-          type:
-          - array
-          - 'null'
-          description: Distinct publisher domains represented in the story.
-          items:
-            type: string
-            description: Distinct publisher domains represented in the story.
-        selectedArticles:
-          type:
-          - array
-          - 'null'
-          description: Representative articles selected for the story.
-          items:
-            $ref: '#/components/schemas/Article'
-        sentiment:
-          allOf:
-          - $ref: '#/components/schemas/SentimentHolder'
-        uniqueCount:
-          type:
-          - integer
-          - 'null'
-          description: Number of unique articles in the story.
-          format: int32
-        reprintCount:
-          type:
-          - integer
-          - 'null'
-          description: Number of reprinted articles in the story.
-          format: int32
-        totalCount:
-          type:
-          - integer
-          - 'null'
-          description: Total article count including reprints.
-          format: int32
-        countries:
-          type:
-          - array
-          - 'null'
-          description: Countries associated with the story and their article counts.
-          items:
-            $ref: '#/components/schemas/RecordStatHolder'
-        topCountries:
-          type:
-          - array
-          - 'null'
-          description: Countries most strongly associated with the story.
-          items:
-            type: string
-            description: Countries most strongly associated with the story.
-        topics:
-          type:
-          - array
-          - 'null'
-          description: Topics associated with the story and their article counts.
-          items:
-            $ref: '#/components/schemas/RecordStatHolder'
-        topTopics:
-          type:
-          - array
-          - 'null'
-          description: Topics most strongly associated with the story.
-          items:
-            $ref: '#/components/schemas/TopicHolder'
-        categories:
-          type:
-          - array
-          - 'null'
-          description: Categories associated with the story and their article counts.
-          items:
-            $ref: '#/components/schemas/RecordStatHolder'
-        topCategories:
-          type:
-          - array
-          - 'null'
-          description: Categories most strongly associated with the story.
-          items:
-            $ref: '#/components/schemas/CategoryHolder'
-        taxonomies:
-          type:
-          - array
-          - 'null'
-          description: Google Content Categories associated with the story and their article counts.
-          items:
-            $ref: '#/components/schemas/RecordStatHolder'
-        topTaxonomies:
-          type:
-          - array
-          - 'null'
-          description: Google Content Categories most strongly associated with the story.
-          items:
-            $ref: '#/components/schemas/CategoryHolder'
-        people:
-          type:
-          - array
-          - 'null'
-          description: People associated with the story and their article counts.
-          items:
-            $ref: '#/components/schemas/PersonCount'
-        topPeople:
-          type:
-          - array
-          - 'null'
-          description: People most strongly associated with the story.
-          items:
-            $ref: '#/components/schemas/PersonHolder'
-        companies:
-          type:
-          - array
-          - 'null'
-          description: Companies associated with the story and their article counts.
-          items:
-            $ref: '#/components/schemas/CompanyCount'
-        topCompanies:
-          type:
-          - array
-          - 'null'
-          description: Companies most strongly associated with the story.
-          items:
-            $ref: '#/components/schemas/CompanyHolder'
-        locations:
-          type:
-          - array
-          - 'null'
-          description: Locations associated with the story and their article counts.
-          items:
-            $ref: '#/components/schemas/LocationCount'
-        topLocations:
-          type:
-          - array
-          - 'null'
-          description: Locations most strongly associated with the story.
-          items:
-            $ref: '#/components/schemas/LocationHolder'
-        highlights:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            type: array
-            description: Matched text fragments grouped by story field.
-            items:
-              type: string
-              description: Matched text fragments grouped by story field.
-          description: Matched text fragments grouped by story field.
-        sourceDiversity:
-          type:
-          - number
-          - 'null'
-          description: Ratio of unique publisher domains to total articles in the story.
-          format: double
-      description: Expanded story cluster details, when requested and available.
-    LabelHolder:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: Editorial label assigned to the article.
-      description: Editorial labels assigned to the article.
-    SourceLocation:
-      type: object
-      properties:
-        country:
-          type:
-          - string
-          - 'null'
-          description: Country where the publisher is located.
-        state:
-          type:
-          - string
-          - 'null'
-          description: State or region where the publisher is located.
-        county:
-          type:
-          - string
-          - 'null'
-          description: County where the publisher is located.
-        city:
-          type:
-          - string
-          - 'null'
-          description: City where the publisher is located.
-        coordinates:
-          allOf:
-          - $ref: '#/components/schemas/Coordinate'
-      description: Geographic location of the publisher, when available.
-    NameCount:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: Name of the aggregated value.
-        count:
-          type:
-          - integer
-          - 'null'
-          description: Number of matching records for the value.
-          format: int64
-      description: Countries most frequently associated with the journalist's articles.
   securitySchemes:
     apiKeyAuth:
       type: http
       scheme: bearer
-x-refined-from:
-- perigon-openapi.json
-- perigon-openapi.yml

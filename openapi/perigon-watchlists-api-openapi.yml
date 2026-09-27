@@ -1,12 +1,12 @@
 openapi: 3.2.0
 info:
   title: Perigon Watchlists API
-  version: 1.0.0
+  description: The Perigon API provides access to comprehensive news and web content data. To use the API, simply sign up for a Perigon Business Solutions account to obtain your API key. Your available features may vary based on your plan. See the Authentication section for details on how to use your API key.
   contact:
     name: Perigon Support
     url: https://docs.perigon.io/
     email: data@perigon.io
-  description: 'Operations tagged Watchlists across 2 of this provider''s published API definitions: perigon-openapi.json, perigon-openapi.yml. Each path carries the servers of the definition it was published in.'
+  version: 1.0.0
 servers:
 - url: https://api.perigon.io
   description: Generated server url
@@ -206,9 +206,6 @@ paths:
                 timestamp: 1681338367402
       security:
       - apiKeyAuth: []
-    servers:
-    - url: https://api.perigon.io
-      description: Generated server url
   /v1/api/watchlists/resolve:
     get:
       tags:
@@ -286,9 +283,6 @@ paths:
                 timestamp: 1681338367402
       security:
       - apiKeyAuth: []
-    servers:
-    - url: https://api.perigon.io
-      description: Generated server url
   /v1/api/watchlists/{id}:
     get:
       tags:
@@ -512,96 +506,48 @@ paths:
                 timestamp: 1681338367402
       security:
       - apiKeyAuth: []
-    servers:
-    - url: https://api.perigon.io
-      description: Generated server url
 components:
   schemas:
-    WatchlistListResult:
+    CreateWatchlistParams:
       required:
-      - data
-      - total
+      - companies
+      - name
+      - people
       type: object
       properties:
-        total:
-          type: integer
-          description: Total number of matching watchlists across all pages.
-          format: int64
-        data:
+        name:
+          type: string
+          description: Unique name for the watchlist within the organization
+        displayName:
+          type:
+          - string
+          - 'null'
+          description: Display name for the watchlist
+        description:
+          type:
+          - string
+          - 'null'
+          description: Description of the watchlist
+        people:
+          maxItems: 100
+          minItems: 0
           type: array
-          description: Watchlists returned for the requested page.
+          description: List of people to include in the watchlist
           items:
-            $ref: '#/components/schemas/WatchlistDto'
-      description: Paginated list of watchlists.
-      example:
-        total: 1
-        data:
-        - id: 42
-          createdAt: '2025-06-01T09:00:00.000Z'
-          updatedAt: '2025-08-01T16:30:00.000Z'
-          name: ai-executives
-          displayName: AI Executives
-          description: Leadership at major AI companies.
-          people: []
-          companies: []
-          organizationId: 1001
-          visible: true
-    WatchlistCompany:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-        description:
-          type:
-          - string
-          - 'null'
-        id:
-          type:
-          - string
-          - 'null'
-        domain:
-          type:
-          - string
-          - 'null'
-        aliases:
-          type:
-          - array
-          - 'null'
+            $ref: '#/components/schemas/WatchlistPerson'
+        companies:
+          maxItems: 100
+          minItems: 0
+          type: array
+          description: List of companies to include in the watchlist
           items:
-            type: string
-        query:
+            $ref: '#/components/schemas/WatchlistCompany'
+        visible:
           type:
-          - string
+          - boolean
           - 'null'
-      description: Updated list of companies to include in the watchlist
-    WatchlistPersonDto:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-        description:
-          type:
-          - string
-          - 'null'
-        wikidataId:
-          type:
-          - string
-          - 'null'
-        aliases:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-        query:
-          type:
-          - string
-          - 'null'
-      description: People included in the watchlist.
+          description: Whether the watchlist is visible in the UI
+          default: true
     WatchlistCompanyDto:
       type: object
       properties:
@@ -632,67 +578,6 @@ components:
           - string
           - 'null'
       description: Companies included in the watchlist.
-    ErrorResponse:
-      type: object
-      properties:
-        status:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        message:
-          type:
-          - string
-          - 'null'
-        timestamp:
-          type:
-          - integer
-          - 'null'
-          format: int64
-    WatchlistSortBy:
-      type: string
-      enum:
-      - id
-      - createdAt
-      - updatedAt
-      - name
-    UpdateWatchlistParams:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: New name for the watchlist
-        displayName:
-          type:
-          - string
-          - 'null'
-          description: New display name for the watchlist
-        description:
-          type:
-          - string
-          - 'null'
-          description: New description for the watchlist
-        people:
-          type:
-          - array
-          - 'null'
-          description: Updated list of people to include in the watchlist
-          items:
-            $ref: '#/components/schemas/WatchlistPerson'
-        companies:
-          type:
-          - array
-          - 'null'
-          description: Updated list of companies to include in the watchlist
-          items:
-            $ref: '#/components/schemas/WatchlistCompany'
-        visible:
-          type:
-          - boolean
-          - 'null'
-          description: Whether the watchlist is visible in the UI
     WatchlistDto:
       type: object
       properties:
@@ -784,6 +669,138 @@ components:
             aliases: []
           organizationId: 1001
           visible: true
+    WatchlistResolveResult:
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: array
+          description: Resolved watchlists.
+          items:
+            $ref: '#/components/schemas/WatchlistDto'
+      description: Resolved watchlists response.
+      example:
+        data:
+        - id: 42
+          createdAt: '2025-06-01T09:00:00.000Z'
+          updatedAt: '2025-08-01T16:30:00.000Z'
+          name: ai-executives
+          displayName: AI Executives
+          description: Leadership at major AI companies.
+          people: []
+          companies: []
+          organizationId: 1001
+          visible: true
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        message:
+          type:
+          - string
+          - 'null'
+        timestamp:
+          type:
+          - integer
+          - 'null'
+          format: int64
+    WatchlistListResult:
+      required:
+      - data
+      - total
+      type: object
+      properties:
+        total:
+          type: integer
+          description: Total number of matching watchlists across all pages.
+          format: int64
+        data:
+          type: array
+          description: Watchlists returned for the requested page.
+          items:
+            $ref: '#/components/schemas/WatchlistDto'
+      description: Paginated list of watchlists.
+      example:
+        total: 1
+        data:
+        - id: 42
+          createdAt: '2025-06-01T09:00:00.000Z'
+          updatedAt: '2025-08-01T16:30:00.000Z'
+          name: ai-executives
+          displayName: AI Executives
+          description: Leadership at major AI companies.
+          people: []
+          companies: []
+          organizationId: 1001
+          visible: true
+    WatchlistCompany:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+        description:
+          type:
+          - string
+          - 'null'
+        id:
+          type:
+          - string
+          - 'null'
+        domain:
+          type:
+          - string
+          - 'null'
+        aliases:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        query:
+          type:
+          - string
+          - 'null'
+      description: Updated list of companies to include in the watchlist
+    WatchlistPersonDto:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+        description:
+          type:
+          - string
+          - 'null'
+        wikidataId:
+          type:
+          - string
+          - 'null'
+        aliases:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        query:
+          type:
+          - string
+          - 'null'
+      description: People included in the watchlist.
+    WatchlistSortBy:
+      type: string
+      enum:
+      - id
+      - createdAt
+      - updatedAt
+      - name
     WatchlistPerson:
       type: object
       properties:
@@ -810,38 +827,36 @@ components:
           - string
           - 'null'
       description: Updated list of people to include in the watchlist
-    CreateWatchlistParams:
-      required:
-      - companies
-      - name
-      - people
+    UpdateWatchlistParams:
       type: object
       properties:
         name:
-          type: string
-          description: Unique name for the watchlist within the organization
+          type:
+          - string
+          - 'null'
+          description: New name for the watchlist
         displayName:
           type:
           - string
           - 'null'
-          description: Display name for the watchlist
+          description: New display name for the watchlist
         description:
           type:
           - string
           - 'null'
-          description: Description of the watchlist
+          description: New description for the watchlist
         people:
-          maxItems: 100
-          minItems: 0
-          type: array
-          description: List of people to include in the watchlist
+          type:
+          - array
+          - 'null'
+          description: Updated list of people to include in the watchlist
           items:
             $ref: '#/components/schemas/WatchlistPerson'
         companies:
-          maxItems: 100
-          minItems: 0
-          type: array
-          description: List of companies to include in the watchlist
+          type:
+          - array
+          - 'null'
+          description: Updated list of companies to include in the watchlist
           items:
             $ref: '#/components/schemas/WatchlistCompany'
         visible:
@@ -849,34 +864,7 @@ components:
           - boolean
           - 'null'
           description: Whether the watchlist is visible in the UI
-          default: true
-    WatchlistResolveResult:
-      required:
-      - data
-      type: object
-      properties:
-        data:
-          type: array
-          description: Resolved watchlists.
-          items:
-            $ref: '#/components/schemas/WatchlistDto'
-      description: Resolved watchlists response.
-      example:
-        data:
-        - id: 42
-          createdAt: '2025-06-01T09:00:00.000Z'
-          updatedAt: '2025-08-01T16:30:00.000Z'
-          name: ai-executives
-          displayName: AI Executives
-          description: Leadership at major AI companies.
-          people: []
-          companies: []
-          organizationId: 1001
-          visible: true
   securitySchemes:
     apiKeyAuth:
       type: http
       scheme: bearer
-x-refined-from:
-- perigon-openapi.json
-- perigon-openapi.yml

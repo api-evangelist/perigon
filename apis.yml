@@ -10,6 +10,22 @@ x-type: company
 x-source: harvest:news
 x-tier: profiled
 x-tier-reason: enrichment pass 2026-09-20 (local-v4; was harvest)
+deliveryModel:
+  model: saas
+  license_evidence:
+    not_product:
+    - goperigon/perigon-mcp-server
+  open_source: unknown
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: low
+  source:
+  - openapi
+  - pricing
+  - repository-not-product
+  generated: '2026-09-25'
+  method: derived
 specificationVersion: '0.20'
 created: '2026-09-20'
 modified: '2026-09-20'
