@@ -356,6 +356,227 @@ paths:
       - apiKeyAuth: []
 components:
   schemas:
+    ScoredDataWikiData:
+      type: object
+      properties:
+        score:
+          type:
+          - number
+          - 'null'
+          format: float
+        data:
+          allOf:
+          - $ref: '#/components/schemas/WikiData'
+        vectors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/VectorData'
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        message:
+          type:
+          - string
+          - 'null'
+        timestamp:
+          type:
+          - integer
+          - 'null'
+          format: int64
+    WikipediaSearchFilter:
+      type: object
+      properties:
+        pageId:
+          type:
+          - array
+          - 'null'
+          description: Filter by specific Perigon page identifiers. Accepts either a single ID or an array of IDs. Returns only pages matching these IDs.
+          example:
+          - ''
+          items:
+            type: string
+        sectionId:
+          type:
+          - array
+          - 'null'
+          description: Filter by specific section identifiers. Accepts either a single ID or an array of IDs. Returns only pages containing these sections.
+          example:
+          - ''
+          items:
+            type: string
+        wikiPageId:
+          type:
+          - array
+          - 'null'
+          description: Filter by specific Wikipedia page identifiers. Accepts either a single ID or an array of IDs. Returns only pages matching these IDs.
+          example:
+          - 0
+          items:
+            type: integer
+            format: int64
+        wikiRevisionId:
+          type:
+          - array
+          - 'null'
+          description: Filter by specific Perigon page revision identifiers. Accepts either a single ID or an array of IDs. Returns only pages matching these IDs.
+          example:
+          - 0
+          items:
+            type: integer
+            format: int64
+        wikiCode:
+          type:
+          - array
+          - 'null'
+          description: Filter by specific Wikipedia project codes. Returns only pages matching these projects.
+          example:
+          - ''
+          items:
+            type: string
+        wikiNamespace:
+          type:
+          - array
+          - 'null'
+          description: Filter by specific Wikipedia namespaces. Returns only pages matching these namespaces.
+          example:
+          - 0
+          items:
+            type: integer
+            format: int64
+        wikidataId:
+          type:
+          - array
+          - 'null'
+          description: Filter by specific Wikidata entity IDs. Returns only pages whose Wikidata entities match those ids.
+          example:
+          - ''
+          items:
+            type: string
+        wikidataInstanceOfId:
+          type:
+          - array
+          - 'null'
+          description: Filter by specific Wikidata entity IDs. Returns only pages whose Wikidata entities are instances of provided ids.
+          example:
+          - ''
+          items:
+            type: string
+        wikidataInstanceOfLabel:
+          type:
+          - array
+          - 'null'
+          description: Filter by specific Wikidata entity labels. Returns only pages whose Wikidata entities are instances of these labels.
+          example:
+          - ''
+          items:
+            type: string
+        AND:
+          type:
+          - array
+          - 'null'
+          description: Adds additional AND filter objects. These objects must be of the same type as the original filter object and will be combined with the existing filter using the AND logical operator.
+          example:
+          - {}
+          items:
+            $ref: '#/components/schemas/WikipediaSearchFilter'
+        OR:
+          type:
+          - array
+          - 'null'
+          description: Adds additional OR filter objects. These objects must be of the same type as the original filter object and will be combined with the existing filter using the OR logical operator.
+          example:
+          - {}
+          items:
+            $ref: '#/components/schemas/WikipediaSearchFilter'
+        NOT:
+          type:
+          - array
+          - 'null'
+          description: A filter object for logical NOT operations
+          example:
+          - {}
+          items:
+            $ref: '#/components/schemas/WikipediaSearchFilter'
+      description: Complex filter structure for Wikipedia page searches that supports nested logical operations (AND, OR, NOT) and multiple filtering criteria.
+    WikiData:
+      type: object
+      properties:
+        pageId:
+          type:
+          - string
+          - 'null'
+        sectionId:
+          type:
+          - string
+          - 'null'
+        wikiPageId:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        wikiRevisionId:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        wikiRevisionTs:
+          type:
+          - string
+          - 'null'
+        wikiCode:
+          type:
+          - string
+          - 'null'
+        wikiNamespace:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        wikiTitle:
+          type:
+          - string
+          - 'null'
+        wikidataId:
+          type:
+          - string
+          - 'null'
+        wikidataInstanceOf:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/WikidataLabelHolder'
+        redirectTitles:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        pageviews:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        title:
+          type:
+          - string
+          - 'null'
+        styleLevel:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        content:
+          type:
+          - string
+          - 'null'
     WikipediaVectorSearchResult:
       required:
       - results
@@ -786,193 +1007,6 @@ components:
           - Ze'ev Drori
           - Zep Solar
           pageviews: 339
-    WikiData:
-      type: object
-      properties:
-        pageId:
-          type:
-          - string
-          - 'null'
-        sectionId:
-          type:
-          - string
-          - 'null'
-        wikiPageId:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        wikiRevisionId:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        wikiRevisionTs:
-          type:
-          - string
-          - 'null'
-        wikiCode:
-          type:
-          - string
-          - 'null'
-        wikiNamespace:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        wikiTitle:
-          type:
-          - string
-          - 'null'
-        wikidataId:
-          type:
-          - string
-          - 'null'
-        wikidataInstanceOf:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/WikidataLabelHolder'
-        redirectTitles:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-        pageviews:
-          type:
-          - integer
-          - 'null'
-          format: int64
-        title:
-          type:
-          - string
-          - 'null'
-        styleLevel:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        content:
-          type:
-          - string
-          - 'null'
-    WikipediaSearchFilter:
-      type: object
-      properties:
-        pageId:
-          type:
-          - array
-          - 'null'
-          description: Filter by specific Perigon page identifiers. Accepts either a single ID or an array of IDs. Returns only pages matching these IDs.
-          example:
-          - ''
-          items:
-            type: string
-        sectionId:
-          type:
-          - array
-          - 'null'
-          description: Filter by specific section identifiers. Accepts either a single ID or an array of IDs. Returns only pages containing these sections.
-          example:
-          - ''
-          items:
-            type: string
-        wikiPageId:
-          type:
-          - array
-          - 'null'
-          description: Filter by specific Wikipedia page identifiers. Accepts either a single ID or an array of IDs. Returns only pages matching these IDs.
-          example:
-          - 0
-          items:
-            type: integer
-            format: int64
-        wikiRevisionId:
-          type:
-          - array
-          - 'null'
-          description: Filter by specific Perigon page revision identifiers. Accepts either a single ID or an array of IDs. Returns only pages matching these IDs.
-          example:
-          - 0
-          items:
-            type: integer
-            format: int64
-        wikiCode:
-          type:
-          - array
-          - 'null'
-          description: Filter by specific Wikipedia project codes. Returns only pages matching these projects.
-          example:
-          - ''
-          items:
-            type: string
-        wikiNamespace:
-          type:
-          - array
-          - 'null'
-          description: Filter by specific Wikipedia namespaces. Returns only pages matching these namespaces.
-          example:
-          - 0
-          items:
-            type: integer
-            format: int64
-        wikidataId:
-          type:
-          - array
-          - 'null'
-          description: Filter by specific Wikidata entity IDs. Returns only pages whose Wikidata entities match those ids.
-          example:
-          - ''
-          items:
-            type: string
-        wikidataInstanceOfId:
-          type:
-          - array
-          - 'null'
-          description: Filter by specific Wikidata entity IDs. Returns only pages whose Wikidata entities are instances of provided ids.
-          example:
-          - ''
-          items:
-            type: string
-        wikidataInstanceOfLabel:
-          type:
-          - array
-          - 'null'
-          description: Filter by specific Wikidata entity labels. Returns only pages whose Wikidata entities are instances of these labels.
-          example:
-          - ''
-          items:
-            type: string
-        AND:
-          type:
-          - array
-          - 'null'
-          description: Adds additional AND filter objects. These objects must be of the same type as the original filter object and will be combined with the existing filter using the AND logical operator.
-          example:
-          - {}
-          items:
-            $ref: '#/components/schemas/WikipediaSearchFilter'
-        OR:
-          type:
-          - array
-          - 'null'
-          description: Adds additional OR filter objects. These objects must be of the same type as the original filter object and will be combined with the existing filter using the OR logical operator.
-          example:
-          - {}
-          items:
-            $ref: '#/components/schemas/WikipediaSearchFilter'
-        NOT:
-          type:
-          - array
-          - 'null'
-          description: A filter object for logical NOT operations
-          example:
-          - {}
-          items:
-            $ref: '#/components/schemas/WikipediaSearchFilter'
-      description: Complex filter structure for Wikipedia page searches that supports nested logical operations (AND, OR, NOT) and multiple filtering criteria.
     WikiPageSectionHolder:
       type: object
       properties:
@@ -1170,40 +1204,6 @@ components:
           type:
           - string
           - 'null'
-    ErrorResponse:
-      type: object
-      properties:
-        status:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        message:
-          type:
-          - string
-          - 'null'
-        timestamp:
-          type:
-          - integer
-          - 'null'
-          format: int64
-    ScoredDataWikiData:
-      type: object
-      properties:
-        score:
-          type:
-          - number
-          - 'null'
-          format: float
-        data:
-          allOf:
-          - $ref: '#/components/schemas/WikiData'
-        vectors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/VectorData'
   securitySchemes:
     apiKeyAuth:
       type: http

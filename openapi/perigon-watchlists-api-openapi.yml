@@ -508,6 +508,155 @@ paths:
       - apiKeyAuth: []
 components:
   schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        message:
+          type:
+          - string
+          - 'null'
+        timestamp:
+          type:
+          - integer
+          - 'null'
+          format: int64
+    WatchlistSortBy:
+      type: string
+      enum:
+      - id
+      - createdAt
+      - updatedAt
+      - name
+    WatchlistListResult:
+      required:
+      - data
+      - total
+      type: object
+      properties:
+        total:
+          type: integer
+          description: Total number of matching watchlists across all pages.
+          format: int64
+        data:
+          type: array
+          description: Watchlists returned for the requested page.
+          items:
+            $ref: '#/components/schemas/WatchlistDto'
+      description: Paginated list of watchlists.
+      example:
+        total: 1
+        data:
+        - id: 42
+          createdAt: '2025-06-01T09:00:00.000Z'
+          updatedAt: '2025-08-01T16:30:00.000Z'
+          name: ai-executives
+          displayName: AI Executives
+          description: Leadership at major AI companies.
+          people: []
+          companies: []
+          organizationId: 1001
+          visible: true
+    WatchlistResult:
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/WatchlistDto'
+      description: Single watchlist response.
+      example:
+        data:
+          id: 42
+          createdAt: '2025-06-01T09:00:00.000Z'
+          updatedAt: '2025-08-01T16:30:00.000Z'
+          name: ai-executives
+          displayName: AI Executives
+          description: Leadership at major AI companies.
+          people:
+          - name: Sam Altman
+            description: CEO of OpenAI
+            wikidataId: Q7411063
+            aliases: []
+          companies:
+          - name: OpenAI
+            description: AI research company
+            id: openai
+            domain: openai.com
+            aliases: []
+          organizationId: 1001
+          visible: true
+    UpdateWatchlistParams:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: New name for the watchlist
+        displayName:
+          type:
+          - string
+          - 'null'
+          description: New display name for the watchlist
+        description:
+          type:
+          - string
+          - 'null'
+          description: New description for the watchlist
+        people:
+          type:
+          - array
+          - 'null'
+          description: Updated list of people to include in the watchlist
+          items:
+            $ref: '#/components/schemas/WatchlistPerson'
+        companies:
+          type:
+          - array
+          - 'null'
+          description: Updated list of companies to include in the watchlist
+          items:
+            $ref: '#/components/schemas/WatchlistCompany'
+        visible:
+          type:
+          - boolean
+          - 'null'
+          description: Whether the watchlist is visible in the UI
+    WatchlistCompanyDto:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+        description:
+          type:
+          - string
+          - 'null'
+        id:
+          type:
+          - string
+          - 'null'
+        domain:
+          type:
+          - string
+          - 'null'
+        aliases:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        query:
+          type:
+          - string
+          - 'null'
+      description: Companies included in the watchlist.
     CreateWatchlistParams:
       required:
       - companies
@@ -548,36 +697,6 @@ components:
           - 'null'
           description: Whether the watchlist is visible in the UI
           default: true
-    WatchlistCompanyDto:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-        description:
-          type:
-          - string
-          - 'null'
-        id:
-          type:
-          - string
-          - 'null'
-        domain:
-          type:
-          - string
-          - 'null'
-        aliases:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-        query:
-          type:
-          - string
-          - 'null'
-      description: Companies included in the watchlist.
     WatchlistDto:
       type: object
       properties:
@@ -640,104 +759,32 @@ components:
           - 'null'
           description: Whether the watchlist is publicly visible.
       description: Watchlist of people and companies for use with monitors.
-    WatchlistResult:
-      required:
-      - data
+    WatchlistPersonDto:
       type: object
       properties:
-        data:
-          $ref: '#/components/schemas/WatchlistDto'
-      description: Single watchlist response.
-      example:
-        data:
-          id: 42
-          createdAt: '2025-06-01T09:00:00.000Z'
-          updatedAt: '2025-08-01T16:30:00.000Z'
-          name: ai-executives
-          displayName: AI Executives
-          description: Leadership at major AI companies.
-          people:
-          - name: Sam Altman
-            description: CEO of OpenAI
-            wikidataId: Q7411063
-            aliases: []
-          companies:
-          - name: OpenAI
-            description: AI research company
-            id: openai
-            domain: openai.com
-            aliases: []
-          organizationId: 1001
-          visible: true
-    WatchlistResolveResult:
-      required:
-      - data
-      type: object
-      properties:
-        data:
-          type: array
-          description: Resolved watchlists.
-          items:
-            $ref: '#/components/schemas/WatchlistDto'
-      description: Resolved watchlists response.
-      example:
-        data:
-        - id: 42
-          createdAt: '2025-06-01T09:00:00.000Z'
-          updatedAt: '2025-08-01T16:30:00.000Z'
-          name: ai-executives
-          displayName: AI Executives
-          description: Leadership at major AI companies.
-          people: []
-          companies: []
-          organizationId: 1001
-          visible: true
-    ErrorResponse:
-      type: object
-      properties:
-        status:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        message:
+        name:
           type:
           - string
           - 'null'
-        timestamp:
+        description:
           type:
-          - integer
+          - string
           - 'null'
-          format: int64
-    WatchlistListResult:
-      required:
-      - data
-      - total
-      type: object
-      properties:
-        total:
-          type: integer
-          description: Total number of matching watchlists across all pages.
-          format: int64
-        data:
-          type: array
-          description: Watchlists returned for the requested page.
+        wikidataId:
+          type:
+          - string
+          - 'null'
+        aliases:
+          type:
+          - array
+          - 'null'
           items:
-            $ref: '#/components/schemas/WatchlistDto'
-      description: Paginated list of watchlists.
-      example:
-        total: 1
-        data:
-        - id: 42
-          createdAt: '2025-06-01T09:00:00.000Z'
-          updatedAt: '2025-08-01T16:30:00.000Z'
-          name: ai-executives
-          displayName: AI Executives
-          description: Leadership at major AI companies.
-          people: []
-          companies: []
-          organizationId: 1001
-          visible: true
+            type: string
+        query:
+          type:
+          - string
+          - 'null'
+      description: People included in the watchlist.
     WatchlistCompany:
       type: object
       properties:
@@ -768,39 +815,29 @@ components:
           - string
           - 'null'
       description: Updated list of companies to include in the watchlist
-    WatchlistPersonDto:
+    WatchlistResolveResult:
+      required:
+      - data
       type: object
       properties:
-        name:
-          type:
-          - string
-          - 'null'
-        description:
-          type:
-          - string
-          - 'null'
-        wikidataId:
-          type:
-          - string
-          - 'null'
-        aliases:
-          type:
-          - array
-          - 'null'
+        data:
+          type: array
+          description: Resolved watchlists.
           items:
-            type: string
-        query:
-          type:
-          - string
-          - 'null'
-      description: People included in the watchlist.
-    WatchlistSortBy:
-      type: string
-      enum:
-      - id
-      - createdAt
-      - updatedAt
-      - name
+            $ref: '#/components/schemas/WatchlistDto'
+      description: Resolved watchlists response.
+      example:
+        data:
+        - id: 42
+          createdAt: '2025-06-01T09:00:00.000Z'
+          updatedAt: '2025-08-01T16:30:00.000Z'
+          name: ai-executives
+          displayName: AI Executives
+          description: Leadership at major AI companies.
+          people: []
+          companies: []
+          organizationId: 1001
+          visible: true
     WatchlistPerson:
       type: object
       properties:
@@ -827,43 +864,6 @@ components:
           - string
           - 'null'
       description: Updated list of people to include in the watchlist
-    UpdateWatchlistParams:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: New name for the watchlist
-        displayName:
-          type:
-          - string
-          - 'null'
-          description: New display name for the watchlist
-        description:
-          type:
-          - string
-          - 'null'
-          description: New description for the watchlist
-        people:
-          type:
-          - array
-          - 'null'
-          description: Updated list of people to include in the watchlist
-          items:
-            $ref: '#/components/schemas/WatchlistPerson'
-        companies:
-          type:
-          - array
-          - 'null'
-          description: Updated list of companies to include in the watchlist
-          items:
-            $ref: '#/components/schemas/WatchlistCompany'
-        visible:
-          type:
-          - boolean
-          - 'null'
-          description: Whether the watchlist is visible in the UI
   securitySchemes:
     apiKeyAuth:
       type: http

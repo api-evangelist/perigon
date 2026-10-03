@@ -100,32 +100,6 @@ paths:
       - apiKeyAuth: []
 components:
   schemas:
-    LimitsResult:
-      required:
-      - data
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/ApiLimitsDto'
-      description: API usage and limits response.
-      example:
-        data:
-          organizationName: Acme Research
-          requestsUsed: 12450
-          requestLimit: 100000
-          maxPageSize: 100
-          paginationLimit: 10000
-          articleContentTruncation: null
-          since: '2025-08-01T00:00:00Z'
-          lastMadeAt: '2025-08-12T15:42:11Z'
-          resetAt: '2025-09-01T00:00:00Z'
-          subscriptionCancelAt: null
-          keyStatuses:
-          - keyPreview: abc...def
-            valid: true
-            enabled: true
-            subscriptionActive: true
-            requestCount: 320
     ApiKeyStatus:
       type: object
       properties:
@@ -173,6 +147,32 @@ components:
           - integer
           - 'null'
           format: int64
+    LimitsResult:
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ApiLimitsDto'
+      description: API usage and limits response.
+      example:
+        data:
+          organizationName: Acme Research
+          requestsUsed: 12450
+          requestLimit: 100000
+          maxPageSize: 100
+          paginationLimit: 10000
+          articleContentTruncation: null
+          since: '2025-08-01T00:00:00Z'
+          lastMadeAt: '2025-08-12T15:42:11Z'
+          resetAt: '2025-09-01T00:00:00Z'
+          subscriptionCancelAt: null
+          keyStatuses:
+          - keyPreview: abc...def
+            valid: true
+            enabled: true
+            subscriptionActive: true
+            requestCount: 320
     ApiLimitsDto:
       type: object
       properties:
