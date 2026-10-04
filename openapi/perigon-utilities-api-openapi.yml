@@ -100,79 +100,6 @@ paths:
       - apiKeyAuth: []
 components:
   schemas:
-    ApiKeyStatus:
-      type: object
-      properties:
-        keyPreview:
-          type:
-          - string
-          - 'null'
-          description: Masked preview of the supplied API key.
-        valid:
-          type:
-          - boolean
-          - 'null'
-          description: Whether the supplied API key is valid and belongs to the authenticated account.
-        enabled:
-          type:
-          - boolean
-          - 'null'
-          description: Whether the API key is enabled. A disabled ('off') key is valid but cannot be used to make requests. False when the key is not valid.
-        subscriptionActive:
-          type:
-          - boolean
-          - 'null'
-          description: Whether the account owning the key has an active subscription or trial.
-        requestCount:
-          type:
-          - integer
-          - 'null'
-          description: Approx number of requests made with this API key in this billing cycle.
-          format: int64
-      description: Validity and status of a single API key.
-    ErrorResponse:
-      type: object
-      properties:
-        status:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        message:
-          type:
-          - string
-          - 'null'
-        timestamp:
-          type:
-          - integer
-          - 'null'
-          format: int64
-    LimitsResult:
-      required:
-      - data
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/ApiLimitsDto'
-      description: API usage and limits response.
-      example:
-        data:
-          organizationName: Acme Research
-          requestsUsed: 12450
-          requestLimit: 100000
-          maxPageSize: 100
-          paginationLimit: 10000
-          articleContentTruncation: null
-          since: '2025-08-01T00:00:00Z'
-          lastMadeAt: '2025-08-12T15:42:11Z'
-          resetAt: '2025-09-01T00:00:00Z'
-          subscriptionCancelAt: null
-          keyStatuses:
-          - keyPreview: abc...def
-            valid: true
-            enabled: true
-            subscriptionActive: true
-            requestCount: 320
     ApiLimitsDto:
       type: object
       properties:
@@ -243,6 +170,79 @@ components:
           items:
             $ref: '#/components/schemas/ApiKeyStatus'
       description: Current API usage and limits for the authenticated account, optionally including the status of additional API keys that were requested. Reading this does not count against the account's request quota or rate limit.
+    ApiKeyStatus:
+      type: object
+      properties:
+        keyPreview:
+          type:
+          - string
+          - 'null'
+          description: Masked preview of the supplied API key.
+        valid:
+          type:
+          - boolean
+          - 'null'
+          description: Whether the supplied API key is valid and belongs to the authenticated account.
+        enabled:
+          type:
+          - boolean
+          - 'null'
+          description: Whether the API key is enabled. A disabled ('off') key is valid but cannot be used to make requests. False when the key is not valid.
+        subscriptionActive:
+          type:
+          - boolean
+          - 'null'
+          description: Whether the account owning the key has an active subscription or trial.
+        requestCount:
+          type:
+          - integer
+          - 'null'
+          description: Approx number of requests made with this API key in this billing cycle.
+          format: int64
+      description: Validity and status of a single API key.
+    LimitsResult:
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ApiLimitsDto'
+      description: API usage and limits response.
+      example:
+        data:
+          organizationName: Acme Research
+          requestsUsed: 12450
+          requestLimit: 100000
+          maxPageSize: 100
+          paginationLimit: 10000
+          articleContentTruncation: null
+          since: '2025-08-01T00:00:00Z'
+          lastMadeAt: '2025-08-12T15:42:11Z'
+          resetAt: '2025-09-01T00:00:00Z'
+          subscriptionCancelAt: null
+          keyStatuses:
+          - keyPreview: abc...def
+            valid: true
+            enabled: true
+            subscriptionActive: true
+            requestCount: 320
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        message:
+          type:
+          - string
+          - 'null'
+        timestamp:
+          type:
+          - integer
+          - 'null'
+          format: int64
   securitySchemes:
     apiKeyAuth:
       type: http

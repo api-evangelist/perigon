@@ -512,6 +512,46 @@ paths:
       - apiKeyAuth: []
 components:
   schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        message:
+          type:
+          - string
+          - 'null'
+        timestamp:
+          type:
+          - integer
+          - 'null'
+          format: int64
+    SourceGroupResult:
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/SourceGroupDto'
+      description: Single source group response.
+      example:
+        data:
+          id: 17
+          createdAt: '2025-05-10T08:00:00.000Z'
+          updatedAt: '2025-07-20T12:45:00.000Z'
+          name: tier-1-tech
+          displayName: Tier 1 Tech
+          description: Major technology news outlets.
+          domains:
+          - reuters.com
+          - apnews.com
+          - bbc.com
+          - cnn.com
+          organizationId: 1001
+          visible: true
     PatchSourceGroupParams:
       type: object
       properties:
@@ -542,56 +582,6 @@ components:
           items:
             type: string
             description: List of domains included in the source group
-    ErrorResponse:
-      type: object
-      properties:
-        status:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        message:
-          type:
-          - string
-          - 'null'
-        timestamp:
-          type:
-          - integer
-          - 'null'
-          format: int64
-    SourceGroupResolveResult:
-      required:
-      - data
-      type: object
-      properties:
-        data:
-          type: array
-          description: Resolved source groups.
-          items:
-            $ref: '#/components/schemas/SourceGroupDto'
-      description: Resolved source groups response.
-      example:
-        data:
-        - id: 17
-          createdAt: '2025-05-10T08:00:00.000Z'
-          updatedAt: '2025-07-20T12:45:00.000Z'
-          name: tier-1-tech
-          displayName: Tier 1 Tech
-          description: Major technology news outlets.
-          domains:
-          - reuters.com
-          - apnews.com
-          - bbc.com
-          - cnn.com
-          organizationId: 1001
-          visible: true
-    SourceGroupSortBy:
-      type: string
-      enum:
-      - id
-      - createdAt
-      - updatedAt
-      - name
     CreateSourceGroupParams:
       required:
       - domains
@@ -614,24 +604,25 @@ components:
           type: array
           items:
             type: string
-    SourceGroupListResult:
+    SourceGroupSortBy:
+      type: string
+      enum:
+      - id
+      - createdAt
+      - updatedAt
+      - name
+    SourceGroupResolveResult:
       required:
       - data
-      - total
       type: object
       properties:
-        total:
-          type: integer
-          description: Total number of matching source groups across all pages.
-          format: int64
         data:
           type: array
-          description: Source groups returned for the requested page.
+          description: Resolved source groups.
           items:
             $ref: '#/components/schemas/SourceGroupDto'
-      description: Paginated list of source groups.
+      description: Resolved source groups response.
       example:
-        total: 1
         data:
         - id: 17
           createdAt: '2025-05-10T08:00:00.000Z'
@@ -702,17 +693,26 @@ components:
           - 'null'
           description: Whether the source group is publicly visible.
       description: Named group of news source domains for filtering search and monitors.
-    SourceGroupResult:
+    SourceGroupListResult:
       required:
       - data
+      - total
       type: object
       properties:
+        total:
+          type: integer
+          description: Total number of matching source groups across all pages.
+          format: int64
         data:
-          $ref: '#/components/schemas/SourceGroupDto'
-      description: Single source group response.
+          type: array
+          description: Source groups returned for the requested page.
+          items:
+            $ref: '#/components/schemas/SourceGroupDto'
+      description: Paginated list of source groups.
       example:
+        total: 1
         data:
-          id: 17
+        - id: 17
           createdAt: '2025-05-10T08:00:00.000Z'
           updatedAt: '2025-07-20T12:45:00.000Z'
           name: tier-1-tech

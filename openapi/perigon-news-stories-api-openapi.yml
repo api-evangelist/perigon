@@ -2069,902 +2069,6 @@ paths:
       - apiKeyAuth: []
 components:
   schemas:
-    NameCount:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: Name of the aggregated value.
-        count:
-          type:
-          - integer
-          - 'null'
-          description: Number of matching records for the value.
-          format: int64
-      description: Countries most frequently associated with the journalist's articles.
-    ErrorResponse:
-      type: object
-      properties:
-        status:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        message:
-          type:
-          - string
-          - 'null'
-        timestamp:
-          type:
-          - integer
-          - 'null'
-          format: int64
-    KeywordHolder:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: Keyword extracted from the article.
-        weight:
-          type:
-          - number
-          - 'null'
-          description: Relative relevance weight of the keyword.
-          format: float
-      description: Keywords extracted from the article with their relevance weights.
-    StoryHistoryRecord:
-      type: object
-      properties:
-        clusterId:
-          type:
-          - string
-          - 'null'
-          description: Unique identifier of the story associated with this history record.
-        createdAt:
-          type:
-          - string
-          - 'null'
-          description: Date and time the history record was created, in ISO 8601 format.
-        name:
-          type:
-          - string
-          - 'null'
-          description: Story name captured in this history record, when available.
-        triggeredAt:
-          type:
-          - string
-          - 'null'
-          description: Date and time the story refresh that produced this record was triggered, in ISO 8601 format.
-        summary:
-          type:
-          - string
-          - 'null'
-          description: Story summary captured in this history record.
-        shortSummary:
-          type:
-          - string
-          - 'null'
-          description: Short story summary captured in this history record, when available.
-        changelog:
-          type:
-          - string
-          - 'null'
-          description: Description of changes from the previous story version, when available.
-        keyPoints:
-          type:
-          - array
-          - 'null'
-          description: Key points captured for this version of the story.
-          items:
-            $ref: '#/components/schemas/KeyPoint'
-        questions:
-          type:
-          - array
-          - 'null'
-          description: Questions and answers generated for this version of the story.
-          items:
-            $ref: '#/components/schemas/Question'
-      description: History records returned for the requested page.
-    ArticleRefreshJobResponse:
-      type: object
-      properties:
-        jobId:
-          type:
-          - string
-          - 'null'
-          format: uuid
-        status:
-          type:
-          - string
-          - 'null'
-          enum:
-          - PENDING
-          - PROCESSING
-          - COMPLETED
-        results:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ArticleRefreshJobArticleResult'
-    KeyPoint:
-      type: object
-      properties:
-        point:
-          type:
-          - string
-          - 'null'
-          description: A key fact or development identified in the content.
-        references:
-          type:
-          - array
-          - 'null'
-          description: Article IDs supporting the key point.
-          items:
-            type: string
-            description: Article IDs supporting the key point.
-      description: Key facts and developments identified in the story.
-    Journalist:
-      type: object
-      properties:
-        id:
-          type:
-          - string
-          - 'null'
-          description: Unique Perigon identifier for the journalist.
-        primaryRecordId:
-          type:
-          - string
-          - 'null'
-        name:
-          type:
-          - string
-          - 'null'
-          description: Common display name of the journalist.
-        fullName:
-          type:
-          - string
-          - 'null'
-          description: Full name of the journalist.
-        headline:
-          type:
-          - string
-          - 'null'
-          description: Professional headline associated with the journalist.
-        description:
-          type:
-          - string
-          - 'null'
-          description: Biographical description of the journalist.
-        title:
-          type:
-          - string
-          - 'null'
-          description: Professional title of the journalist.
-        email:
-          type:
-          - string
-          - 'null'
-          description: Journalist's email.
-        locations:
-          type:
-          - array
-          - 'null'
-          description: Locations associated with the journalist.
-          items:
-            $ref: '#/components/schemas/LocationHolder'
-        updatedAt:
-          type:
-          - string
-          - 'null'
-          description: Date and time the journalist record was last refreshed, in ISO 8601 format.
-        topTopics:
-          type:
-          - array
-          - 'null'
-          description: Topics most frequently covered by the journalist.
-          items:
-            $ref: '#/components/schemas/NameCount'
-        topSources:
-          type:
-          - array
-          - 'null'
-          description: Publishers most frequently associated with the journalist.
-          items:
-            $ref: '#/components/schemas/NameCount'
-        topCategories:
-          type:
-          - array
-          - 'null'
-          description: Categories most frequently covered by the journalist.
-          items:
-            $ref: '#/components/schemas/NameCount'
-        topLabels:
-          type:
-          - array
-          - 'null'
-          description: Editorial labels most frequently associated with the journalist's articles.
-          items:
-            $ref: '#/components/schemas/NameCount'
-        topCountries:
-          type:
-          - array
-          - 'null'
-          description: Countries most frequently associated with the journalist's articles.
-          items:
-            $ref: '#/components/schemas/NameCount'
-        avgMonthlyPosts:
-          type:
-          - integer
-          - 'null'
-          description: Average number of articles published by the journalist per month.
-          format: int32
-        twitterHandle:
-          type:
-          - string
-          - 'null'
-          description: Journalist's X or Twitter handle.
-        twitterBio:
-          type:
-          - string
-          - 'null'
-          description: Biography from the journalist's X or Twitter profile.
-        imageUrl:
-          type:
-          - string
-          - 'null'
-          description: Profile image URL for the journalist.
-        linkedinUrl:
-          type:
-          - string
-          - 'null'
-          description: LinkedIn profile URL for the journalist.
-        linkedinConnections:
-          type:
-          - integer
-          - 'null'
-          description: LinkedIn connection count for the journalist, when available.
-          format: int32
-        linkedinFollowers:
-          type:
-          - integer
-          - 'null'
-          description: LinkedIn follower count for the journalist, when available.
-          format: int32
-        facebookUrl:
-          type:
-          - string
-          - 'null'
-          description: Facebook profile URL for the journalist.
-        instagramUrl:
-          type:
-          - string
-          - 'null'
-          description: Instagram profile URL for the journalist.
-        websiteUrl:
-          type:
-          - string
-          - 'null'
-          description: Personal or professional website URL for the journalist.
-        blogUrl:
-          type:
-          - string
-          - 'null'
-          description: Blog URL for the journalist.
-        tumblrUrl:
-          type:
-          - string
-          - 'null'
-          description: Tumblr profile URL for the journalist.
-        youtubeUrl:
-          type:
-          - string
-          - 'null'
-          description: YouTube channel URL for the journalist.
-      description: Expanded journalist details, when requested and available.
-    EventTypeHolder:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: Detected event name.
-        type:
-          type:
-          - string
-          - 'null'
-          description: Detected event classification.
-      description: Event types detected in the article.
-    RecordStatHolder:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: Name of the aggregated value.
-        count:
-          type:
-          - integer
-          - 'null'
-          description: Number of matching articles for the value.
-          format: int32
-      description: Google Content Categories associated with the story and their article counts.
-    VectorData:
-      type: object
-      properties:
-        data:
-          type:
-          - array
-          - 'null'
-          description: Numeric values in the vector embedding.
-          items:
-            type: number
-            description: Numeric values in the vector embedding.
-            format: float
-        version:
-          type:
-          - integer
-          - 'null'
-          description: Version of the embedding representation.
-          format: int32
-      description: Vector embeddings associated with the article, when requested.
-    SourceHolder:
-      type: object
-      properties:
-        domain:
-          type:
-          - string
-          - 'null'
-          description: Publisher domain.
-        paywall:
-          type:
-          - boolean
-          - 'null'
-          description: Whether the publisher uses a paywall, when known.
-        location:
-          allOf:
-          - $ref: '#/components/schemas/SourceLocation'
-      description: Publisher information for the selected story image.
-    ArticleRefreshSubmitRequest:
-      required:
-      - articleIds
-      type: object
-      properties:
-        articleIds:
-          maxItems: 100
-          minItems: 0
-          type: array
-          items:
-            type: string
-    Article:
-      type: object
-      properties:
-        url:
-          type:
-          - string
-          - 'null'
-          description: Canonical URL of the article.
-        authorsByline:
-          type:
-          - string
-          - 'null'
-          description: Author byline as published by the source.
-        articleId:
-          type:
-          - string
-          - 'null'
-          description: Unique Perigon identifier for the article.
-        clusterId:
-          type:
-          - string
-          - 'null'
-          description: Identifier of the story cluster containing the article, when assigned.
-        source:
-          allOf:
-          - $ref: '#/components/schemas/SourceHolder'
-        imageUrl:
-          type:
-          - string
-          - 'null'
-          description: Primary image URL associated with the article.
-        country:
-          type:
-          - string
-          - 'null'
-          description: Two-character country code associated with the article.
-        language:
-          type:
-          - string
-          - 'null'
-          description: ISO 639 two-letter language code for the article.
-        pubDate:
-          type:
-          - string
-          - 'null'
-          description: Date and time the article was published, in ISO 8601 format.
-        addDate:
-          type:
-          - string
-          - 'null'
-          description: Date and time the article was added to Perigon, in ISO 8601 format.
-        refreshDate:
-          type:
-          - string
-          - 'null'
-          description: Date and time the article was last refreshed by Perigon, in ISO 8601 format.
-        score:
-          type:
-          - number
-          - 'null'
-          description: Search relevance score for the article, when applicable.
-          format: float
-        title:
-          type:
-          - string
-          - 'null'
-          description: Article headline.
-        description:
-          type:
-          - string
-          - 'null'
-          description: Article description or publisher-provided excerpt.
-        content:
-          type:
-          - string
-          - 'null'
-          description: Full article body available to Perigon.
-        enContentWordCount:
-          type:
-          - integer
-          - 'null'
-          description: Word count of the English article content, when available.
-          format: int32
-        medium:
-          type:
-          - string
-          - 'null'
-          description: Primary medium type, such as Article or Video.
-        links:
-          type:
-          - array
-          - 'null'
-          description: URLs linked from the article content.
-          items:
-            type: string
-            description: URLs linked from the article content.
-        labels:
-          type:
-          - array
-          - 'null'
-          description: Editorial labels assigned to the article.
-          items:
-            $ref: '#/components/schemas/LabelHolder'
-        eventTypes:
-          type:
-          - array
-          - 'null'
-          description: Event types detected in the article.
-          items:
-            $ref: '#/components/schemas/EventTypeHolder'
-        matchedAuthors:
-          type:
-          - array
-          - 'null'
-          description: Known journalist records matched to the article byline.
-          items:
-            $ref: '#/components/schemas/IdNameHolder'
-        claim:
-          type:
-          - string
-          - 'null'
-          description: Claim identified in fact-check content, when applicable.
-        verdict:
-          type:
-          - string
-          - 'null'
-          description: Verdict identified in fact-check content, when applicable.
-        keywords:
-          type:
-          - array
-          - 'null'
-          description: Keywords extracted from the article with their relevance weights.
-          items:
-            $ref: '#/components/schemas/KeywordHolder'
-        topics:
-          type:
-          - array
-          - 'null'
-          description: Topics assigned to the article.
-          items:
-            $ref: '#/components/schemas/TopicHolder'
-        categories:
-          type:
-          - array
-          - 'null'
-          description: Broad content categories assigned to the article.
-          items:
-            $ref: '#/components/schemas/CategoryHolder'
-        taxonomies:
-          type:
-          - array
-          - 'null'
-          description: Google Content Categories assigned to the article with confidence scores.
-          items:
-            $ref: '#/components/schemas/CategoryWithScoreHolder'
-        entities:
-          type:
-          - array
-          - 'null'
-          description: Named entities extracted from the article.
-          items:
-            $ref: '#/components/schemas/EntityHolder'
-        companies:
-          type:
-          - array
-          - 'null'
-          description: Companies identified in the article.
-          items:
-            $ref: '#/components/schemas/CompanyHolder'
-        sentiment:
-          allOf:
-          - $ref: '#/components/schemas/SentimentHolder'
-        summary:
-          type:
-          - string
-          - 'null'
-          description: Generated summary of the article, when available.
-        shortSummary:
-          type:
-          - string
-          - 'null'
-          description: Short generated summary of the article, when available.
-        translation:
-          type:
-          - string
-          - 'null'
-          description: Translated article content, when available.
-        translatedTitle:
-          type:
-          - string
-          - 'null'
-          description: English translation of the article title, when available.
-        translatedDescription:
-          type:
-          - string
-          - 'null'
-          description: English translation of the article description, when available.
-        translatedSummary:
-          type:
-          - string
-          - 'null'
-          description: English translation of the article summary, when available.
-        locations:
-          type:
-          - array
-          - 'null'
-          description: Locations identified as central to the article.
-          items:
-            $ref: '#/components/schemas/LocationHolder'
-        reprint:
-          type:
-          - boolean
-          - 'null'
-          description: Whether the article is a reprint of previously published content.
-        reprintGroupId:
-          type:
-          - string
-          - 'null'
-          description: Identifier grouping the original article with its known reprints.
-        places:
-          type:
-          - array
-          - 'null'
-          description: Structured geographic places extracted from the article.
-          items:
-            $ref: '#/components/schemas/Place'
-        people:
-          type:
-          - array
-          - 'null'
-          description: Known people identified in the article.
-          items:
-            $ref: '#/components/schemas/PersonHolder'
-        cluster:
-          allOf:
-          - $ref: '#/components/schemas/NewsCluster'
-        journalists:
-          type:
-          - array
-          - 'null'
-          description: Expanded journalist details, when requested and available.
-          items:
-            $ref: '#/components/schemas/Journalist'
-        highlights:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            type: array
-            description: Matched text fragments grouped by article field.
-            items:
-              type: string
-              description: Matched text fragments grouped by article field.
-          description: Matched text fragments grouped by article field.
-        vectors:
-          type:
-          - array
-          - 'null'
-          description: Vector embeddings associated with the article, when requested.
-          items:
-            $ref: '#/components/schemas/VectorData'
-    QuerySearchResult:
-      required:
-      - articles
-      - numResults
-      - status
-      type: object
-      properties:
-        status:
-          type: integer
-          format: int32
-        numResults:
-          type: integer
-          format: int64
-        articles:
-          type: array
-          items:
-            $ref: '#/components/schemas/Article'
-      example:
-        status: 200
-        numResults: 10000
-        articles:
-        - url: https://www.breitbart.com/news/south-koreas-lee-trump-to-hold-summit-at-white-house-on-aug-25/
-          authorsByline: UPI
-          articleId: 97dce2f1bdcd441c99360e58d38e811d
-          clusterId: 87f8c1cdc02f41e0b6fc818f86239c7f
-          source:
-            domain: breitbart.com
-            paywall: false
-            location: null
-          imageUrl: https://media.breitbart.com/media/2025/08/wi/upi/south-koreas-lee-trump-hold-summit-at-white-house-aug-25-south-korea-lee-trump-hold-summit-at-white.jpg
-          country: us
-          language: en
-          pubDate: '2025-08-12T02:40:08+00:00'
-          addDate: '2025-08-12T09:50:33.647613+00:00'
-          refreshDate: '2025-08-12T09:50:33.647614+00:00'
-          score: 1.0
-          title: South Korea's Lee, Trump to hold summit at White House on Aug. 25
-          description: SEOUL, Aug. 12 (UPI) -- South Korean President Lee Jae Myung will travel to Washington to hold a summit with U.S. President Donald Trump on Aug. 25, Lee's
-          content: 'SEOUL, Aug. 12 (UPI) — South Korean President Lee Jae Myung will travel to Washington to hold a summit with U.S. President Donald Trump on Aug. 25, Lee’s office said Tuesday, with trade and defense issues expected to be at the top of the agenda.
-
-
-            The three-day visit will be Lee’s first trip to the United States since taking office in June, presidential spokeswoman Kang Yu-jung said at a press briefing.
-
-
-            “The two leaders plan to discuss ways to develop the Korea-U.S. alliance into a future comprehensive strategic alliance in response to the changing international security and economic environment,” Kang said.
-
-
-            “They will also discuss ways to further strengthen the robust South Korea-U.S. combined defense posture and to cooperate to establish peace and achieve denuclearization on the Korean Peninsula,” she added.
-
-
-            The summit comes weeks after Seoul and Washington struck a trade deal that lowered Trump’s threatened 25% tariffs on South Korean goods to 15%. As part of the package, South Korea pledged to invest $350 billion in the United States and to purchase $100 billion in U.S. energy.
-
-
-            Based on the tariff deal, Trump and Lee will consult on economic cooperation in semiconductors, batteries and shipbuilding, as well as partnerships in advanced technologies and key minerals, Kang said.
-
-
-            The future of the decades-old South Korea-U.S. military alliance is also expected to be in the spotlight as the two countries prepare to kick off their annual Ulchi Freedom Shield joint exercise on Monday.
-
-
-            During his previous term in office, Trump called for massive increases in Seoul’s financial contribution for the 28,500 U.S. forces stationed in Korea.
-
-
-            Seoul signed a new five-year cost-sharing agreement with Washington in October, but Trump has suggested he would look to renegotiate the terms of the deal amid calls for allies to increase their defense spending.
-
-
-            “South Korea is making a lot of money, and they’re very good,” Trump told reporters at a Cabinet meeting in the White House last month. “They’re very good, but, you know, they should be paying for their own military.”
-
-
-            On Friday, Gen. Xavier Brunson, commander of U.S. Forces Korea, discussed the need to restructure the military alliance in response to an evolving regional security environment.
-
-
-            “Alliance modernization … reflects the recognition that the world’s changed around us,” Brunson told local reporters at a press briefing in Pyeongtaek. “We have a nuclear-armed adversary who’s north of the border. We have increasing involvement of Russia, along with the DPRK, and we also have the Chinese and the threat that they pose to a free and open Indo-Pacific.”
-
-
-            The Democratic People’s Republic of Korea is the official name of North Korea.
-
-
-            Brunson avoided the question of a potential of U.S. troop reduction on the peninsula, stressing military capabilities and strategic flexibility over numbers ahead of the Lee-Trump summit.
-
-
-            “We’re going to have two chief executives sitting down together to discuss not only the security situation in the region, but the security situation in the world,” he said. “For us, it’s about the capabilities. We want to have the right capabilities resident on the Peninsula.”
-
-
-            Lee will be in the United States from Aug. 24-26 for his summit with Trump. In response to local media reports that Lee may also stop in Japan around the time of his U.S. trip, presidential spokeswoman Kang said that nothing had been confirmed.'
-          medium: Article
-          links: []
-          labels: []
-          matchedAuthors: []
-          claim: ''
-          verdict: ''
-          keywords:
-          - name: U.S. Forces Korea
-            weight: 0.09803479
-          - name: U.S. President Donald Trump
-            weight: 0.09388354
-          - name: South Korea
-            weight: 0.08868486
-          - name: U.S.
-            weight: 0.077976175
-          - name: North Korea
-            weight: 0.077027455
-          - name: U.S. troop reduction
-            weight: 0.07701537
-          - name: Korea
-            weight: 0.076576516
-          - name: U.S. energy
-            weight: 0.0765642
-          - name: Donald Trump
-            weight: 0.07466888
-          - name: Trump
-            weight: 0.07382798
-          topics: []
-          categories:
-          - name: Politics
-          taxonomies:
-          - name: /News/Politics/Other
-            score: 0.98291015625
-          - name: /Law & Government/Government/Executive Branch
-            score: 0.96337890625
-          - name: /People & Society/Social Sciences/Political Science
-            score: 0.8974609375
-          entities:
-          - data: South Korea's
-            type: GPE
-            mentions: 7
-          - data: SEOUL
-            type: GPE
-            mentions: 1
-          - data: Washington
-            type: GPE
-            mentions: 3
-          - data: U.S.
-            type: GPE
-            mentions: 7
-          - data: the United States
-            type: GPE
-            mentions: 3
-          - data: Seoul
-            type: GPE
-            mentions: 3
-          - data: Pyeongtaek
-            type: GPE
-            mentions: 1
-          - data: Russia
-            type: GPE
-            mentions: 1
-          - data: DPRK
-            type: GPE
-            mentions: 1
-          - data: The Democratic People’s Republic of Korea
-            type: GPE
-            mentions: 2
-          - data: Japan
-            type: GPE
-            mentions: 1
-          - data: Lee
-            type: PERSON
-            mentions: 8
-          - data: Trump
-            type: PERSON
-            mentions: 8
-          - data: Kang Yu-jung
-            type: PERSON
-            mentions: 4
-          - data: Xavier Brunson
-            type: PERSON
-            mentions: 3
-          - data: White House
-            type: ORG
-            mentions: 1
-          - data: Cabinet
-            type: ORG
-            mentions: 1
-          - data: U.S. Forces Korea
-            type: ORG
-            mentions: 1
-          - data: South Korean
-            type: NORP
-            mentions: 2
-          - data: Chinese
-            type: NORP
-            mentions: 1
-          - data: the Korean Peninsula
-            type: LOC
-            mentions: 2
-          - data: Indo
-            type: LOC
-            mentions: 1
-          - data: '-'
-            type: LOC
-            mentions: 1
-          - data: Pacific
-            type: LOC
-            mentions: 1
-          - data: Ulchi Freedom Shield
-            type: PRODUCT
-            mentions: 1
-          - data: the White House
-            type: FAC
-            mentions: 1
-          companies: []
-          sentiment:
-            positive: 0.655995
-            negative: 0.103086375
-            neutral: 0.24091867
-          summary: South Korean President Lee Jae Myung is set to meet with U.S. President Donald Trump on Aug. 25, this will be his first trip to the United States since taking office in June. The summit will focus on trade and defense issues, with the two leaders expected to discuss ways to develop the Korea-U.S.-Korea alliance into a future comprehensive strategic alliance. They will also discuss strengthening the robust South Korea-US combined defense posture and cooperating to establish peace and achieve denuclearization on the Korean Peninsula. The future of the decades-old military alliance is also expected to be in the spotlight as the two countries prepare to participate in their annual Ulchi Freedom Shield joint exercise.
-          shortSummary: South Korean President Lee Jae Myung will hold a summit with U.S. President Donald Trump in Washington, focusing on strengthening the South Korea-U.S alliance and establishing peace and denuclearization.
-          translation: ''
-          translatedTitle: ''
-          translatedDescription: ''
-          translatedSummary: ''
-          locations:
-          - country: kr
-          - country: kr
-            state: '11'
-            city: Seoul
-          reprint: true
-          reprintGroupId: 4e4bf19e89984af1baee7d04776bb9cd
-          places: []
-          people:
-          - wikidataId: Q22686
-            name: Donald Trump
-          - wikidataId: Q12612463
-            name: Lee Jae Myung
-    CategoryHolder:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: Content category assigned to the article.
-      description: Google Content Categories most strongly associated with the story.
-    LocationHolder:
-      type: object
-      properties:
-        country:
-          type:
-          - string
-          - 'null'
-          description: Country central to the article.
-        state:
-          type:
-          - string
-          - 'null'
-          description: State or region central to the article.
-        county:
-          type:
-          - string
-          - 'null'
-          description: County central to the article.
-        city:
-          type:
-          - string
-          - 'null'
-          description: City central to the article.
-        area:
-          type:
-          - string
-          - 'null'
-          description: Neighborhood, borough, or district central to the article.
-      description: Locations most strongly associated with the story.
     LabelHolder:
       type: object
       properties:
@@ -2974,254 +2078,6 @@ components:
           - 'null'
           description: Editorial label assigned to the article.
       description: Editorial labels assigned to the article.
-    ArticleRefreshPeekResult:
-      type: object
-      properties:
-        data:
-          allOf:
-          - $ref: '#/components/schemas/ArticleRefreshData'
-        fetchedAt:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        validatedAt:
-          type:
-          - string
-          - 'null'
-          format: date-time
-    ArticleSearchParams:
-      required:
-      - prompt
-      type: object
-      properties:
-        prompt:
-          maxLength: 1024
-          minLength: 0
-          type: string
-          description: Natural language query to search the news articles database
-          example: Enter your prompt
-        filter:
-          allOf:
-          - $ref: '#/components/schemas/ArticleSearchFilter'
-        pubDateFrom:
-          type:
-          - string
-          - 'null'
-          description: '''pubDateFrom'' filter, will search articles published after the specified date, the date could be passed as ISO or ''yyyy-mm-dd''. Date time in ISO format, ie. 2024-01-01T00:00:00 - Default: Only articles with a pubDate within the last 30 days of the request'
-          format: date-time
-          example: '2024-01-01T00:00:00Z'
-        pubDateTo:
-          type:
-          - string
-          - 'null'
-          description: '''pubDateTo'' filter, will search articles published before the specified date, the date could be passed as ISO or ''yyyy-mm-dd''. Date time in ISO format, ie. 2024-01-01T00:00:00'
-          format: date-time
-          example: '2024-12-31T23:59:59Z'
-        showReprints:
-          type:
-          - boolean
-          - 'null'
-          description: Whether to return reprints in the response or not. Reprints are usually wired articles from sources like AP or Reuters that are reprinted in multiple sources at the same time. By default, this parameter is 'true'.
-          default: true
-        size:
-          maximum: 100
-          minimum: 1
-          type:
-          - integer
-          - 'null'
-          description: The number of items per page.
-          format: int32
-          default: 10
-        page:
-          maximum: 10000
-          minimum: 0
-          type:
-          - integer
-          - 'null'
-          description: The page number to retrieve.
-          format: int32
-          default: 0
-    ScoredDataArticle:
-      type: object
-      properties:
-        score:
-          type:
-          - number
-          - 'null'
-          format: float
-        data:
-          allOf:
-          - $ref: '#/components/schemas/Article'
-        vectors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/VectorData'
-    IdNameHolder:
-      type: object
-      properties:
-        id:
-          type:
-          - string
-          - 'null'
-          description: Unique identifier for the matched record.
-        name:
-          type:
-          - string
-          - 'null'
-          description: Display name of the matched record.
-      description: Known journalist records matched to the article byline.
-    StoryHistoryResult:
-      required:
-      - numResults
-      - results
-      - status
-      type: object
-      properties:
-        status:
-          type: integer
-          description: HTTP status code for the response.
-          format: int32
-        numResults:
-          type: integer
-          description: Total number of matching history records.
-          format: int64
-        results:
-          type: array
-          description: History records returned for the requested page.
-          items:
-            $ref: '#/components/schemas/StoryHistoryRecord'
-      description: Story history result
-      example:
-        status: 200
-        numResults: 4530319
-        results:
-        - clusterId: 911860d569ca464698c0beec0697f694
-          createdAt: '2025-08-12T10:18:48.493128+00:00'
-          name: null
-          triggeredAt: '2025-08-12T10:17:41.249815+00:00'
-          summary: The Indian stock market experienced notable volatility and ended lower on August 12, with the Sensex dropping 368.49 points to 80,235.59 and the Nifty falling 97.65 points to 24,487.40, reversing early gains amid cautious investor sentiment ahead of key inflation data from India and the US. Financial and private banking sectors faced selling pressure, while auto, IT, and media sectors showed gains, supported by strong performances in large-cap stocks like Maruti Suzuki and Tech Mahindra. Market experts warned of potential overheating in the rally, especially in mid and small caps, urging investors to remain selective due to short-term uncertainties despite favorable long-term prospects. The broader market showed mixed movements, with smallcaps outperforming midcaps and a slight easing in market volatility as gauged by India VIX. Investors remained watchful of the July retail inflation print, expected to dip to a historic low of 1.4%, and global concerns over US tariffs adding to price pressures. Overall, the market's cautious stance reflects anticipation around inflation data and geopolitical events, including the Trump-Putin summit, amid mixed sector performances and ongoing foreign selling pressure.
-          shortSummary: Indian equity markets showed volatility with the Sensex and Nifty reversing early gains to close lower amid cautious investor sentiment ahead of key inflation data from India and the US. Financial and private banking sectors faced selling pressure while auto, IT, and media sectors outperformed, with mixed performances in mid and small caps as investors weigh global events including US tariffs and mutual fund inflows.
-          changelog: null
-          keyPoints:
-          - point: The IPO of Bluestone Jewelry and Lifestyle Limited (BJLL) opened on August 11, aiming to raise ₹1,540.65 crore, with listing scheduled for August 19 on BSE and NSE.
-            references:
-            - 574436fd177e4af5a166a439a5bc97a0
-          - point: Among the Sensex components, 17 shares settled in the red, with notable losers including Bajaj Finance, HUL, Trent, HDFC Bank, ICICI Bank, Kotak Bank, BEL, Bajaj Finserv, Adani Ports, and Asian Paints.
-            references:
-            - 574436fd177e4af5a166a439a5bc97a0
-          - point: Market breadth showed about 1,994 shares advanced, 1,889 declined, and 157 remained unchanged, indicating a mixed but slightly positive broader market.
-            references:
-            - 184a5f45336e4129b4e220d901abef10
-          - point: SBI report highlighted expectations that CPI inflation in India will remain below 3 percent until the third quarter of FY26, contributing to market volatility and cautious investor sentiment.
-            references:
-            - bed7d190e0b64f17aa1f77012bf634af
-          - point: Several stocks hit new 52-week highs and lows, with 23 stocks including Star Cement and Anand Rathi reaching 52-week highs, while 45 stocks including Bigbloc Construction and Praj Industries hit 52-week lows, reflecting uneven market performance.
-            references:
-            - bed7d190e0b64f17aa1f77012bf634af
-          questions: null
-    SourceLocation:
-      type: object
-      properties:
-        country:
-          type:
-          - string
-          - 'null'
-          description: Country where the publisher is located.
-        state:
-          type:
-          - string
-          - 'null'
-          description: State or region where the publisher is located.
-        county:
-          type:
-          - string
-          - 'null'
-          description: County where the publisher is located.
-        city:
-          type:
-          - string
-          - 'null'
-          description: City where the publisher is located.
-        coordinates:
-          allOf:
-          - $ref: '#/components/schemas/Coordinate'
-      description: Geographic location of the publisher, when available.
-    CategoryWithScoreHolder:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: Full taxonomy category path.
-        score:
-          type:
-          - number
-          - 'null'
-          description: Confidence score for the category assignment.
-          format: double
-      description: Google Content Categories assigned to the article with confidence scores.
-    StatResult:
-      type: object
-      properties:
-        status:
-          type:
-          - integer
-          - 'null'
-          description: HTTP status code for the response.
-          format: int32
-        results:
-          type:
-          - array
-          - 'null'
-          description: Statistics returned by the request.
-          items:
-            type: object
-            description: Statistics returned by the request.
-        numResults:
-          type:
-          - integer
-          - 'null'
-          description: Total number of matching records, when calculated by the endpoint.
-          format: int64
-    LocationCount:
-      type: object
-      properties:
-        country:
-          type:
-          - string
-          - 'null'
-          description: Country associated with the story.
-        state:
-          type:
-          - string
-          - 'null'
-          description: State or region associated with the story.
-        county:
-          type:
-          - string
-          - 'null'
-          description: County associated with the story.
-        city:
-          type:
-          - string
-          - 'null'
-          description: City associated with the story.
-        area:
-          type:
-          - string
-          - 'null'
-          description: Neighborhood, borough, or district associated with the story.
-        count:
-          type:
-          - integer
-          - 'null'
-          description: Number of story articles associated with the location.
-          format: int32
-      description: Locations associated with the story and their article counts.
     ArticleSearchFilter:
       type: object
       properties:
@@ -3601,28 +2457,6 @@ components:
           items:
             $ref: '#/components/schemas/ArticleSearchFilter'
       description: Complex filter structure for article searches that supports nested logical operations (AND, OR, NOT) and multiple filtering criteria.
-    SentimentHolder:
-      type: object
-      properties:
-        positive:
-          type:
-          - number
-          - 'null'
-          description: Positive sentiment score from 0 to 1.
-          format: float
-        negative:
-          type:
-          - number
-          - 'null'
-          description: Negative sentiment score from 0 to 1.
-          format: float
-        neutral:
-          type:
-          - number
-          - 'null'
-          description: Neutral sentiment score from 0 to 1.
-          format: float
-      description: Aggregate sentiment scores for the story.
     NewsCluster:
       type: object
       properties:
@@ -3854,6 +2688,922 @@ components:
           description: Ratio of unique publisher domains to total articles in the story.
           format: double
       description: Expanded story cluster details, when requested and available.
+    SourceLocation:
+      type: object
+      properties:
+        country:
+          type:
+          - string
+          - 'null'
+          description: Country where the publisher is located.
+        state:
+          type:
+          - string
+          - 'null'
+          description: State or region where the publisher is located.
+        county:
+          type:
+          - string
+          - 'null'
+          description: County where the publisher is located.
+        city:
+          type:
+          - string
+          - 'null'
+          description: City where the publisher is located.
+        coordinates:
+          allOf:
+          - $ref: '#/components/schemas/Coordinate'
+      description: Geographic location of the publisher, when available.
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        message:
+          type:
+          - string
+          - 'null'
+        timestamp:
+          type:
+          - integer
+          - 'null'
+          format: int64
+    PersonHolder:
+      type: object
+      properties:
+        wikidataId:
+          type:
+          - string
+          - 'null'
+          description: Wikidata identifier for the person.
+        name:
+          type:
+          - string
+          - 'null'
+          description: Person name.
+      description: People most strongly associated with the story.
+    AllEndpointSortBy:
+      type: string
+      enum:
+      - relevance
+      - date
+      - reverseDate
+      - reverseAddDate
+      - addDate
+      - pubDate
+      - refreshDate
+    CoordinateFilter:
+      type: object
+      properties:
+        lat:
+          type:
+          - number
+          - 'null'
+          format: float
+          example: 0
+        lon:
+          type:
+          - number
+          - 'null'
+          format: float
+          example: 0
+        radius:
+          type:
+          - number
+          - 'null'
+          format: float
+          example: 0
+      description: Filter articles from publishers based at specific geographic locations. Uses latitude, longitude, and radius parameters to define a circular search area for publisher locations.
+    ArticleRefreshPeekResponse:
+      type: object
+      properties:
+        results:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ArticleRefreshPeekResult'
+    PersonCount:
+      type: object
+      properties:
+        wikidataId:
+          type:
+          - string
+          - 'null'
+          description: Wikidata identifier for the person.
+        name:
+          type:
+          - string
+          - 'null'
+          description: Person name.
+        count:
+          type:
+          - integer
+          - 'null'
+          description: Number of story articles mentioning the person.
+          format: int32
+      description: People associated with the story and their article counts.
+    CompanyCount:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          description: Unique Perigon identifier for the company.
+        name:
+          type:
+          - string
+          - 'null'
+          description: Company name.
+        domains:
+          type:
+          - array
+          - 'null'
+          description: Domains associated with the company.
+          items:
+            type: string
+            description: Domains associated with the company.
+        symbols:
+          type:
+          - array
+          - 'null'
+          description: Stock symbols associated with the company.
+          items:
+            type: string
+            description: Stock symbols associated with the company.
+        count:
+          type:
+          - integer
+          - 'null'
+          description: Number of story articles mentioning the company.
+          format: int32
+      description: Companies associated with the story and their article counts.
+    ArticleRefreshPeekResult:
+      type: object
+      properties:
+        data:
+          allOf:
+          - $ref: '#/components/schemas/ArticleRefreshData'
+        fetchedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        validatedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+    StoryHistoryResult:
+      required:
+      - numResults
+      - results
+      - status
+      type: object
+      properties:
+        status:
+          type: integer
+          description: HTTP status code for the response.
+          format: int32
+        numResults:
+          type: integer
+          description: Total number of matching history records.
+          format: int64
+        results:
+          type: array
+          description: History records returned for the requested page.
+          items:
+            $ref: '#/components/schemas/StoryHistoryRecord'
+      description: Story history result
+      example:
+        status: 200
+        numResults: 4530319
+        results:
+        - clusterId: 911860d569ca464698c0beec0697f694
+          createdAt: '2025-08-12T10:18:48.493128+00:00'
+          name: null
+          triggeredAt: '2025-08-12T10:17:41.249815+00:00'
+          summary: The Indian stock market experienced notable volatility and ended lower on August 12, with the Sensex dropping 368.49 points to 80,235.59 and the Nifty falling 97.65 points to 24,487.40, reversing early gains amid cautious investor sentiment ahead of key inflation data from India and the US. Financial and private banking sectors faced selling pressure, while auto, IT, and media sectors showed gains, supported by strong performances in large-cap stocks like Maruti Suzuki and Tech Mahindra. Market experts warned of potential overheating in the rally, especially in mid and small caps, urging investors to remain selective due to short-term uncertainties despite favorable long-term prospects. The broader market showed mixed movements, with smallcaps outperforming midcaps and a slight easing in market volatility as gauged by India VIX. Investors remained watchful of the July retail inflation print, expected to dip to a historic low of 1.4%, and global concerns over US tariffs adding to price pressures. Overall, the market's cautious stance reflects anticipation around inflation data and geopolitical events, including the Trump-Putin summit, amid mixed sector performances and ongoing foreign selling pressure.
+          shortSummary: Indian equity markets showed volatility with the Sensex and Nifty reversing early gains to close lower amid cautious investor sentiment ahead of key inflation data from India and the US. Financial and private banking sectors faced selling pressure while auto, IT, and media sectors outperformed, with mixed performances in mid and small caps as investors weigh global events including US tariffs and mutual fund inflows.
+          changelog: null
+          keyPoints:
+          - point: The IPO of Bluestone Jewelry and Lifestyle Limited (BJLL) opened on August 11, aiming to raise ₹1,540.65 crore, with listing scheduled for August 19 on BSE and NSE.
+            references:
+            - 574436fd177e4af5a166a439a5bc97a0
+          - point: Among the Sensex components, 17 shares settled in the red, with notable losers including Bajaj Finance, HUL, Trent, HDFC Bank, ICICI Bank, Kotak Bank, BEL, Bajaj Finserv, Adani Ports, and Asian Paints.
+            references:
+            - 574436fd177e4af5a166a439a5bc97a0
+          - point: Market breadth showed about 1,994 shares advanced, 1,889 declined, and 157 remained unchanged, indicating a mixed but slightly positive broader market.
+            references:
+            - 184a5f45336e4129b4e220d901abef10
+          - point: SBI report highlighted expectations that CPI inflation in India will remain below 3 percent until the third quarter of FY26, contributing to market volatility and cautious investor sentiment.
+            references:
+            - bed7d190e0b64f17aa1f77012bf634af
+          - point: Several stocks hit new 52-week highs and lows, with 23 stocks including Star Cement and Anand Rathi reaching 52-week highs, while 45 stocks including Bigbloc Construction and Praj Industries hit 52-week lows, reflecting uneven market performance.
+            references:
+            - bed7d190e0b64f17aa1f77012bf634af
+          questions: null
+    ArticleRefreshJobArticleResult:
+      type: object
+      properties:
+        articleId:
+          type:
+          - string
+          - 'null'
+        status:
+          type:
+          - string
+          - 'null'
+          enum:
+          - PENDING
+          - COMPLETED
+          - ERROR
+        data:
+          allOf:
+          - $ref: '#/components/schemas/ArticleRefreshData'
+        computedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+    KeywordHolder:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: Keyword extracted from the article.
+        weight:
+          type:
+          - number
+          - 'null'
+          description: Relative relevance weight of the keyword.
+          format: float
+      description: Keywords extracted from the article with their relevance weights.
+    SourceHolder:
+      type: object
+      properties:
+        domain:
+          type:
+          - string
+          - 'null'
+          description: Publisher domain.
+        paywall:
+          type:
+          - boolean
+          - 'null'
+          description: Whether the publisher uses a paywall, when known.
+        location:
+          allOf:
+          - $ref: '#/components/schemas/SourceLocation'
+      description: Publisher information for the selected story image.
+    ArticleSearchParams:
+      required:
+      - prompt
+      type: object
+      properties:
+        prompt:
+          maxLength: 1024
+          minLength: 0
+          type: string
+          description: Natural language query to search the news articles database
+          example: Enter your prompt
+        filter:
+          allOf:
+          - $ref: '#/components/schemas/ArticleSearchFilter'
+        pubDateFrom:
+          type:
+          - string
+          - 'null'
+          description: '''pubDateFrom'' filter, will search articles published after the specified date, the date could be passed as ISO or ''yyyy-mm-dd''. Date time in ISO format, ie. 2024-01-01T00:00:00 - Default: Only articles with a pubDate within the last 30 days of the request'
+          format: date-time
+          example: '2024-01-01T00:00:00Z'
+        pubDateTo:
+          type:
+          - string
+          - 'null'
+          description: '''pubDateTo'' filter, will search articles published before the specified date, the date could be passed as ISO or ''yyyy-mm-dd''. Date time in ISO format, ie. 2024-01-01T00:00:00'
+          format: date-time
+          example: '2024-12-31T23:59:59Z'
+        showReprints:
+          type:
+          - boolean
+          - 'null'
+          description: Whether to return reprints in the response or not. Reprints are usually wired articles from sources like AP or Reuters that are reprinted in multiple sources at the same time. By default, this parameter is 'true'.
+          default: true
+        size:
+          maximum: 100
+          minimum: 1
+          type:
+          - integer
+          - 'null'
+          description: The number of items per page.
+          format: int32
+          default: 10
+        page:
+          maximum: 10000
+          minimum: 0
+          type:
+          - integer
+          - 'null'
+          description: The page number to retrieve.
+          format: int32
+          default: 0
+    VectorData:
+      type: object
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          description: Numeric values in the vector embedding.
+          items:
+            type: number
+            description: Numeric values in the vector embedding.
+            format: float
+        version:
+          type:
+          - integer
+          - 'null'
+          description: Version of the embedding representation.
+          format: int32
+      description: Vector embeddings associated with the article, when requested.
+    IdNameHolder:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          description: Unique identifier for the matched record.
+        name:
+          type:
+          - string
+          - 'null'
+          description: Display name of the matched record.
+      description: Known journalist records matched to the article byline.
+    ArticleRefreshData:
+      type: object
+      properties:
+        articleId:
+          type:
+          - string
+          - 'null'
+        url:
+          type:
+          - string
+          - 'null'
+        authorsByline:
+          type:
+          - string
+          - 'null'
+        imageUrl:
+          type:
+          - string
+          - 'null'
+        country:
+          type:
+          - string
+          - 'null'
+        language:
+          type:
+          - string
+          - 'null'
+        pubDate:
+          type:
+          - string
+          - 'null'
+        title:
+          type:
+          - string
+          - 'null'
+        description:
+          type:
+          - string
+          - 'null'
+        content:
+          type:
+          - string
+          - 'null'
+        source:
+          allOf:
+          - $ref: '#/components/schemas/SourceHolder'
+        links:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        medium:
+          type:
+          - string
+          - 'null'
+        claim:
+          type:
+          - string
+          - 'null'
+        verdict:
+          type:
+          - string
+          - 'null'
+        translation:
+          type:
+          - string
+          - 'null'
+        translatedTitle:
+          type:
+          - string
+          - 'null'
+        translatedDescription:
+          type:
+          - string
+          - 'null'
+        entities:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/EntityHolder'
+        people:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/PersonHolder'
+        companies:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CompanyHolder'
+        matchedAuthors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/IdNameHolder'
+    Question:
+      type: object
+      properties:
+        question:
+          type:
+          - string
+          - 'null'
+          description: Question generated from the story content.
+        answer:
+          type:
+          - string
+          - 'null'
+          description: Answer generated from the story content.
+        references:
+          type:
+          - array
+          - 'null'
+          description: Article IDs supporting the answer.
+          items:
+            type: string
+            description: Article IDs supporting the answer.
+      description: Questions and answers generated from the story content.
+    LocationHolder:
+      type: object
+      properties:
+        country:
+          type:
+          - string
+          - 'null'
+          description: Country central to the article.
+        state:
+          type:
+          - string
+          - 'null'
+          description: State or region central to the article.
+        county:
+          type:
+          - string
+          - 'null'
+          description: County central to the article.
+        city:
+          type:
+          - string
+          - 'null'
+          description: City central to the article.
+        area:
+          type:
+          - string
+          - 'null'
+          description: Neighborhood, borough, or district central to the article.
+      description: Locations most strongly associated with the story.
+    RecordStatHolder:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: Name of the aggregated value.
+        count:
+          type:
+          - integer
+          - 'null'
+          description: Number of matching articles for the value.
+          format: int32
+      description: Google Content Categories associated with the story and their article counts.
+    NameCount:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: Name of the aggregated value.
+        count:
+          type:
+          - integer
+          - 'null'
+          description: Number of matching records for the value.
+          format: int64
+      description: Countries most frequently associated with the journalist's articles.
+    TopicHolder:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: Topic assigned to the article.
+      description: Topics most strongly associated with the story.
+    StatResult:
+      type: object
+      properties:
+        status:
+          type:
+          - integer
+          - 'null'
+          description: HTTP status code for the response.
+          format: int32
+        results:
+          type:
+          - array
+          - 'null'
+          description: Statistics returned by the request.
+          items:
+            type: object
+            description: Statistics returned by the request.
+        numResults:
+          type:
+          - integer
+          - 'null'
+          description: Total number of matching records, when calculated by the endpoint.
+          format: int64
+    StoryHistoryRecord:
+      type: object
+      properties:
+        clusterId:
+          type:
+          - string
+          - 'null'
+          description: Unique identifier of the story associated with this history record.
+        createdAt:
+          type:
+          - string
+          - 'null'
+          description: Date and time the history record was created, in ISO 8601 format.
+        name:
+          type:
+          - string
+          - 'null'
+          description: Story name captured in this history record, when available.
+        triggeredAt:
+          type:
+          - string
+          - 'null'
+          description: Date and time the story refresh that produced this record was triggered, in ISO 8601 format.
+        summary:
+          type:
+          - string
+          - 'null'
+          description: Story summary captured in this history record.
+        shortSummary:
+          type:
+          - string
+          - 'null'
+          description: Short story summary captured in this history record, when available.
+        changelog:
+          type:
+          - string
+          - 'null'
+          description: Description of changes from the previous story version, when available.
+        keyPoints:
+          type:
+          - array
+          - 'null'
+          description: Key points captured for this version of the story.
+          items:
+            $ref: '#/components/schemas/KeyPoint'
+        questions:
+          type:
+          - array
+          - 'null'
+          description: Questions and answers generated for this version of the story.
+          items:
+            $ref: '#/components/schemas/Question'
+      description: History records returned for the requested page.
+    LocationCount:
+      type: object
+      properties:
+        country:
+          type:
+          - string
+          - 'null'
+          description: Country associated with the story.
+        state:
+          type:
+          - string
+          - 'null'
+          description: State or region associated with the story.
+        county:
+          type:
+          - string
+          - 'null'
+          description: County associated with the story.
+        city:
+          type:
+          - string
+          - 'null'
+          description: City associated with the story.
+        area:
+          type:
+          - string
+          - 'null'
+          description: Neighborhood, borough, or district associated with the story.
+        count:
+          type:
+          - integer
+          - 'null'
+          description: Number of story articles associated with the location.
+          format: int32
+      description: Locations associated with the story and their article counts.
+    ScoredDataArticle:
+      type: object
+      properties:
+        score:
+          type:
+          - number
+          - 'null'
+          format: float
+        data:
+          allOf:
+          - $ref: '#/components/schemas/Article'
+        vectors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/VectorData'
+    CompanyHolder:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          description: Unique Perigon identifier for the company.
+        name:
+          type:
+          - string
+          - 'null'
+          description: Company name.
+        domains:
+          type:
+          - array
+          - 'null'
+          description: Domains associated with the company.
+          items:
+            type: string
+            description: Domains associated with the company.
+        symbols:
+          type:
+          - array
+          - 'null'
+          description: Stock symbols associated with the company.
+          items:
+            type: string
+            description: Stock symbols associated with the company.
+      description: Companies most strongly associated with the story.
+    ClustersListSortBy:
+      type: string
+      enum:
+      - createdAt
+      - updatedAt
+      - relevance
+      - count
+      - totalCount
+    CategoryHolder:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: Content category assigned to the article.
+      description: Google Content Categories most strongly associated with the story.
+    ArticleRefreshSubmitRequest:
+      required:
+      - articleIds
+      type: object
+      properties:
+        articleIds:
+          maxItems: 100
+          minItems: 0
+          type: array
+          items:
+            type: string
+    Journalist:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          description: Unique Perigon identifier for the journalist.
+        primaryRecordId:
+          type:
+          - string
+          - 'null'
+        name:
+          type:
+          - string
+          - 'null'
+          description: Common display name of the journalist.
+        fullName:
+          type:
+          - string
+          - 'null'
+          description: Full name of the journalist.
+        headline:
+          type:
+          - string
+          - 'null'
+          description: Professional headline associated with the journalist.
+        description:
+          type:
+          - string
+          - 'null'
+          description: Biographical description of the journalist.
+        title:
+          type:
+          - string
+          - 'null'
+          description: Professional title of the journalist.
+        email:
+          type:
+          - string
+          - 'null'
+          description: Journalist's email.
+        locations:
+          type:
+          - array
+          - 'null'
+          description: Locations associated with the journalist.
+          items:
+            $ref: '#/components/schemas/LocationHolder'
+        updatedAt:
+          type:
+          - string
+          - 'null'
+          description: Date and time the journalist record was last refreshed, in ISO 8601 format.
+        topTopics:
+          type:
+          - array
+          - 'null'
+          description: Topics most frequently covered by the journalist.
+          items:
+            $ref: '#/components/schemas/NameCount'
+        topSources:
+          type:
+          - array
+          - 'null'
+          description: Publishers most frequently associated with the journalist.
+          items:
+            $ref: '#/components/schemas/NameCount'
+        topCategories:
+          type:
+          - array
+          - 'null'
+          description: Categories most frequently covered by the journalist.
+          items:
+            $ref: '#/components/schemas/NameCount'
+        topLabels:
+          type:
+          - array
+          - 'null'
+          description: Editorial labels most frequently associated with the journalist's articles.
+          items:
+            $ref: '#/components/schemas/NameCount'
+        topCountries:
+          type:
+          - array
+          - 'null'
+          description: Countries most frequently associated with the journalist's articles.
+          items:
+            $ref: '#/components/schemas/NameCount'
+        avgMonthlyPosts:
+          type:
+          - integer
+          - 'null'
+          description: Average number of articles published by the journalist per month.
+          format: int32
+        twitterHandle:
+          type:
+          - string
+          - 'null'
+          description: Journalist's X or Twitter handle.
+        twitterBio:
+          type:
+          - string
+          - 'null'
+          description: Biography from the journalist's X or Twitter profile.
+        imageUrl:
+          type:
+          - string
+          - 'null'
+          description: Profile image URL for the journalist.
+        linkedinUrl:
+          type:
+          - string
+          - 'null'
+          description: LinkedIn profile URL for the journalist.
+        linkedinConnections:
+          type:
+          - integer
+          - 'null'
+          description: LinkedIn connection count for the journalist, when available.
+          format: int32
+        linkedinFollowers:
+          type:
+          - integer
+          - 'null'
+          description: LinkedIn follower count for the journalist, when available.
+          format: int32
+        facebookUrl:
+          type:
+          - string
+          - 'null'
+          description: Facebook profile URL for the journalist.
+        instagramUrl:
+          type:
+          - string
+          - 'null'
+          description: Instagram profile URL for the journalist.
+        websiteUrl:
+          type:
+          - string
+          - 'null'
+          description: Personal or professional website URL for the journalist.
+        blogUrl:
+          type:
+          - string
+          - 'null'
+          description: Blog URL for the journalist.
+        tumblrUrl:
+          type:
+          - string
+          - 'null'
+          description: Tumblr profile URL for the journalist.
+        youtubeUrl:
+          type:
+          - string
+          - 'null'
+          description: YouTube channel URL for the journalist.
+      description: Expanded journalist details, when requested and available.
+    SentimentHolder:
+      type: object
+      properties:
+        positive:
+          type:
+          - number
+          - 'null'
+          description: Positive sentiment score from 0 to 1.
+          format: float
+        negative:
+          type:
+          - number
+          - 'null'
+          description: Negative sentiment score from 0 to 1.
+          format: float
+        neutral:
+          type:
+          - number
+          - 'null'
+          description: Neutral sentiment score from 0 to 1.
+          format: float
+      description: Aggregate sentiment scores for the story.
     ArticlesVectorSearchResult:
       required:
       - results
@@ -3978,42 +3728,252 @@ components:
               state: TX
               county: Williamson County
             places: []
-    CompanyCount:
+    QuerySearchResult:
+      required:
+      - articles
+      - numResults
+      - status
       type: object
       properties:
-        id:
-          type:
-          - string
-          - 'null'
-          description: Unique Perigon identifier for the company.
-        name:
-          type:
-          - string
-          - 'null'
-          description: Company name.
-        domains:
-          type:
-          - array
-          - 'null'
-          description: Domains associated with the company.
-          items:
-            type: string
-            description: Domains associated with the company.
-        symbols:
-          type:
-          - array
-          - 'null'
-          description: Stock symbols associated with the company.
-          items:
-            type: string
-            description: Stock symbols associated with the company.
-        count:
-          type:
-          - integer
-          - 'null'
-          description: Number of story articles mentioning the company.
+        status:
+          type: integer
           format: int32
-      description: Companies associated with the story and their article counts.
+        numResults:
+          type: integer
+          format: int64
+        articles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Article'
+      example:
+        status: 200
+        numResults: 10000
+        articles:
+        - url: https://www.breitbart.com/news/south-koreas-lee-trump-to-hold-summit-at-white-house-on-aug-25/
+          authorsByline: UPI
+          articleId: 97dce2f1bdcd441c99360e58d38e811d
+          clusterId: 87f8c1cdc02f41e0b6fc818f86239c7f
+          source:
+            domain: breitbart.com
+            paywall: false
+            location: null
+          imageUrl: https://media.breitbart.com/media/2025/08/wi/upi/south-koreas-lee-trump-hold-summit-at-white-house-aug-25-south-korea-lee-trump-hold-summit-at-white.jpg
+          country: us
+          language: en
+          pubDate: '2025-08-12T02:40:08+00:00'
+          addDate: '2025-08-12T09:50:33.647613+00:00'
+          refreshDate: '2025-08-12T09:50:33.647614+00:00'
+          score: 1.0
+          title: South Korea's Lee, Trump to hold summit at White House on Aug. 25
+          description: SEOUL, Aug. 12 (UPI) -- South Korean President Lee Jae Myung will travel to Washington to hold a summit with U.S. President Donald Trump on Aug. 25, Lee's
+          content: 'SEOUL, Aug. 12 (UPI) — South Korean President Lee Jae Myung will travel to Washington to hold a summit with U.S. President Donald Trump on Aug. 25, Lee’s office said Tuesday, with trade and defense issues expected to be at the top of the agenda.
+
+
+            The three-day visit will be Lee’s first trip to the United States since taking office in June, presidential spokeswoman Kang Yu-jung said at a press briefing.
+
+
+            “The two leaders plan to discuss ways to develop the Korea-U.S. alliance into a future comprehensive strategic alliance in response to the changing international security and economic environment,” Kang said.
+
+
+            “They will also discuss ways to further strengthen the robust South Korea-U.S. combined defense posture and to cooperate to establish peace and achieve denuclearization on the Korean Peninsula,” she added.
+
+
+            The summit comes weeks after Seoul and Washington struck a trade deal that lowered Trump’s threatened 25% tariffs on South Korean goods to 15%. As part of the package, South Korea pledged to invest $350 billion in the United States and to purchase $100 billion in U.S. energy.
+
+
+            Based on the tariff deal, Trump and Lee will consult on economic cooperation in semiconductors, batteries and shipbuilding, as well as partnerships in advanced technologies and key minerals, Kang said.
+
+
+            The future of the decades-old South Korea-U.S. military alliance is also expected to be in the spotlight as the two countries prepare to kick off their annual Ulchi Freedom Shield joint exercise on Monday.
+
+
+            During his previous term in office, Trump called for massive increases in Seoul’s financial contribution for the 28,500 U.S. forces stationed in Korea.
+
+
+            Seoul signed a new five-year cost-sharing agreement with Washington in October, but Trump has suggested he would look to renegotiate the terms of the deal amid calls for allies to increase their defense spending.
+
+
+            “South Korea is making a lot of money, and they’re very good,” Trump told reporters at a Cabinet meeting in the White House last month. “They’re very good, but, you know, they should be paying for their own military.”
+
+
+            On Friday, Gen. Xavier Brunson, commander of U.S. Forces Korea, discussed the need to restructure the military alliance in response to an evolving regional security environment.
+
+
+            “Alliance modernization … reflects the recognition that the world’s changed around us,” Brunson told local reporters at a press briefing in Pyeongtaek. “We have a nuclear-armed adversary who’s north of the border. We have increasing involvement of Russia, along with the DPRK, and we also have the Chinese and the threat that they pose to a free and open Indo-Pacific.”
+
+
+            The Democratic People’s Republic of Korea is the official name of North Korea.
+
+
+            Brunson avoided the question of a potential of U.S. troop reduction on the peninsula, stressing military capabilities and strategic flexibility over numbers ahead of the Lee-Trump summit.
+
+
+            “We’re going to have two chief executives sitting down together to discuss not only the security situation in the region, but the security situation in the world,” he said. “For us, it’s about the capabilities. We want to have the right capabilities resident on the Peninsula.”
+
+
+            Lee will be in the United States from Aug. 24-26 for his summit with Trump. In response to local media reports that Lee may also stop in Japan around the time of his U.S. trip, presidential spokeswoman Kang said that nothing had been confirmed.'
+          medium: Article
+          links: []
+          labels: []
+          matchedAuthors: []
+          claim: ''
+          verdict: ''
+          keywords:
+          - name: U.S. Forces Korea
+            weight: 0.09803479
+          - name: U.S. President Donald Trump
+            weight: 0.09388354
+          - name: South Korea
+            weight: 0.08868486
+          - name: U.S.
+            weight: 0.077976175
+          - name: North Korea
+            weight: 0.077027455
+          - name: U.S. troop reduction
+            weight: 0.07701537
+          - name: Korea
+            weight: 0.076576516
+          - name: U.S. energy
+            weight: 0.0765642
+          - name: Donald Trump
+            weight: 0.07466888
+          - name: Trump
+            weight: 0.07382798
+          topics: []
+          categories:
+          - name: Politics
+          taxonomies:
+          - name: /News/Politics/Other
+            score: 0.98291015625
+          - name: /Law & Government/Government/Executive Branch
+            score: 0.96337890625
+          - name: /People & Society/Social Sciences/Political Science
+            score: 0.8974609375
+          entities:
+          - data: South Korea's
+            type: GPE
+            mentions: 7
+          - data: SEOUL
+            type: GPE
+            mentions: 1
+          - data: Washington
+            type: GPE
+            mentions: 3
+          - data: U.S.
+            type: GPE
+            mentions: 7
+          - data: the United States
+            type: GPE
+            mentions: 3
+          - data: Seoul
+            type: GPE
+            mentions: 3
+          - data: Pyeongtaek
+            type: GPE
+            mentions: 1
+          - data: Russia
+            type: GPE
+            mentions: 1
+          - data: DPRK
+            type: GPE
+            mentions: 1
+          - data: The Democratic People’s Republic of Korea
+            type: GPE
+            mentions: 2
+          - data: Japan
+            type: GPE
+            mentions: 1
+          - data: Lee
+            type: PERSON
+            mentions: 8
+          - data: Trump
+            type: PERSON
+            mentions: 8
+          - data: Kang Yu-jung
+            type: PERSON
+            mentions: 4
+          - data: Xavier Brunson
+            type: PERSON
+            mentions: 3
+          - data: White House
+            type: ORG
+            mentions: 1
+          - data: Cabinet
+            type: ORG
+            mentions: 1
+          - data: U.S. Forces Korea
+            type: ORG
+            mentions: 1
+          - data: South Korean
+            type: NORP
+            mentions: 2
+          - data: Chinese
+            type: NORP
+            mentions: 1
+          - data: the Korean Peninsula
+            type: LOC
+            mentions: 2
+          - data: Indo
+            type: LOC
+            mentions: 1
+          - data: '-'
+            type: LOC
+            mentions: 1
+          - data: Pacific
+            type: LOC
+            mentions: 1
+          - data: Ulchi Freedom Shield
+            type: PRODUCT
+            mentions: 1
+          - data: the White House
+            type: FAC
+            mentions: 1
+          companies: []
+          sentiment:
+            positive: 0.655995
+            negative: 0.103086375
+            neutral: 0.24091867
+          summary: South Korean President Lee Jae Myung is set to meet with U.S. President Donald Trump on Aug. 25, this will be his first trip to the United States since taking office in June. The summit will focus on trade and defense issues, with the two leaders expected to discuss ways to develop the Korea-U.S.-Korea alliance into a future comprehensive strategic alliance. They will also discuss strengthening the robust South Korea-US combined defense posture and cooperating to establish peace and achieve denuclearization on the Korean Peninsula. The future of the decades-old military alliance is also expected to be in the spotlight as the two countries prepare to participate in their annual Ulchi Freedom Shield joint exercise.
+          shortSummary: South Korean President Lee Jae Myung will hold a summit with U.S. President Donald Trump in Washington, focusing on strengthening the South Korea-U.S alliance and establishing peace and denuclearization.
+          translation: ''
+          translatedTitle: ''
+          translatedDescription: ''
+          translatedSummary: ''
+          locations:
+          - country: kr
+          - country: kr
+            state: '11'
+            city: Seoul
+          reprint: true
+          reprintGroupId: 4e4bf19e89984af1baee7d04776bb9cd
+          places: []
+          people:
+          - wikidataId: Q22686
+            name: Donald Trump
+          - wikidataId: Q12612463
+            name: Lee Jae Myung
+    ArticleRefreshJobResponse:
+      type: object
+      properties:
+        jobId:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        status:
+          type:
+          - string
+          - 'null'
+          enum:
+          - PENDING
+          - PROCESSING
+          - COMPLETED
+        results:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ArticleRefreshJobArticleResult'
     Coordinate:
       type: object
       properties:
@@ -4107,270 +4067,267 @@ components:
           allOf:
           - $ref: '#/components/schemas/Coordinate'
       description: Structured geographic places extracted from the article.
-    EntityHolder:
+    Article:
       type: object
       properties:
-        data:
-          type:
-          - string
-          - 'null'
-          description: Text value of the extracted entity.
-        type:
-          type:
-          - string
-          - 'null'
-          description: Entity type, such as PERSON, ORGANIZATION, or LOCATION.
-        mentions:
-          type:
-          - integer
-          - 'null'
-          description: Number of times the entity appears in the article.
-          format: int32
-      description: Named entities extracted from the article.
-    CompanyHolder:
-      type: object
-      properties:
-        id:
-          type:
-          - string
-          - 'null'
-          description: Unique Perigon identifier for the company.
-        name:
-          type:
-          - string
-          - 'null'
-          description: Company name.
-        domains:
-          type:
-          - array
-          - 'null'
-          description: Domains associated with the company.
-          items:
-            type: string
-            description: Domains associated with the company.
-        symbols:
-          type:
-          - array
-          - 'null'
-          description: Stock symbols associated with the company.
-          items:
-            type: string
-            description: Stock symbols associated with the company.
-      description: Companies most strongly associated with the story.
-    Question:
-      type: object
-      properties:
-        question:
-          type:
-          - string
-          - 'null'
-          description: Question generated from the story content.
-        answer:
-          type:
-          - string
-          - 'null'
-          description: Answer generated from the story content.
-        references:
-          type:
-          - array
-          - 'null'
-          description: Article IDs supporting the answer.
-          items:
-            type: string
-            description: Article IDs supporting the answer.
-      description: Questions and answers generated from the story content.
-    TopicHolder:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: Topic assigned to the article.
-      description: Topics most strongly associated with the story.
-    CoordinateFilter:
-      type: object
-      properties:
-        lat:
-          type:
-          - number
-          - 'null'
-          format: float
-          example: 0
-        lon:
-          type:
-          - number
-          - 'null'
-          format: float
-          example: 0
-        radius:
-          type:
-          - number
-          - 'null'
-          format: float
-          example: 0
-      description: Filter articles from publishers based at specific geographic locations. Uses latitude, longitude, and radius parameters to define a circular search area for publisher locations.
-    PersonHolder:
-      type: object
-      properties:
-        wikidataId:
-          type:
-          - string
-          - 'null'
-          description: Wikidata identifier for the person.
-        name:
-          type:
-          - string
-          - 'null'
-          description: Person name.
-      description: People most strongly associated with the story.
-    ArticleRefreshPeekResponse:
-      type: object
-      properties:
-        results:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ArticleRefreshPeekResult'
-    AllEndpointSortBy:
-      type: string
-      enum:
-      - relevance
-      - date
-      - reverseDate
-      - reverseAddDate
-      - addDate
-      - pubDate
-      - refreshDate
-    ArticleRefreshData:
-      type: object
-      properties:
-        articleId:
-          type:
-          - string
-          - 'null'
         url:
           type:
           - string
           - 'null'
+          description: Canonical URL of the article.
         authorsByline:
           type:
           - string
           - 'null'
+          description: Author byline as published by the source.
+        articleId:
+          type:
+          - string
+          - 'null'
+          description: Unique Perigon identifier for the article.
+        clusterId:
+          type:
+          - string
+          - 'null'
+          description: Identifier of the story cluster containing the article, when assigned.
+        source:
+          allOf:
+          - $ref: '#/components/schemas/SourceHolder'
         imageUrl:
           type:
           - string
           - 'null'
+          description: Primary image URL associated with the article.
         country:
           type:
           - string
           - 'null'
+          description: Two-character country code associated with the article.
         language:
           type:
           - string
           - 'null'
+          description: ISO 639 two-letter language code for the article.
         pubDate:
           type:
           - string
           - 'null'
+          description: Date and time the article was published, in ISO 8601 format.
+        addDate:
+          type:
+          - string
+          - 'null'
+          description: Date and time the article was added to Perigon, in ISO 8601 format.
+        refreshDate:
+          type:
+          - string
+          - 'null'
+          description: Date and time the article was last refreshed by Perigon, in ISO 8601 format.
+        score:
+          type:
+          - number
+          - 'null'
+          description: Search relevance score for the article, when applicable.
+          format: float
         title:
           type:
           - string
           - 'null'
+          description: Article headline.
         description:
           type:
           - string
           - 'null'
+          description: Article description or publisher-provided excerpt.
         content:
           type:
           - string
           - 'null'
-        source:
-          allOf:
-          - $ref: '#/components/schemas/SourceHolder'
-        links:
+          description: Full article body available to Perigon.
+        enContentWordCount:
           type:
-          - array
+          - integer
           - 'null'
-          items:
-            type: string
+          description: Word count of the English article content, when available.
+          format: int32
         medium:
           type:
           - string
           - 'null'
-        claim:
-          type:
-          - string
-          - 'null'
-        verdict:
-          type:
-          - string
-          - 'null'
-        translation:
-          type:
-          - string
-          - 'null'
-        translatedTitle:
-          type:
-          - string
-          - 'null'
-        translatedDescription:
-          type:
-          - string
-          - 'null'
-        entities:
+          description: Primary medium type, such as Article or Video.
+        links:
           type:
           - array
           - 'null'
+          description: URLs linked from the article content.
           items:
-            $ref: '#/components/schemas/EntityHolder'
-        people:
+            type: string
+            description: URLs linked from the article content.
+        labels:
           type:
           - array
           - 'null'
+          description: Editorial labels assigned to the article.
           items:
-            $ref: '#/components/schemas/PersonHolder'
-        companies:
+            $ref: '#/components/schemas/LabelHolder'
+        eventTypes:
           type:
           - array
           - 'null'
+          description: Event types detected in the article.
           items:
-            $ref: '#/components/schemas/CompanyHolder'
+            $ref: '#/components/schemas/EventTypeHolder'
         matchedAuthors:
           type:
           - array
           - 'null'
+          description: Known journalist records matched to the article byline.
           items:
             $ref: '#/components/schemas/IdNameHolder'
-    PersonCount:
-      type: object
-      properties:
-        wikidataId:
+        claim:
           type:
           - string
           - 'null'
-          description: Wikidata identifier for the person.
-        name:
+          description: Claim identified in fact-check content, when applicable.
+        verdict:
           type:
           - string
           - 'null'
-          description: Person name.
-        count:
+          description: Verdict identified in fact-check content, when applicable.
+        keywords:
           type:
-          - integer
+          - array
           - 'null'
-          description: Number of story articles mentioning the person.
-          format: int32
-      description: People associated with the story and their article counts.
-    ClustersListSortBy:
-      type: string
-      enum:
-      - createdAt
-      - updatedAt
-      - relevance
-      - count
-      - totalCount
+          description: Keywords extracted from the article with their relevance weights.
+          items:
+            $ref: '#/components/schemas/KeywordHolder'
+        topics:
+          type:
+          - array
+          - 'null'
+          description: Topics assigned to the article.
+          items:
+            $ref: '#/components/schemas/TopicHolder'
+        categories:
+          type:
+          - array
+          - 'null'
+          description: Broad content categories assigned to the article.
+          items:
+            $ref: '#/components/schemas/CategoryHolder'
+        taxonomies:
+          type:
+          - array
+          - 'null'
+          description: Google Content Categories assigned to the article with confidence scores.
+          items:
+            $ref: '#/components/schemas/CategoryWithScoreHolder'
+        entities:
+          type:
+          - array
+          - 'null'
+          description: Named entities extracted from the article.
+          items:
+            $ref: '#/components/schemas/EntityHolder'
+        companies:
+          type:
+          - array
+          - 'null'
+          description: Companies identified in the article.
+          items:
+            $ref: '#/components/schemas/CompanyHolder'
+        sentiment:
+          allOf:
+          - $ref: '#/components/schemas/SentimentHolder'
+        summary:
+          type:
+          - string
+          - 'null'
+          description: Generated summary of the article, when available.
+        shortSummary:
+          type:
+          - string
+          - 'null'
+          description: Short generated summary of the article, when available.
+        translation:
+          type:
+          - string
+          - 'null'
+          description: Translated article content, when available.
+        translatedTitle:
+          type:
+          - string
+          - 'null'
+          description: English translation of the article title, when available.
+        translatedDescription:
+          type:
+          - string
+          - 'null'
+          description: English translation of the article description, when available.
+        translatedSummary:
+          type:
+          - string
+          - 'null'
+          description: English translation of the article summary, when available.
+        locations:
+          type:
+          - array
+          - 'null'
+          description: Locations identified as central to the article.
+          items:
+            $ref: '#/components/schemas/LocationHolder'
+        reprint:
+          type:
+          - boolean
+          - 'null'
+          description: Whether the article is a reprint of previously published content.
+        reprintGroupId:
+          type:
+          - string
+          - 'null'
+          description: Identifier grouping the original article with its known reprints.
+        places:
+          type:
+          - array
+          - 'null'
+          description: Structured geographic places extracted from the article.
+          items:
+            $ref: '#/components/schemas/Place'
+        people:
+          type:
+          - array
+          - 'null'
+          description: Known people identified in the article.
+          items:
+            $ref: '#/components/schemas/PersonHolder'
+        cluster:
+          allOf:
+          - $ref: '#/components/schemas/NewsCluster'
+        journalists:
+          type:
+          - array
+          - 'null'
+          description: Expanded journalist details, when requested and available.
+          items:
+            $ref: '#/components/schemas/Journalist'
+        highlights:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: array
+            description: Matched text fragments grouped by article field.
+            items:
+              type: string
+              description: Matched text fragments grouped by article field.
+          description: Matched text fragments grouped by article field.
+        vectors:
+          type:
+          - array
+          - 'null'
+          description: Vector embeddings associated with the article, when requested.
+          items:
+            $ref: '#/components/schemas/VectorData'
     StorySearchResult:
       required:
       - numResults
@@ -4583,29 +4540,72 @@ components:
           topLocations:
           - state: ENG
             city: Newcastle upon Tyne
-    ArticleRefreshJobArticleResult:
+    CategoryWithScoreHolder:
       type: object
       properties:
-        articleId:
+        name:
           type:
           - string
           - 'null'
-        status:
+          description: Full taxonomy category path.
+        score:
           type:
-          - string
+          - number
           - 'null'
-          enum:
-          - PENDING
-          - COMPLETED
-          - ERROR
+          description: Confidence score for the category assignment.
+          format: double
+      description: Google Content Categories assigned to the article with confidence scores.
+    EntityHolder:
+      type: object
+      properties:
         data:
-          allOf:
-          - $ref: '#/components/schemas/ArticleRefreshData'
-        computedAt:
           type:
           - string
           - 'null'
-          format: date-time
+          description: Text value of the extracted entity.
+        type:
+          type:
+          - string
+          - 'null'
+          description: Entity type, such as PERSON, ORGANIZATION, or LOCATION.
+        mentions:
+          type:
+          - integer
+          - 'null'
+          description: Number of times the entity appears in the article.
+          format: int32
+      description: Named entities extracted from the article.
+    EventTypeHolder:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: Detected event name.
+        type:
+          type:
+          - string
+          - 'null'
+          description: Detected event classification.
+      description: Event types detected in the article.
+    KeyPoint:
+      type: object
+      properties:
+        point:
+          type:
+          - string
+          - 'null'
+          description: A key fact or development identified in the content.
+        references:
+          type:
+          - array
+          - 'null'
+          description: Article IDs supporting the key point.
+          items:
+            type: string
+            description: Article IDs supporting the key point.
+      description: Key facts and developments identified in the story.
   securitySchemes:
     apiKeyAuth:
       type: http

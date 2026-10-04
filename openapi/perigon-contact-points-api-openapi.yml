@@ -448,97 +448,6 @@ paths:
       - apiKeyAuth: []
 components:
   schemas:
-    ErrorResponse:
-      type: object
-      properties:
-        status:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        message:
-          type:
-          - string
-          - 'null'
-        timestamp:
-          type:
-          - integer
-          - 'null'
-          format: int64
-    ContactPointSortBy:
-      type: string
-      enum:
-      - createdAt
-      - updatedAt
-    ContactPointUpdateBody:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-        status:
-          type:
-          - string
-          - 'null'
-          enum:
-          - ACTIVE
-          - STOPPED
-          - FAILING
-          - ARCHIVED
-        webhook:
-          type:
-          - string
-          - 'null'
-    ContactPointListResult:
-      required:
-      - data
-      - total
-      type: object
-      properties:
-        total:
-          type: integer
-          description: Total number of matching contact points across all pages.
-          format: int64
-        data:
-          type: array
-          description: Contact points returned for the requested page.
-          items:
-            $ref: '#/components/schemas/ContactPointApiDto'
-      description: Paginated list of contact points.
-      example:
-        total: 1
-        data:
-        - uuid: f47ac10b-58cc-4372-a567-0e02b2c3d479
-          createdAt: '2025-07-15T11:20:00.000Z'
-          updatedAt: '2025-07-15T11:25:00.000Z'
-          type: WEBHOOK
-          status: ACTIVE
-          name: Ops webhook
-          webhookUrl: https://hooks.example.com/perigon/monitors
-          webhookSecret: whsec_example_secret
-          isVerified: true
-          verifiedAt: '2025-07-15T11:25:00.000Z'
-    ContactPointResult:
-      required:
-      - data
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/ContactPointApiDto'
-      description: Single contact point response.
-      example:
-        data:
-          uuid: f47ac10b-58cc-4372-a567-0e02b2c3d479
-          createdAt: '2025-07-15T11:20:00.000Z'
-          updatedAt: '2025-07-15T11:25:00.000Z'
-          type: WEBHOOK
-          status: ACTIVE
-          name: Ops webhook
-          webhookUrl: https://hooks.example.com/perigon/monitors
-          webhookSecret: whsec_example_secret
-          isVerified: true
-          verifiedAt: '2025-07-15T11:25:00.000Z'
     ContactPointApiDto:
       type: object
       properties:
@@ -610,6 +519,97 @@ components:
           - boolean
           - 'null'
       description: Contact point used to deliver monitor notifications.
+    ContactPointResult:
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ContactPointApiDto'
+      description: Single contact point response.
+      example:
+        data:
+          uuid: f47ac10b-58cc-4372-a567-0e02b2c3d479
+          createdAt: '2025-07-15T11:20:00.000Z'
+          updatedAt: '2025-07-15T11:25:00.000Z'
+          type: WEBHOOK
+          status: ACTIVE
+          name: Ops webhook
+          webhookUrl: https://hooks.example.com/perigon/monitors
+          webhookSecret: whsec_example_secret
+          isVerified: true
+          verifiedAt: '2025-07-15T11:25:00.000Z'
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        message:
+          type:
+          - string
+          - 'null'
+        timestamp:
+          type:
+          - integer
+          - 'null'
+          format: int64
+    ContactPointUpdateBody:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+        status:
+          type:
+          - string
+          - 'null'
+          enum:
+          - ACTIVE
+          - STOPPED
+          - FAILING
+          - ARCHIVED
+        webhook:
+          type:
+          - string
+          - 'null'
+    ContactPointSortBy:
+      type: string
+      enum:
+      - createdAt
+      - updatedAt
+    ContactPointListResult:
+      required:
+      - data
+      - total
+      type: object
+      properties:
+        total:
+          type: integer
+          description: Total number of matching contact points across all pages.
+          format: int64
+        data:
+          type: array
+          description: Contact points returned for the requested page.
+          items:
+            $ref: '#/components/schemas/ContactPointApiDto'
+      description: Paginated list of contact points.
+      example:
+        total: 1
+        data:
+        - uuid: f47ac10b-58cc-4372-a567-0e02b2c3d479
+          createdAt: '2025-07-15T11:20:00.000Z'
+          updatedAt: '2025-07-15T11:25:00.000Z'
+          type: WEBHOOK
+          status: ACTIVE
+          name: Ops webhook
+          webhookUrl: https://hooks.example.com/perigon/monitors
+          webhookSecret: whsec_example_secret
+          isVerified: true
+          verifiedAt: '2025-07-15T11:25:00.000Z'
     ContactPointRequestBody:
       required:
       - name

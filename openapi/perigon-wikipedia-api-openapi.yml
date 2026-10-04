@@ -356,40 +356,6 @@ paths:
       - apiKeyAuth: []
 components:
   schemas:
-    ScoredDataWikiData:
-      type: object
-      properties:
-        score:
-          type:
-          - number
-          - 'null'
-          format: float
-        data:
-          allOf:
-          - $ref: '#/components/schemas/WikiData'
-        vectors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/VectorData'
-    ErrorResponse:
-      type: object
-      properties:
-        status:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        message:
-          type:
-          - string
-          - 'null'
-        timestamp:
-          type:
-          - integer
-          - 'null'
-          format: int64
     WikipediaSearchFilter:
       type: object
       properties:
@@ -505,139 +471,6 @@ components:
           items:
             $ref: '#/components/schemas/WikipediaSearchFilter'
       description: Complex filter structure for Wikipedia page searches that supports nested logical operations (AND, OR, NOT) and multiple filtering criteria.
-    WikiData:
-      type: object
-      properties:
-        pageId:
-          type:
-          - string
-          - 'null'
-        sectionId:
-          type:
-          - string
-          - 'null'
-        wikiPageId:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        wikiRevisionId:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        wikiRevisionTs:
-          type:
-          - string
-          - 'null'
-        wikiCode:
-          type:
-          - string
-          - 'null'
-        wikiNamespace:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        wikiTitle:
-          type:
-          - string
-          - 'null'
-        wikidataId:
-          type:
-          - string
-          - 'null'
-        wikidataInstanceOf:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/WikidataLabelHolder'
-        redirectTitles:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-        pageviews:
-          type:
-          - integer
-          - 'null'
-          format: int64
-        title:
-          type:
-          - string
-          - 'null'
-        styleLevel:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        content:
-          type:
-          - string
-          - 'null'
-    WikipediaVectorSearchResult:
-      required:
-      - results
-      - status
-      type: object
-      properties:
-        status:
-          type: integer
-          format: int32
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/ScoredDataWikiData'
-      description: Wikipedia vector search result
-      example:
-        status: 200
-        results:
-        - score: 0.6632843
-          data:
-            pageId: a9e264ec1f6a4c049e3be8e997e24d2f
-            sectionId: d3d9e592df354cb9abcac4d3c5d38065
-            wikiPageId: 63988579
-            wikiRevisionId: 1300572396
-            wikiRevisionTs: '2025-07-15T04:19:25Z'
-            wikiCode: enwiki
-            wikiNamespace: 0
-            wikiTitle: Gigafactory Texas
-            wikidataId: Q96379480
-            wikidataInstanceOf:
-            - wikidataId: Q83405
-              label: factory
-            redirectTitles:
-            - Giga Austin
-            - Gigafactory 5
-            - Tesla Gigafactory 5
-            - Terafactory
-            - Giga Texas
-            - Austin Gigafactory
-            pageviews: 339
-            title: Austin
-            styleLevel: 3
-            content: "In 2014, Tesla evaluated a 1,500-acre (600 ha; 2 sq mi; 6 km2) manufacturing site on U.S. Route 79 at Frame Switch (30°32′N 97°30′W\uFEFF / \uFEFF30.54°N 97.5°W\uFEFF / 30.54; -97.5\uFEFF (Hutto MegaSite, (Frame Switch, Texas))), located between the towns of Hutto and Taylor, north-east of the Greater Austin center as its next factory. However, Tesla chose to build its first Gigafactory (now named Gigafactory Nevada) near Sparks, Nevada which is by Reno in 2014.\n\nBy June 2020, another location, one near the Del Valle area of Austin was being considered, a 2,100-acre (850 ha; 3.3 sq mi; 8.5 km2) site bordering Harold Green Road (later renamed Tesla Road) and Texas State Highway 130. On June 16, 2020, the Commissioners' court of Travis County discussed a possible incentives package for Tesla. In July 2020, the Del Valle Independent School District approved a tax incentives package worth $68 million, should the Tesla Gigafactory be built. On July 22, 2020, during Tesla's second quarter 2020 earnings call, the company announced that location had been selected for its fifth Gigafactory.\n\nBy the end of July 2020, construction had begun. The Tesla Gigafactory received state tax incentives worth about $50 million through the Texas Tax Code Chapter 313 program. Tesla announced a manufacturing training program in cooperation with Austin Community College District on June 15, 2021. The program was expected to start in August 2021 and the course was to last 14 weeks. The first fully completed Tesla Model Y rolled off the line at Giga Texas in the last week of August 2021 under trial production. In December 2021, Elon Musk estimated that Giga Texas will require a total investment of at least $10B and may employ as many as 20,000 employees within the company.\n\nIn early 2022 Tesla battery suppliers CATL and Panasonic were reportedly scouting sites for battery factories in North America, including Kansas, Oklahoma, Mexico and Canada. Panasonic announced in July 2022 that the company selected De Soto, Kansas (at the former Sunflower Army Ammunition Plant) to build a battery factory. Large subsidies and abatements were granted to Panasonic, organized by Governor Laura Kelly."
-    VectorData:
-      type: object
-      properties:
-        data:
-          type:
-          - array
-          - 'null'
-          description: Numeric values in the vector embedding.
-          items:
-            type: number
-            description: Numeric values in the vector embedding.
-            format: float
-        version:
-          type:
-          - integer
-          - 'null'
-          description: Version of the embedding representation.
-          format: int32
-      description: Vector embeddings associated with the article, when requested.
     WikipediaSearchResult:
       required:
       - numResults
@@ -1007,6 +840,42 @@ components:
           - Ze'ev Drori
           - Zep Solar
           pageviews: 339
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        message:
+          type:
+          - string
+          - 'null'
+        timestamp:
+          type:
+          - integer
+          - 'null'
+          format: int64
+    VectorData:
+      type: object
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          description: Numeric values in the vector embedding.
+          items:
+            type: number
+            description: Numeric values in the vector embedding.
+            format: float
+        version:
+          type:
+          - integer
+          - 'null'
+          description: Version of the embedding representation.
+          format: int32
+      description: Vector embeddings associated with the article, when requested.
     WikiPageSectionHolder:
       type: object
       properties:
@@ -1038,66 +907,34 @@ components:
           type:
           - string
           - 'null'
-    WikipediaSearchParams:
-      required:
-      - prompt
+    ScoredDataWikiData:
       type: object
       properties:
-        prompt:
-          maxLength: 1024
-          minLength: 0
-          type: string
-          description: Natural language query to search the Wikipedia pages database
-          example: Enter your prompt
-        filter:
+        score:
+          type:
+          - number
+          - 'null'
+          format: float
+        data:
           allOf:
-          - $ref: '#/components/schemas/WikipediaSearchFilter'
-        wikiRevisionFrom:
+          - $ref: '#/components/schemas/WikiData'
+        vectors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/VectorData'
+    WikidataLabelHolder:
+      type: object
+      properties:
+        wikidataId:
           type:
           - string
           - 'null'
-          description: '''wikiRevisionFrom'' filter, will search pages modified after the specified date, the date could be passed as ISO or ''yyyy-mm-dd''. Date time in ISO format, ie. 2024-01-01T00:00:00.'
-          format: date-time
-          example: '2024-01-01T00:00:00Z'
-        wikiRevisionTo:
+        label:
           type:
           - string
           - 'null'
-          description: '''wikiRevisionFrom'' filter, will search pages modified before the specified date, the date could be passed as ISO or ''yyyy-mm-dd''. Date time in ISO format, ie. 2024-01-01T00:00:00.'
-          format: date-time
-          example: '2024-12-31T23:59:59Z'
-        pageviewsFrom:
-          type:
-          - integer
-          - 'null'
-          description: '''pageviewsFrom'' filter, will search pages with at least the provided number of views per day.'
-          format: int64
-          example: 0
-        pageviewsTo:
-          type:
-          - integer
-          - 'null'
-          description: '''pageviewsFrom'' filter, will search pages with at most the provided number of views per day.'
-          format: int64
-          example: 0
-        size:
-          maximum: 100
-          minimum: 1
-          type:
-          - integer
-          - 'null'
-          description: The number of items per page.
-          format: int32
-          default: 10
-        page:
-          maximum: 10000
-          minimum: 0
-          type:
-          - integer
-          - 'null'
-          description: The page number to retrieve.
-          format: int32
-          default: 0
     WikiPage:
       type: object
       properties:
@@ -1193,17 +1030,180 @@ components:
           - integer
           - 'null'
           format: int64
-    WikidataLabelHolder:
+    WikipediaSearchParams:
+      required:
+      - prompt
       type: object
       properties:
+        prompt:
+          maxLength: 1024
+          minLength: 0
+          type: string
+          description: Natural language query to search the Wikipedia pages database
+          example: Enter your prompt
+        filter:
+          allOf:
+          - $ref: '#/components/schemas/WikipediaSearchFilter'
+        wikiRevisionFrom:
+          type:
+          - string
+          - 'null'
+          description: '''wikiRevisionFrom'' filter, will search pages modified after the specified date, the date could be passed as ISO or ''yyyy-mm-dd''. Date time in ISO format, ie. 2024-01-01T00:00:00.'
+          format: date-time
+          example: '2024-01-01T00:00:00Z'
+        wikiRevisionTo:
+          type:
+          - string
+          - 'null'
+          description: '''wikiRevisionFrom'' filter, will search pages modified before the specified date, the date could be passed as ISO or ''yyyy-mm-dd''. Date time in ISO format, ie. 2024-01-01T00:00:00.'
+          format: date-time
+          example: '2024-12-31T23:59:59Z'
+        pageviewsFrom:
+          type:
+          - integer
+          - 'null'
+          description: '''pageviewsFrom'' filter, will search pages with at least the provided number of views per day.'
+          format: int64
+          example: 0
+        pageviewsTo:
+          type:
+          - integer
+          - 'null'
+          description: '''pageviewsFrom'' filter, will search pages with at most the provided number of views per day.'
+          format: int64
+          example: 0
+        size:
+          maximum: 100
+          minimum: 1
+          type:
+          - integer
+          - 'null'
+          description: The number of items per page.
+          format: int32
+          default: 10
+        page:
+          maximum: 10000
+          minimum: 0
+          type:
+          - integer
+          - 'null'
+          description: The page number to retrieve.
+          format: int32
+          default: 0
+    WikiData:
+      type: object
+      properties:
+        pageId:
+          type:
+          - string
+          - 'null'
+        sectionId:
+          type:
+          - string
+          - 'null'
+        wikiPageId:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        wikiRevisionId:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        wikiRevisionTs:
+          type:
+          - string
+          - 'null'
+        wikiCode:
+          type:
+          - string
+          - 'null'
+        wikiNamespace:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        wikiTitle:
+          type:
+          - string
+          - 'null'
         wikidataId:
           type:
           - string
           - 'null'
-        label:
+        wikidataInstanceOf:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/WikidataLabelHolder'
+        redirectTitles:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        pageviews:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        title:
           type:
           - string
           - 'null'
+        styleLevel:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        content:
+          type:
+          - string
+          - 'null'
+    WikipediaVectorSearchResult:
+      required:
+      - results
+      - status
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScoredDataWikiData'
+      description: Wikipedia vector search result
+      example:
+        status: 200
+        results:
+        - score: 0.6632843
+          data:
+            pageId: a9e264ec1f6a4c049e3be8e997e24d2f
+            sectionId: d3d9e592df354cb9abcac4d3c5d38065
+            wikiPageId: 63988579
+            wikiRevisionId: 1300572396
+            wikiRevisionTs: '2025-07-15T04:19:25Z'
+            wikiCode: enwiki
+            wikiNamespace: 0
+            wikiTitle: Gigafactory Texas
+            wikidataId: Q96379480
+            wikidataInstanceOf:
+            - wikidataId: Q83405
+              label: factory
+            redirectTitles:
+            - Giga Austin
+            - Gigafactory 5
+            - Tesla Gigafactory 5
+            - Terafactory
+            - Giga Texas
+            - Austin Gigafactory
+            pageviews: 339
+            title: Austin
+            styleLevel: 3
+            content: "In 2014, Tesla evaluated a 1,500-acre (600 ha; 2 sq mi; 6 km2) manufacturing site on U.S. Route 79 at Frame Switch (30°32′N 97°30′W\uFEFF / \uFEFF30.54°N 97.5°W\uFEFF / 30.54; -97.5\uFEFF (Hutto MegaSite, (Frame Switch, Texas))), located between the towns of Hutto and Taylor, north-east of the Greater Austin center as its next factory. However, Tesla chose to build its first Gigafactory (now named Gigafactory Nevada) near Sparks, Nevada which is by Reno in 2014.\n\nBy June 2020, another location, one near the Del Valle area of Austin was being considered, a 2,100-acre (850 ha; 3.3 sq mi; 8.5 km2) site bordering Harold Green Road (later renamed Tesla Road) and Texas State Highway 130. On June 16, 2020, the Commissioners' court of Travis County discussed a possible incentives package for Tesla. In July 2020, the Del Valle Independent School District approved a tax incentives package worth $68 million, should the Tesla Gigafactory be built. On July 22, 2020, during Tesla's second quarter 2020 earnings call, the company announced that location had been selected for its fifth Gigafactory.\n\nBy the end of July 2020, construction had begun. The Tesla Gigafactory received state tax incentives worth about $50 million through the Texas Tax Code Chapter 313 program. Tesla announced a manufacturing training program in cooperation with Austin Community College District on June 15, 2021. The program was expected to start in August 2021 and the course was to last 14 weeks. The first fully completed Tesla Model Y rolled off the line at Giga Texas in the last week of August 2021 under trial production. In December 2021, Elon Musk estimated that Giga Texas will require a total investment of at least $10B and may employ as many as 20,000 employees within the company.\n\nIn early 2022 Tesla battery suppliers CATL and Panasonic were reportedly scouting sites for battery factories in North America, including Kansas, Oklahoma, Mexico and Canada. Panasonic announced in July 2022 that the company selected De Soto, Kansas (at the former Sunflower Army Ammunition Plant) to build a battery factory. Large subsidies and abatements were granted to Panasonic, organized by Governor Laura Kelly."
   securitySchemes:
     apiKeyAuth:
       type: http
