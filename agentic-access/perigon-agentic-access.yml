@@ -1,19 +1,32 @@
-generated: '2026-09-20'
+generated: '2026-09-23'
 method: generated
-source: openapi/perigon-openapi.yml
+source: openapi/perigon-ai-advanced-search-api-openapi.yml, openapi/perigon-contact-points-api-openapi.yml,
+  openapi/perigon-monitors-api-openapi.yml, openapi/perigon-news-stories-api-openapi.yml, openapi/perigon-source-groups-api-openapi.yml,
+  openapi/perigon-supplemental-endpoints-api-openapi.yml, openapi/perigon-utilities-api-openapi.yml,
+  openapi/perigon-watchlists-api-openapi.yml, openapi/perigon-wikipedia-api-openapi.yml
 description: Recommended x-agentic-access execution contracts, classified heuristically from
   the OpenAPI. A governance starting point for exposing this API to AI agents — review and bind
   audience per deployment. See research/curity/agentic-governance/.
 summary:
   operations: 45
   by_action_class:
-    connected: 26
-    acting: 19
+    connected: 27
+    acting: 18
   by_consequence:
-    read: 26
-    write: 19
+    read: 27
+    write: 18
   human_in_the_loop_required: 0
 operations:
+- path: /v1/summarize
+  method: post
+  operationId: search-summarizer
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
 - path: /v1/api/contactPoints
   method: get
   operationId: list-contact-points
@@ -212,6 +225,104 @@ operations:
     token:
       max-ttl: 3600
     audit: none
+- path: /v1/articles/all
+  method: get
+  operationId: search-articles
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/articles/refresh/jobs
+  method: post
+  operationId: submit-article-refresh-job
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/articles/refresh/jobs/{id}
+  method: get
+  operationId: get-article-refresh-job
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/articles/refresh/peek
+  method: post
+  operationId: peek-article-refresh
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/stories/all
+  method: get
+  operationId: search-stories
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/stories/history
+  method: get
+  operationId: get-story-history
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/stories/stats
+  method: get
+  operationId: get-story-counts
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/vector/news/all
+  method: post
+  operationId: vector-search-articles
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
 - path: /v1/api/sourceGroups
   method: get
   operationId: list-source-groups
@@ -290,6 +401,76 @@ operations:
       - abnormal
       - high-value
     audit: required
+- path: /v1/companies/all
+  method: get
+  operationId: search-companies
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/journalists/all
+  method: get
+  operationId: search-journalists
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/journalists/{id}
+  method: get
+  operationId: get-journalist-by-id
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/people/all
+  method: get
+  operationId: search-people
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/sources/all
+  method: get
+  operationId: search-sources
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/topics/all
+  method: get
+  operationId: search-topics
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/limits
+  method: get
+  operationId: get-limits
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
 - path: /v1/api/watchlists
   method: get
   operationId: list-watchlists
@@ -355,190 +536,6 @@ operations:
 - path: /v1/api/watchlists/{id}
   method: patch
   operationId: update-watchlist
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /v1/articles/all
-  method: get
-  operationId: search-articles
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /v1/articles/refresh/jobs
-  method: post
-  operationId: submit-article-refresh-job
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /v1/articles/refresh/jobs/{id}
-  method: get
-  operationId: get-article-refresh-job
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /v1/articles/refresh/peek
-  method: post
-  operationId: peek-article-refresh
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /v1/companies/all
-  method: get
-  operationId: search-companies
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /v1/journalists/all
-  method: get
-  operationId: search-journalists
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /v1/journalists/{id}
-  method: get
-  operationId: get-journalist-by-id
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /v1/limits
-  method: get
-  operationId: get-limits
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /v1/people/all
-  method: get
-  operationId: search-people
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /v1/sources/all
-  method: get
-  operationId: search-sources
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /v1/stories/all
-  method: get
-  operationId: search-stories
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /v1/stories/history
-  method: get
-  operationId: get-story-history
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /v1/stories/stats
-  method: get
-  operationId: get-story-counts
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /v1/summarize
-  method: post
-  operationId: search-summarizer
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /v1/topics/all
-  method: get
-  operationId: search-topics
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /v1/vector/news/all
-  method: post
-  operationId: vector-search-articles
   x-agentic-access:
     action-class: acting
     consequence: write

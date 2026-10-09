@@ -1,0 +1,34 @@
+# Front Door AI Index — perigon — 2026-09-17
+# AI vocabulary counted on the provider's root page. Generated; do not edit.
+# `score` is null unless ownership is `own` — see front_door_ai.py.
+front_door_ai:
+  slug: perigon
+  lexicon_version: '1.0'
+  probed_at: '2026-09-25'
+  host: perigon.io
+  final_host: perigon.io
+  ownership: own
+  owner: perigon
+  shares_host_with: null
+  inherited_from: null
+  alias_of: null
+  verdict: scored
+  score: 21
+  band: 5
+  band_label: prominent
+  host_score: 21
+  density: 37.84
+  words: 555
+  tiers:
+    agentic: 8
+    core: 12
+    model: 1
+  ambiguous: 15
+  top_terms:
+    AI: 12
+    agent: 8
+    intelligence: 7
+    AI agent: 5
+    MCP: 2
+    AI assistant: 1
+    Claude: 1
