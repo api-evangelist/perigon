@@ -1040,37 +1040,201 @@ paths:
       - apiKeyAuth: []
 components:
   schemas:
-    FilledField:
+    EntityGroup:
       required:
-      - field
-      - method
-      - source
+      - groupReference
       type: object
       properties:
-        field:
+        groupReference:
           type: string
-          description: Name of the event data field populated by enrichment.
-        method:
-          type: string
-          description: Search method used to populate the field. Accepts WEB_SEARCH or ARTICLE_SEARCH.
-          enum:
-          - WEB_SEARCH
-          - ARTICLE_SEARCH
-          - X_POST
-        source:
-          type: string
-          description: How enrichment was initiated. Accepts MANUAL or BACKGROUND.
-          enum:
-          - MANUAL
-          - BACKGROUND
-        sources:
+          description: Reference name used to identify the entity group in monitor output.
+        description:
+          type:
+          - string
+          - 'null'
+          description: Optional plain-language description of the entities represented by the group.
+      description: Entity groups the monitor identifies in matching content.
+    SignalNewsletterStoryPartialDto:
+      type: object
+      properties:
+        slug:
+          type:
+          - string
+          - 'null'
+          description: URL-safe identifier for the story.
+        url:
+          type:
+          - string
+          - 'null'
+          description: URL of the story.
+        title:
+          type:
+          - string
+          - 'null'
+          description: Story headline.
+        sourceFavicon:
+          type:
+          - string
+          - 'null'
+          description: URL of the source favicon used for the story.
+        updatedAt:
+          type:
+          - string
+          - 'null'
+          description: Date and time the story was last updated, in ISO 8601 format.
+          format: date-time
+        createdAt:
+          type:
+          - string
+          - 'null'
+          description: Date and time the story was created, in ISO 8601 format.
+          format: date-time
+      description: Story details keyed by story identifier for stories cited in the newsletter.
+    ScheduleInterval:
+      required:
+      - scheduleType
+      type: object
+      properties:
+        hour:
+          maximum: 23
+          minimum: 0
+          type:
+          - integer
+          - 'null'
+          description: Hour when the monitor runs, from 0 through 23.
+          format: int32
+        minute:
+          maximum: 59
+          minimum: 0
+          type:
+          - integer
+          - 'null'
+          description: Minute when the monitor runs, from 0 through 59.
+          format: int32
+        days:
+          maxItems: 7
+          minItems: 1
+          uniqueItems: true
           type:
           - array
           - 'null'
-          description: Sources used to populate the field.
+          description: Days when a WEEKLY schedule runs. Requires 1 through 7 values from MONDAY through SUNDAY.
           items:
-            $ref: '#/components/schemas/Source'
-      description: Event fields populated by enrichment and the sources used for each field.
+            type: string
+            description: Days when a WEEKLY schedule runs. Requires 1 through 7 values from MONDAY through SUNDAY.
+            enum:
+            - MONDAY
+            - TUESDAY
+            - WEDNESDAY
+            - THURSDAY
+            - FRIDAY
+            - SATURDAY
+            - SUNDAY
+        daysOfMonth:
+          maxItems: 31
+          minItems: 0
+          uniqueItems: true
+          type:
+          - array
+          - 'null'
+          description: Days of the month when a MONTHLY schedule runs. Required for MONTHLY schedules; each value must be from 1 through 31.
+          items:
+            maximum: 31
+            minimum: 1
+            type: integer
+            description: Days of the month when a MONTHLY schedule runs. Required for MONTHLY schedules; each value must be from 1 through 31.
+            format: int32
+        scheduleType:
+          type: string
+          description: Schedule recurrence type. Accepts WEEKLY or MONTHLY and defaults to WEEKLY.
+          enum:
+          - WEEKLY
+          - MONTHLY
+      description: Times when the monitor runs. Must contain between 1 and 24 intervals.
+    SignalMonitoringPlanDataSchema:
+      required:
+      - schema
+      - version
+      type: object
+      properties:
+        version:
+          type: string
+          description: Data schema version. Currently only V1 is supported.
+          enum:
+          - V1
+        allowExtra:
+          type:
+          - boolean
+          - 'null'
+          description: Whether extracted event data may contain fields not defined in schema. Defaults to false.
+        schema:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/SignalMonitoringPlanDataSchemaProperty'
+          description: Structured event field definitions keyed by output field name.
+      description: Schema for the structured data extracted into each matching event.
+    XPostMediaItem:
+      required:
+      - mediaUrlHttps
+      type: object
+      properties:
+        mediaUrlHttps:
+          type: string
+    XPostMedia:
+      type: object
+      properties:
+        photo:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/XPostMediaItem'
+        video:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/XPostMediaItem'
+    SignalArticlePartialDto:
+      type: object
+      properties:
+        title:
+          type:
+          - string
+          - 'null'
+          description: Article headline.
+        url:
+          type:
+          - string
+          - 'null'
+          description: Canonical URL of the article.
+        domain:
+          type:
+          - string
+          - 'null'
+          description: Publisher domain for the article.
+        pubDate:
+          type:
+          - string
+          - 'null'
+          description: Article publication date supplied with the monitor result.
+        sourceFavicon:
+          type:
+          - string
+          - 'null'
+          description: URL of the publisher's favicon.
+        highlights:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: array
+            description: Matched text snippets grouped by article field.
+            items:
+              type: string
+              description: Matched text snippets grouped by article field.
+          description: Matched text snippets grouped by article field.
+      description: Article details keyed by article ID for articles related to the event.
     Source:
       type: object
       properties:
@@ -1107,6 +1271,25 @@ components:
           - integer
           - 'null'
           format: int64
+    SignalXQuery:
+      required:
+      - query
+      - searchType
+      - version
+      type: object
+      properties:
+        version:
+          type: string
+          enum:
+          - V1
+        query:
+          type: string
+        searchType:
+          type: string
+          enum:
+          - TOP
+          - LATEST
+          - MEDIA
     XPost:
       required:
       - createdAt
@@ -1159,64 +1342,212 @@ components:
           format: int64
         media:
           $ref: '#/components/schemas/XPostMedia'
-    XPostMediaItem:
+    MonitorSummaryListResult:
       required:
-      - mediaUrlHttps
+      - data
+      - total
       type: object
       properties:
-        mediaUrlHttps:
-          type: string
-    SignalArticlePartialDto:
+        total:
+          type: integer
+          description: Total number of matching summaries across all pages.
+          format: int64
+        data:
+          type: array
+          description: Summaries returned for the requested page.
+          items:
+            $ref: '#/components/schemas/SignalSummaryDto'
+      description: Paginated list of monitor summaries.
+      example:
+        total: 1
+        data:
+        - text: Several major AI labs announced new model releases this week, with coverage focused on capabilities and enterprise availability.
+          createdAt: '2025-08-12T12:00:00.000Z'
+          updatedAt: '2025-08-12T12:00:00.000Z'
+    SignalApiDto:
       type: object
       properties:
-        title:
+        uuid:
           type:
           - string
           - 'null'
-          description: Article headline.
-        url:
+          description: Unique identifier for the monitor.
+          format: uuid
+        name:
           type:
           - string
           - 'null'
-          description: Canonical URL of the article.
-        domain:
+          description: Display name of the monitor.
+        createdAt:
           type:
           - string
           - 'null'
-          description: Publisher domain for the article.
-        pubDate:
+          description: Date and time the monitor was created, in ISO 8601 format.
+          format: date-time
+        updatedAt:
           type:
           - string
           - 'null'
-          description: Article publication date supplied with the monitor result.
-        sourceFavicon:
+          description: Date and time the monitor was last updated, in ISO 8601 format.
+          format: date-time
+        status:
           type:
           - string
           - 'null'
-          description: URL of the publisher's favicon.
-        highlights:
+          description: 'Current lifecycle status: DRAFT, ACTIVE, STOPPED, or ARCHIVED.'
+          enum:
+          - DRAFT
+          - ACTIVE
+          - STOPPED
+          - ARCHIVED
+        classificationType:
           type:
-          - object
+          - string
           - 'null'
-          additionalProperties:
-            type: array
-            description: Matched text snippets grouped by article field.
-            items:
-              type: string
-              description: Matched text snippets grouped by article field.
-          description: Matched text snippets grouped by article field.
-      description: Article details keyed by article ID for articles related to the event.
-    FillbotMetadata:
-      type: object
-      properties:
-        filledFields:
+          description: 'How matching content is classified: EVENT, MENTIONS, or TOPIC.'
+          enum:
+          - EVENT
+          - MENTIONS
+          - TOPIC
+        monitoringObjective:
+          type:
+          - string
+          - 'null'
+          description: Plain-language objective that defines what the monitor tracks.
+        prompt:
+          type:
+          - string
+          - 'null'
+          description: Optional instructions used to guide monitor processing.
+        dataSchema:
+          allOf:
+          - $ref: '#/components/schemas/SignalMonitoringPlanDataSchema'
+        newsletterConfig:
+          allOf:
+          - $ref: '#/components/schemas/SignalMonitoringPlanNewsletterConfig'
+        entityGroups:
           type:
           - array
           - 'null'
-          description: Event fields populated by enrichment and the sources used for each field.
+          description: Entity groups the monitor identifies in matching content.
           items:
-            $ref: '#/components/schemas/FilledField'
-      description: Provenance for event fields populated by the enrichment process.
+            $ref: '#/components/schemas/EntityGroup'
+        query:
+          allOf:
+          - $ref: '#/components/schemas/ComplexAllEndpointQuery'
+        schedulePolicy:
+          allOf:
+          - $ref: '#/components/schemas/SignalSchedulePolicy'
+        watchlistId:
+          type:
+          - integer
+          - 'null'
+          description: Numeric ID of the watchlist associated with the monitor, if any.
+          format: int32
+        contactPointIds:
+          type:
+          - array
+          - 'null'
+          description: UUIDs of contact points configured to receive monitor notifications.
+          items:
+            type: string
+            description: UUIDs of contact points configured to receive monitor notifications.
+            format: uuid
+        xQuery:
+          allOf:
+          - $ref: '#/components/schemas/SignalXQuery'
+      description: Monitor payload.
+    SignalMonitoringPlanNewsletterConfig:
+      required:
+      - storyCitationResolvingType
+      type: object
+      properties:
+        citations:
+          type:
+          - boolean
+          - 'null'
+          description: Whether generated newsletters include citations. Defaults to true.
+        storyCitationResolvingType:
+          type: string
+          description: How story citations are resolved. Accepts STORY or TOP_ARTICLE.
+          enum:
+          - STORY
+          - TOP_ARTICLE
+      description: Citation settings for newsletters generated by the monitor.
+    MonitorEventListResult:
+      required:
+      - data
+      - total
+      type: object
+      properties:
+        total:
+          type: integer
+          description: Total number of matching events across all pages.
+          format: int64
+        data:
+          type: array
+          description: Events returned for the requested page.
+          items:
+            $ref: '#/components/schemas/SignalEventDto'
+      description: Paginated list of monitor events.
+      example:
+        total: 1
+        data:
+        - uuid: b2c3d4e5-f6a7-8901-bcde-f12345678901
+          createdAt: '2025-08-12T10:05:22.100Z'
+          updatedAt: '2025-08-12T10:05:22.100Z'
+          eventDate: '2025-08-12T08:30:00Z'
+          eventType: product_launch
+          data:
+            productName: GPT-5
+            company: OpenAI
+          relatedArticleIds:
+          - 97dce2f1bdcd441c99360e58d38e811d
+          articles:
+            97dce2f1bdcd441c99360e58d38e811d:
+              title: OpenAI unveils next-generation language model
+              url: https://www.reuters.com/technology/openai-unveils-next-generation-model-2025-08-12/
+              domain: reuters.com
+              pubDate: '2025-08-12T08:15:00+00:00'
+              sourceFavicon: https://www.reuters.com/favicon.ico
+              highlights: null
+          entities:
+          - name: OpenAI
+            type: COMPANY
+          summary: OpenAI announced a new flagship language model.
+    MonitorNewsletterListResult:
+      required:
+      - data
+      - total
+      type: object
+      properties:
+        total:
+          type: integer
+          description: Total number of matching newsletters across all pages.
+          format: int64
+        data:
+          type: array
+          description: Newsletters returned for the requested page.
+          items:
+            $ref: '#/components/schemas/SignalNewsletterDto'
+      description: Paginated list of monitor newsletters.
+      example:
+        total: 1
+        data:
+        - uuid: c3d4e5f6-a7b8-9012-cdef-123456789012
+          createdAt: '2025-08-12T14:00:00.000Z'
+          updatedAt: '2025-08-12T14:00:00.000Z'
+          title: Weekly AI Launch Digest
+          content: This week saw several notable AI product announcements across the industry.
+          articles:
+            97dce2f1bdcd441c99360e58d38e811d:
+              title: OpenAI unveils next-generation language model
+              url: https://www.reuters.com/technology/openai-unveils-next-generation-model-2025-08-12/
+              domain: reuters.com
+              pubDate: '2025-08-12T08:15:00+00:00'
+              sourceFavicon: https://www.reuters.com/favicon.ico
+              highlights: null
+          stories: {}
     SignalEventDto:
       type: object
       properties:
@@ -1320,75 +1651,94 @@ components:
           items:
             $ref: '#/components/schemas/XPost'
       description: Events returned for the requested page.
-    EntityGroup:
+    MatchedEntityData:
       required:
-      - groupReference
+      - name
+      - type
       type: object
       properties:
-        groupReference:
+        name:
           type: string
-          description: Reference name used to identify the entity group in monitor output.
-        description:
+          description: Name of the entity matched in the source content.
+        type:
+          type: string
+          description: Entity type assigned by the monitor.
+        domain:
           type:
           - string
           - 'null'
-          description: Optional plain-language description of the entities represented by the group.
-      description: Entity groups the monitor identifies in matching content.
-    MonitorResult:
+          description: Domain associated with the matched entity, when available.
+      description: Entities matched in the content that produced the event.
+    SignalSchedulePolicy:
       required:
-      - data
+      - intervals
       type: object
       properties:
-        data:
-          $ref: '#/components/schemas/SignalApiDto'
-      description: Single monitor response.
-      example:
-        data:
-          uuid: a1b2c3d4-e5f6-7890-abcd-ef1234567890
-          name: AI Product Launches
-          createdAt: '2025-08-01T14:22:10.123Z'
-          updatedAt: '2025-08-12T09:15:44.567Z'
-          status: ACTIVE
-          classificationType: EVENT
-          monitoringObjective: Track major AI product launches and model releases from leading technology companies.
-          prompt: Focus on official announcements and product releases.
-          dataSchema:
-            version: V1
-            allowExtra: false
-            schema:
-              eventType:
-                type: ENUM
-                description: Type of AI product announcement
-                required: true
-                values:
-                - PRODUCT_LAUNCH
-                - MODEL_RELEASE
-              productName:
-                type:
-                - STRING
-                - 'null'
-                description: Name of the launched product or model
-                required: true
-              company:
-                type:
-                - STRING
-                - 'null'
-                description: Company that launched the product
-                required: true
-          newsletterConfig: null
-          entityGroups: []
-          query:
-            q: AI OR "artificial intelligence"
-            sourceGroup:
-            - top100
-          schedulePolicy:
-            intervals:
-            - hour: 9
-              minute: 0
-            timezoneId: America/New_York
-          watchlistId: 42
-          contactPointIds:
-          - f47ac10b-58cc-4372-a567-0e02b2c3d479
+        intervals:
+          maxItems: 24
+          minItems: 1
+          type: array
+          description: Times when the monitor runs. Must contain between 1 and 24 intervals.
+          items:
+            $ref: '#/components/schemas/ScheduleInterval'
+        timezoneId:
+          type:
+          - string
+          - 'null'
+          description: IANA time zone used to interpret schedule intervals, such as America/Chicago. Defaults to UTC.
+      description: Recurring processing schedule configured for the monitor.
+    SignalNewsletterDto:
+      type: object
+      properties:
+        uuid:
+          type:
+          - string
+          - 'null'
+          description: Unique identifier for the newsletter.
+          format: uuid
+        createdAt:
+          type:
+          - string
+          - 'null'
+          description: Date and time the newsletter was created, in ISO 8601 format.
+          format: date-time
+        updatedAt:
+          type:
+          - string
+          - 'null'
+          description: Date and time the newsletter was last updated, in ISO 8601 format.
+          format: date-time
+        title:
+          type:
+          - string
+          - 'null'
+          description: Generated title of the newsletter.
+        content:
+          type:
+          - string
+          - 'null'
+          description: Generated newsletter content.
+        articles:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            $ref: '#/components/schemas/SignalArticlePartialDto'
+          description: Article details keyed by article ID for content cited in the newsletter.
+        stories:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            $ref: '#/components/schemas/SignalNewsletterStoryPartialDto'
+          description: Story details keyed by story identifier for stories cited in the newsletter.
+        xPosts:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            $ref: '#/components/schemas/XPost'
+      description: Newsletters returned for the requested page.
     ComplexAllEndpointQuery:
       type: object
       properties:
@@ -2039,298 +2389,6 @@ components:
             - CONTENT
             - SUMMARY
       description: Article search filters that determine which content the monitor evaluates.
-    SignalSchedulePolicy:
-      required:
-      - intervals
-      type: object
-      properties:
-        intervals:
-          maxItems: 24
-          minItems: 1
-          type: array
-          description: Times when the monitor runs. Must contain between 1 and 24 intervals.
-          items:
-            $ref: '#/components/schemas/ScheduleInterval'
-        timezoneId:
-          type:
-          - string
-          - 'null'
-          description: IANA time zone used to interpret schedule intervals, such as America/Chicago. Defaults to UTC.
-      description: Recurring processing schedule configured for the monitor.
-    SignalApiDto:
-      type: object
-      properties:
-        uuid:
-          type:
-          - string
-          - 'null'
-          description: Unique identifier for the monitor.
-          format: uuid
-        name:
-          type:
-          - string
-          - 'null'
-          description: Display name of the monitor.
-        createdAt:
-          type:
-          - string
-          - 'null'
-          description: Date and time the monitor was created, in ISO 8601 format.
-          format: date-time
-        updatedAt:
-          type:
-          - string
-          - 'null'
-          description: Date and time the monitor was last updated, in ISO 8601 format.
-          format: date-time
-        status:
-          type:
-          - string
-          - 'null'
-          description: 'Current lifecycle status: DRAFT, ACTIVE, STOPPED, or ARCHIVED.'
-          enum:
-          - DRAFT
-          - ACTIVE
-          - STOPPED
-          - ARCHIVED
-        classificationType:
-          type:
-          - string
-          - 'null'
-          description: 'How matching content is classified: EVENT, MENTIONS, or TOPIC.'
-          enum:
-          - EVENT
-          - MENTIONS
-          - TOPIC
-        monitoringObjective:
-          type:
-          - string
-          - 'null'
-          description: Plain-language objective that defines what the monitor tracks.
-        prompt:
-          type:
-          - string
-          - 'null'
-          description: Optional instructions used to guide monitor processing.
-        dataSchema:
-          allOf:
-          - $ref: '#/components/schemas/SignalMonitoringPlanDataSchema'
-        newsletterConfig:
-          allOf:
-          - $ref: '#/components/schemas/SignalMonitoringPlanNewsletterConfig'
-        entityGroups:
-          type:
-          - array
-          - 'null'
-          description: Entity groups the monitor identifies in matching content.
-          items:
-            $ref: '#/components/schemas/EntityGroup'
-        query:
-          allOf:
-          - $ref: '#/components/schemas/ComplexAllEndpointQuery'
-        schedulePolicy:
-          allOf:
-          - $ref: '#/components/schemas/SignalSchedulePolicy'
-        watchlistId:
-          type:
-          - integer
-          - 'null'
-          description: Numeric ID of the watchlist associated with the monitor, if any.
-          format: int32
-        contactPointIds:
-          type:
-          - array
-          - 'null'
-          description: UUIDs of contact points configured to receive monitor notifications.
-          items:
-            type: string
-            description: UUIDs of contact points configured to receive monitor notifications.
-            format: uuid
-        xQuery:
-          allOf:
-          - $ref: '#/components/schemas/SignalXQuery'
-      description: Monitor payload.
-    ScheduleInterval:
-      required:
-      - scheduleType
-      type: object
-      properties:
-        hour:
-          maximum: 23
-          minimum: 0
-          type:
-          - integer
-          - 'null'
-          description: Hour when the monitor runs, from 0 through 23.
-          format: int32
-        minute:
-          maximum: 59
-          minimum: 0
-          type:
-          - integer
-          - 'null'
-          description: Minute when the monitor runs, from 0 through 59.
-          format: int32
-        days:
-          maxItems: 7
-          minItems: 1
-          uniqueItems: true
-          type:
-          - array
-          - 'null'
-          description: Days when a WEEKLY schedule runs. Requires 1 through 7 values from MONDAY through SUNDAY.
-          items:
-            type: string
-            description: Days when a WEEKLY schedule runs. Requires 1 through 7 values from MONDAY through SUNDAY.
-            enum:
-            - MONDAY
-            - TUESDAY
-            - WEDNESDAY
-            - THURSDAY
-            - FRIDAY
-            - SATURDAY
-            - SUNDAY
-        daysOfMonth:
-          maxItems: 31
-          minItems: 0
-          uniqueItems: true
-          type:
-          - array
-          - 'null'
-          description: Days of the month when a MONTHLY schedule runs. Required for MONTHLY schedules; each value must be from 1 through 31.
-          items:
-            maximum: 31
-            minimum: 1
-            type: integer
-            description: Days of the month when a MONTHLY schedule runs. Required for MONTHLY schedules; each value must be from 1 through 31.
-            format: int32
-        scheduleType:
-          type: string
-          description: Schedule recurrence type. Accepts WEEKLY or MONTHLY and defaults to WEEKLY.
-          enum:
-          - WEEKLY
-          - MONTHLY
-      description: Times when the monitor runs. Must contain between 1 and 24 intervals.
-    SignalSummaryDto:
-      type: object
-      properties:
-        text:
-          type:
-          - string
-          - 'null'
-          description: AI-generated summary of the monitor's matching content.
-        createdAt:
-          type:
-          - string
-          - 'null'
-          description: Date and time the summary was created, in ISO 8601 format.
-          format: date-time
-        updatedAt:
-          type:
-          - string
-          - 'null'
-          description: Date and time the summary was last updated, in ISO 8601 format.
-          format: date-time
-      description: Summaries returned for the requested page.
-    MonitorEventListResult:
-      required:
-      - data
-      - total
-      type: object
-      properties:
-        total:
-          type: integer
-          description: Total number of matching events across all pages.
-          format: int64
-        data:
-          type: array
-          description: Events returned for the requested page.
-          items:
-            $ref: '#/components/schemas/SignalEventDto'
-      description: Paginated list of monitor events.
-      example:
-        total: 1
-        data:
-        - uuid: b2c3d4e5-f6a7-8901-bcde-f12345678901
-          createdAt: '2025-08-12T10:05:22.100Z'
-          updatedAt: '2025-08-12T10:05:22.100Z'
-          eventDate: '2025-08-12T08:30:00Z'
-          eventType: product_launch
-          data:
-            productName: GPT-5
-            company: OpenAI
-          relatedArticleIds:
-          - 97dce2f1bdcd441c99360e58d38e811d
-          articles:
-            97dce2f1bdcd441c99360e58d38e811d:
-              title: OpenAI unveils next-generation language model
-              url: https://www.reuters.com/technology/openai-unveils-next-generation-model-2025-08-12/
-              domain: reuters.com
-              pubDate: '2025-08-12T08:15:00+00:00'
-              sourceFavicon: https://www.reuters.com/favicon.ico
-              highlights: null
-          entities:
-          - name: OpenAI
-            type: COMPANY
-          summary: OpenAI announced a new flagship language model.
-    SignalMonitoringPlanNewsletterConfig:
-      required:
-      - storyCitationResolvingType
-      type: object
-      properties:
-        citations:
-          type:
-          - boolean
-          - 'null'
-          description: Whether generated newsletters include citations. Defaults to true.
-        storyCitationResolvingType:
-          type: string
-          description: How story citations are resolved. Accepts STORY or TOP_ARTICLE.
-          enum:
-          - STORY
-          - TOP_ARTICLE
-      description: Citation settings for newsletters generated by the monitor.
-    SignalMonitoringPlanDataSchema:
-      required:
-      - schema
-      - version
-      type: object
-      properties:
-        version:
-          type: string
-          description: Data schema version. Currently only V1 is supported.
-          enum:
-          - V1
-        allowExtra:
-          type:
-          - boolean
-          - 'null'
-          description: Whether extracted event data may contain fields not defined in schema. Defaults to false.
-        schema:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/SignalMonitoringPlanDataSchemaProperty'
-          description: Structured event field definitions keyed by output field name.
-      description: Schema for the structured data extracted into each matching event.
-    SignalXQuery:
-      required:
-      - query
-      - searchType
-      - version
-      type: object
-      properties:
-        version:
-          type: string
-          enum:
-          - V1
-        query:
-          type: string
-        searchType:
-          type: string
-          enum:
-          - TOP
-          - LATEST
-          - MEDIA
     SignalApiUpdateBody:
       required:
       - classificationType
@@ -2397,6 +2455,63 @@ components:
         xQuery:
           allOf:
           - $ref: '#/components/schemas/SignalXQuery'
+    MonitorListResult:
+      required:
+      - data
+      - total
+      type: object
+      properties:
+        total:
+          type: integer
+          description: Total number of matching monitors across all pages.
+          format: int64
+        data:
+          type: array
+          description: Monitors returned for the requested page.
+          items:
+            $ref: '#/components/schemas/SignalApiDto'
+      description: Paginated list of monitors.
+      example:
+        total: 2
+        data:
+        - uuid: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+          name: AI Product Launches
+          createdAt: '2025-08-01T14:22:10.123Z'
+          updatedAt: '2025-08-12T09:15:44.567Z'
+          status: ACTIVE
+          classificationType: EVENT
+          monitoringObjective: Track major AI product launches and model releases.
+          prompt: null
+          dataSchema:
+            version: V1
+            allowExtra: false
+            schema:
+              eventType:
+                type: ENUM
+                description: Type of AI product announcement
+                required: true
+                values:
+                - PRODUCT_LAUNCH
+                - MODEL_RELEASE
+              productName:
+                type:
+                - STRING
+                - 'null'
+                description: Name of the launched product or model
+                required: true
+          newsletterConfig: null
+          entityGroups: []
+          query:
+            q: AI
+            sourceGroup:
+            - top100
+          schedulePolicy:
+            intervals:
+            - hour: 9
+              minute: 0
+            timezoneId: UTC
+          watchlistId: null
+          contactPointIds: []
     SignalApiCreateBody:
       required:
       - classificationType
@@ -2473,106 +2588,48 @@ components:
         xQuery:
           allOf:
           - $ref: '#/components/schemas/SignalXQuery'
-    MonitorNewsletterListResult:
+    FilledField:
       required:
-      - data
-      - total
+      - field
+      - method
+      - source
       type: object
       properties:
-        total:
-          type: integer
-          description: Total number of matching newsletters across all pages.
-          format: int64
-        data:
-          type: array
-          description: Newsletters returned for the requested page.
-          items:
-            $ref: '#/components/schemas/SignalNewsletterDto'
-      description: Paginated list of monitor newsletters.
-      example:
-        total: 1
-        data:
-        - uuid: c3d4e5f6-a7b8-9012-cdef-123456789012
-          createdAt: '2025-08-12T14:00:00.000Z'
-          updatedAt: '2025-08-12T14:00:00.000Z'
-          title: Weekly AI Launch Digest
-          content: This week saw several notable AI product announcements across the industry.
-          articles:
-            97dce2f1bdcd441c99360e58d38e811d:
-              title: OpenAI unveils next-generation language model
-              url: https://www.reuters.com/technology/openai-unveils-next-generation-model-2025-08-12/
-              domain: reuters.com
-              pubDate: '2025-08-12T08:15:00+00:00'
-              sourceFavicon: https://www.reuters.com/favicon.ico
-              highlights: null
-          stories: {}
-    SignalNewsletterDto:
-      type: object
-      properties:
-        uuid:
-          type:
-          - string
-          - 'null'
-          description: Unique identifier for the newsletter.
-          format: uuid
-        createdAt:
-          type:
-          - string
-          - 'null'
-          description: Date and time the newsletter was created, in ISO 8601 format.
-          format: date-time
-        updatedAt:
-          type:
-          - string
-          - 'null'
-          description: Date and time the newsletter was last updated, in ISO 8601 format.
-          format: date-time
-        title:
-          type:
-          - string
-          - 'null'
-          description: Generated title of the newsletter.
-        content:
-          type:
-          - string
-          - 'null'
-          description: Generated newsletter content.
-        articles:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            $ref: '#/components/schemas/SignalArticlePartialDto'
-          description: Article details keyed by article ID for content cited in the newsletter.
-        stories:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            $ref: '#/components/schemas/SignalNewsletterStoryPartialDto'
-          description: Story details keyed by story identifier for stories cited in the newsletter.
-        xPosts:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            $ref: '#/components/schemas/XPost'
-      description: Newsletters returned for the requested page.
-    XPostMedia:
-      type: object
-      properties:
-        photo:
+        field:
+          type: string
+          description: Name of the event data field populated by enrichment.
+        method:
+          type: string
+          description: Search method used to populate the field. Accepts WEB_SEARCH or ARTICLE_SEARCH.
+          enum:
+          - WEB_SEARCH
+          - ARTICLE_SEARCH
+          - X_POST
+        source:
+          type: string
+          description: How enrichment was initiated. Accepts MANUAL or BACKGROUND.
+          enum:
+          - MANUAL
+          - BACKGROUND
+        sources:
           type:
           - array
           - 'null'
+          description: Sources used to populate the field.
           items:
-            $ref: '#/components/schemas/XPostMediaItem'
-        video:
+            $ref: '#/components/schemas/Source'
+      description: Event fields populated by enrichment and the sources used for each field.
+    FillbotMetadata:
+      type: object
+      properties:
+        filledFields:
           type:
           - array
           - 'null'
+          description: Event fields populated by enrichment and the sources used for each field.
           items:
-            $ref: '#/components/schemas/XPostMediaItem'
+            $ref: '#/components/schemas/FilledField'
+      description: Provenance for event fields populated by the enrichment process.
     SignalMonitoringPlanDataSchemaProperty:
       required:
       - type
@@ -2610,69 +2667,24 @@ components:
       description: Structured event field definitions keyed by output field name.
       discriminator:
         propertyName: type
-    SignalNewsletterStoryPartialDto:
-      type: object
-      properties:
-        slug:
-          type:
-          - string
-          - 'null'
-          description: URL-safe identifier for the story.
-        url:
-          type:
-          - string
-          - 'null'
-          description: URL of the story.
-        title:
-          type:
-          - string
-          - 'null'
-          description: Story headline.
-        sourceFavicon:
-          type:
-          - string
-          - 'null'
-          description: URL of the source favicon used for the story.
-        updatedAt:
-          type:
-          - string
-          - 'null'
-          description: Date and time the story was last updated, in ISO 8601 format.
-          format: date-time
-        createdAt:
-          type:
-          - string
-          - 'null'
-          description: Date and time the story was created, in ISO 8601 format.
-          format: date-time
-      description: Story details keyed by story identifier for stories cited in the newsletter.
-    MonitorListResult:
+    MonitorResult:
       required:
       - data
-      - total
       type: object
       properties:
-        total:
-          type: integer
-          description: Total number of matching monitors across all pages.
-          format: int64
         data:
-          type: array
-          description: Monitors returned for the requested page.
-          items:
-            $ref: '#/components/schemas/SignalApiDto'
-      description: Paginated list of monitors.
+          $ref: '#/components/schemas/SignalApiDto'
+      description: Single monitor response.
       example:
-        total: 2
         data:
-        - uuid: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+          uuid: a1b2c3d4-e5f6-7890-abcd-ef1234567890
           name: AI Product Launches
           createdAt: '2025-08-01T14:22:10.123Z'
           updatedAt: '2025-08-12T09:15:44.567Z'
           status: ACTIVE
           classificationType: EVENT
-          monitoringObjective: Track major AI product launches and model releases.
-          prompt: null
+          monitoringObjective: Track major AI product launches and model releases from leading technology companies.
+          prompt: Focus on official announcements and product releases.
           dataSchema:
             version: V1
             allowExtra: false
@@ -2690,59 +2702,47 @@ components:
                 - 'null'
                 description: Name of the launched product or model
                 required: true
+              company:
+                type:
+                - STRING
+                - 'null'
+                description: Company that launched the product
+                required: true
           newsletterConfig: null
           entityGroups: []
           query:
-            q: AI
+            q: AI OR "artificial intelligence"
             sourceGroup:
             - top100
           schedulePolicy:
             intervals:
             - hour: 9
               minute: 0
-            timezoneId: UTC
-          watchlistId: null
-          contactPointIds: []
-    MonitorSummaryListResult:
-      required:
-      - data
-      - total
+            timezoneId: America/New_York
+          watchlistId: 42
+          contactPointIds:
+          - f47ac10b-58cc-4372-a567-0e02b2c3d479
+    SignalSummaryDto:
       type: object
       properties:
-        total:
-          type: integer
-          description: Total number of matching summaries across all pages.
-          format: int64
-        data:
-          type: array
-          description: Summaries returned for the requested page.
-          items:
-            $ref: '#/components/schemas/SignalSummaryDto'
-      description: Paginated list of monitor summaries.
-      example:
-        total: 1
-        data:
-        - text: Several major AI labs announced new model releases this week, with coverage focused on capabilities and enterprise availability.
-          createdAt: '2025-08-12T12:00:00.000Z'
-          updatedAt: '2025-08-12T12:00:00.000Z'
-    MatchedEntityData:
-      required:
-      - name
-      - type
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the entity matched in the source content.
-        type:
-          type: string
-          description: Entity type assigned by the monitor.
-        domain:
+        text:
           type:
           - string
           - 'null'
-          description: Domain associated with the matched entity, when available.
-      description: Entities matched in the content that produced the event.
+          description: AI-generated summary of the monitor's matching content.
+        createdAt:
+          type:
+          - string
+          - 'null'
+          description: Date and time the summary was created, in ISO 8601 format.
+          format: date-time
+        updatedAt:
+          type:
+          - string
+          - 'null'
+          description: Date and time the summary was last updated, in ISO 8601 format.
+          format: date-time
+      description: Summaries returned for the requested page.
   securitySchemes:
     apiKeyAuth:
       type: http

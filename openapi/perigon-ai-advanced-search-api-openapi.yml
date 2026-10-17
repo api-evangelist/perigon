@@ -816,42 +816,389 @@ paths:
       - apiKeyAuth: []
 components:
   schemas:
-    LabelHolder:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: Editorial label assigned to the article.
-      description: Editorial labels assigned to the article.
-    SourceLocation:
+    AllEndpointSortBy:
+      type: string
+      enum:
+      - relevance
+      - date
+      - reverseDate
+      - reverseAddDate
+      - addDate
+      - pubDate
+      - refreshDate
+    LocationHolder:
       type: object
       properties:
         country:
           type:
           - string
           - 'null'
-          description: Country where the publisher is located.
+          description: Country central to the article.
         state:
           type:
           - string
           - 'null'
-          description: State or region where the publisher is located.
+          description: State or region central to the article.
         county:
           type:
           - string
           - 'null'
-          description: County where the publisher is located.
+          description: County central to the article.
         city:
           type:
           - string
           - 'null'
-          description: City where the publisher is located.
-        coordinates:
-          allOf:
-          - $ref: '#/components/schemas/Coordinate'
-      description: Geographic location of the publisher, when available.
+          description: City central to the article.
+        area:
+          type:
+          - string
+          - 'null'
+          description: Neighborhood, borough, or district central to the article.
+      description: Locations most strongly associated with the story.
+    Question:
+      type: object
+      properties:
+        question:
+          type:
+          - string
+          - 'null'
+          description: Question generated from the story content.
+        answer:
+          type:
+          - string
+          - 'null'
+          description: Answer generated from the story content.
+        references:
+          type:
+          - array
+          - 'null'
+          description: Article IDs supporting the answer.
+          items:
+            type: string
+            description: Article IDs supporting the answer.
+      description: Questions and answers generated from the story content.
+    LocationCount:
+      type: object
+      properties:
+        country:
+          type:
+          - string
+          - 'null'
+          description: Country associated with the story.
+        state:
+          type:
+          - string
+          - 'null'
+          description: State or region associated with the story.
+        county:
+          type:
+          - string
+          - 'null'
+          description: County associated with the story.
+        city:
+          type:
+          - string
+          - 'null'
+          description: City associated with the story.
+        area:
+          type:
+          - string
+          - 'null'
+          description: Neighborhood, borough, or district associated with the story.
+        count:
+          type:
+          - integer
+          - 'null'
+          description: Number of story articles associated with the location.
+          format: int32
+      description: Locations associated with the story and their article counts.
+    SummarySearchResult:
+      required:
+      - numResults
+      - results
+      - status
+      - summary
+      type: object
+      properties:
+        status:
+          type: integer
+          description: HTTP status code for the response.
+          format: int32
+        numResults:
+          type: integer
+          description: Number of articles returned in results after applying returnedArticleCount.
+          format: int64
+        summary:
+          type: string
+          description: Generated summary of the selected articles, or 'No articles found' when no content matches.
+        results:
+          type: array
+          description: Articles returned after summary generation, limited by returnedArticleCount.
+          items:
+            $ref: '#/components/schemas/Article'
+      example:
+        status: 200
+        numResults: 10
+        summary: 'Across these articles, a few themes stand out: public concern and adaptation in the face of ongoing challenges, whether in pandemic management, economic shifts, or even sports. In the U.S., anxiety about COVID-19 is surging again as the delta variant spreads, with Americans divided yet increasingly supportive of mask and vaccine mandates, even as federal travel restrictions persist at the borders. Meanwhile, regions like Rheinland-Pfalz in Germany are experiencing rising infection rates, signaling the fourth wave’s intensification. On the economic front, both the industrial fastening equipment and intravascular ultrasound catheter markets are navigating recovery, competition, and supply chain intricacies, highlighting the pandemic’s ripple effects. Elsewhere, local politics—like Lipetsk’s focus on wages and infrastructure, or Russia’s restoration of energy market competition—reflect everyday priorities. Even in sports, player transfers and injuries illustrate how life’s routines continue, albeit under new pressures and uncertainties.'
+        results:
+        - url: https://www.recorderonline.com/news/national_news/covid-anxiety-rising-amid-delta-surge-ap-norc-poll-finds/article_0f59e7ab-864d-5690-b6f5-692cd9903d40.html
+          authorsByline: JAMES ANDERSON and HANNAH FINGERHUT Associated Press
+          articleId: cbf66b7f0ec641528180766d7a1f95d6
+          clusterId: 6c262dee867f45588b43da0066126f79
+          source:
+            domain: recorderonline.com
+            location: null
+          imageUrl: https://bloximages.newyork1.vip.townnews.com/recorderonline.com/content/tncms/assets/v3/editorial/2/44/244be964-8860-5c56-bc92-95b2cf717acf/611fab31295f3.image.jpg?resize=945%2C630
+          country: us
+          language: en
+          pubDate: '2021-08-20T13:12:55+00:00'
+          addDate: '2021-08-22T01:07:16.414408+00:00'
+          refreshDate: '2021-08-22T01:07:16.414408+00:00'
+          score: 1.0
+          title: COVID anxiety rising amid delta surge, AP-NORC poll finds
+          description: COVID anxiety rising amid delta surge, AP-NORC poll finds  Porterville Recorder
+          content: 'DENVER (AP) — Anxiety in the United States over COVID-19 is at its highest level since winter, a new poll shows, as the delta variant rages, more states and school districts adopt mask and vaccination requirements and the nation’s hospitals once again fill to capacity.
+
+
+            The poll from The Associated Press-NORC Center for Public Affairs Research also finds that majorities of American adults want vaccination mandates for those attending movies, sports, concerts and other crowded events; those traveling by airplane; and workers in hospitals, restaurants, stores and government offices.
+
+
+            The poll shows that 41% are “extremely” or “very” worried about themselves or their family becoming infected with the virus. That is up from 21% in June, and about the same as in January, during the country''s last major surge, when 43% were extremely or very worried.
+
+
+            “I wouldn’t have said this a couple of years ago, but I’m not as confident as I was in America’s ability to take care of itself,” said David Bowers, a 42-year-old business analyst in the Phoenix suburb of Peoria.
+
+
+            Bowers, a Democrat, and his wife, a public school teacher, got vaccinated early. But they fret once again about their daughters, ages 7 and 9, attending school in a state whose Republican governor, Doug Ducey, signed a law to block school districts from mandating masks, let alone vaccines.
+
+
+            A brief summer respite from COVID-19 fatigue included a family trip to New York. “COVID was pretty much out of mind," Bowers said. "Now it feels like we’re going backward.”
+
+
+            Close to 6 in 10 Americans say they favor requiring people to be fully vaccinated against COVID-19 to travel on an airplane or attend crowded public events. Only about a quarter of Americans oppose such measures.
+
+
+            Roughly 6 in 10 also support vaccine mandates for hospital or other health care workers, along with government employees, members of the military and workers who interact with the public, such as in restaurants and stores. Support is slightly lower for requiring vaccinations to go out to a bar or restaurant, though more are in favor than opposed, 51% to 28%.
+
+
+            Nearly 200 million people, or just over 60% of the U.S. population, had received at least one vaccine dose as of Thursday, according to the Centers for Disease Control and Prevention. Just over half of the population was fully vaccinated.
+
+
+            Hospitals across the U.S. had more than 75,000 coronavirus patients as of last week, a dramatic increase from a few weeks ago but still well below the winter surge records. Florida, Arkansas, Oregon, Hawaii, Louisiana and Mississippi have set records for COVID-19 hospitalizations in recent weeks, and the surge in the delta variant, combined with low vaccination rates, has produced a scramble to find beds for patients.
+
+
+            The poll suggests that despite increasing cases and greater concern about the virus, Americans have not stepped up their own precautionary behavior since June, though at least half still say they always or often wear a mask around other people, stay away from large groups and avoid nonessential travel.
+
+
+            Confidence in vaccines to withstand virus variants has not waned, either, as U.S. health officials this week announced plans to dispense booster shots to all Americans to shore up their protection. The doses could begin next month.
+
+
+            Carla Jones, 37, of Lafayette, Louisiana, is a paraplegic with immunity problems and uses a wheelchair after she was severely injured in a car accident. Because of her health, she has been told by her doctor she cannot get the vaccine. She gets anxious visiting the doctor or when her grandchildren visit.
+
+
+            “I see someone next to me at the doctor’s without a mask, it makes my heart rapidly beat faster,” Jones said.
+
+
+            Jones, a Democrat, strongly favors vaccination and mask mandates, and not just for herself. “For the good of all,” she said. "I don’t have the shot, but I definitely wouldn’t want to pass it on to anyone else.”
+
+
+            The poll shows that 55% support requiring Americans to wear masks around other people outside their homes, while 62% support mask mandates specifically for workers who interact with the public, such as at restaurants and stores. Eighty-five percent of Democrats and 39% of Republicans are in favor of mask mandates for public-facing workers.
+
+
+            Robbie Allen, a 63-year-old retiree from Clifton, Texas, is fully vaccinated and will wear a mask when required by stores or other places. But the self-described independent who leans Republican insists it is a matter of personal choice, and he sees mandates as taking the joy out of life.
+
+
+            “The COVID is not going away very quickly, but I don’t think people should live in fear," said Allen, who motorcycled with his girlfriend to this month''s Sturgis Motorcycle Rally, which attracted hundreds of thousands to the South Dakota city. “People are going to die, but if we all hunker down, life gets miserable."
+
+
+            Partisan gaps are also wide on vaccination requirements. In Arizona, Bowers has already taken time off work to pick up his daughter from school after she developed a high fever. They spent hours last week looking for a drive-thru COVID-19 testing site that wasn’t overcrowded. She tested negative. But the worries persist.
+
+
+            “My thinking is, the people who don’t want mandates are the people who need to be regulated,” Bowers said. "There’s a slim majority in this country making the right decisions. If it wasn’t for a slim majority as a country, we’d be in trouble.”
+
+
+            The AP-NORC poll of 1,729 adults was conducted Aug. 12-16 using a sample drawn from NORC’s probability-based AmeriSpeak Panel, which is designed to be representative of the U.S. population. The margin of sampling error for all respondents is plus or minus 3.2 percentage points.'
+          medium: Article
+          labels:
+          - name: Opinion
+          matchedAuthors: []
+          claim: ''
+          verdict: ''
+          keywords:
+          - name: mask mandates
+            weight: 0.07696303
+          - name: vaccine mandates
+            weight: 0.06830935
+          - name: vaccination mandates
+            weight: 0.06619582
+          - name: other people
+            weight: 0.06527583
+          - name: masks
+            weight: 0.06391404
+          - name: other crowded events
+            weight: 0.06374716
+          - name: last week
+            weight: 0.062233474
+          - name: recent weeks
+            weight: 0.059354812
+          - name: virus variants
+            weight: 0.059015423
+          - name: school districts
+            weight: 0.058817048
+          topics:
+          - name: Coronavirus
+          - name: Polls
+          categories: []
+          taxonomies: []
+          entities:
+          - data: hours
+            type: TIME
+            mentions: 1
+          - data: David Bowers
+            type: PERSON
+            mentions: 5
+          - data: Jones
+            type: PERSON
+            mentions: 2
+          - data: Doug Ducey
+            type: PERSON
+            mentions: 1
+          - data: Carla Jones
+            type: PERSON
+            mentions: 1
+          - data: Robbie Allen
+            type: PERSON
+            mentions: 1
+          - data: Allen
+            type: PERSON
+            mentions: 1
+          - data: AP
+            type: ORG
+            mentions: 2
+          - data: The Associated Press-NORC Center for Public Affairs Research
+            type: ORG
+            mentions: 1
+          - data: the Centers for Disease Control and Prevention
+            type: ORG
+            mentions: 1
+          - data: COVID
+            type: ORG
+            mentions: 1
+          - data: NORC
+            type: ORG
+            mentions: 1
+          - data: the United States
+            type: GPE
+            mentions: 6
+          - data: Louisiana
+            type: GPE
+            mentions: 2
+          - data: DENVER
+            type: GPE
+            mentions: 1
+          - data: Phoenix
+            type: GPE
+            mentions: 1
+          - data: Peoria
+            type: GPE
+            mentions: 1
+          - data: New York
+            type: GPE
+            mentions: 1
+          - data: Florida
+            type: GPE
+            mentions: 1
+          - data: Arkansas
+            type: GPE
+            mentions: 1
+          - data: Oregon
+            type: GPE
+            mentions: 1
+          - data: Hawaii
+            type: GPE
+            mentions: 1
+          - data: Mississippi
+            type: GPE
+            mentions: 1
+          - data: Lafayette
+            type: GPE
+            mentions: 1
+          - data: Clifton
+            type: GPE
+            mentions: 1
+          - data: Texas
+            type: GPE
+            mentions: 1
+          - data: South Dakota
+            type: GPE
+            mentions: 1
+          - data: Arizona
+            type: GPE
+            mentions: 1
+          - data: delta
+            type: LOC
+            mentions: 1
+          - data: COVID
+            type: EVENT
+            mentions: 1
+          - data: Sturgis Motorcycle Rally
+            type: EVENT
+            mentions: 1
+          - data: American
+            type: NORP
+            mentions: 6
+          - data: Democrat
+            type: NORP
+            mentions: 3
+          - data: Republican
+            type: NORP
+            mentions: 3
+          sentiment:
+            positive: 0.05536453
+            negative: 0.6762484
+            neutral: 0.26838717
+          summary: "\n\nThe poll from The Associated Press-NORC Center for Public Affairs Research also finds that majorities of American adults want vaccination mandates for those attending movies, sports, concerts and other crowded events; those traveling by airplane; and workers in hospitals, restaurants, stores and government offices. But they fret once again about their daughters, ages 7 and 9, attending school in a state whose Republican governor, Doug Ducey, signed a law to block school districts from mandating masks, let alone vaccines. \n\nJones, a Democrat, strongly favors vaccination and mask mandates, and not just for herself. “For the good of all,” she said. \"I don’t have the shot, but I definitely wouldn’t want to pass it on to anyone else.”\n\nThe poll shows that 55% support requiring Americans to wear masks around other people outside their homes, while 62% support mask mandates specifically for workers who interact with the public, such as at restaurants and stores."
+          translation: ''
+          locations: []
+          reprint: true
+          places: null
+    RecordStatHolder:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: Name of the aggregated value.
+        count:
+          type:
+          - integer
+          - 'null'
+          description: Number of matching articles for the value.
+          format: int32
+      description: Google Content Categories associated with the story and their article counts.
+    SentimentHolder:
+      type: object
+      properties:
+        positive:
+          type:
+          - number
+          - 'null'
+          description: Positive sentiment score from 0 to 1.
+          format: float
+        negative:
+          type:
+          - number
+          - 'null'
+          description: Negative sentiment score from 0 to 1.
+          format: float
+        neutral:
+          type:
+          - number
+          - 'null'
+          description: Neutral sentiment score from 0 to 1.
+          format: float
+      description: Aggregate sentiment scores for the story.
     NewsCluster:
       type: object
       properties:
@@ -1083,332 +1430,83 @@ components:
           description: Ratio of unique publisher domains to total articles in the story.
           format: double
       description: Expanded story cluster details, when requested and available.
-    ErrorResponse:
+    Place:
       type: object
       properties:
-        status:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        message:
+        osmId:
           type:
           - string
           - 'null'
-        timestamp:
-          type:
-          - integer
-          - 'null'
-          format: int64
-    PersonHolder:
-      type: object
-      properties:
-        wikidataId:
+          description: OpenStreetMap identifier for the place.
+        road:
           type:
           - string
           - 'null'
-          description: Wikidata identifier for the person.
-        name:
+          description: Road associated with the place.
+        quarter:
           type:
           - string
           - 'null'
-          description: Person name.
-      description: People most strongly associated with the story.
-    AllEndpointSortBy:
-      type: string
-      enum:
-      - relevance
-      - date
-      - reverseDate
-      - reverseAddDate
-      - addDate
-      - pubDate
-      - refreshDate
-    PersonCount:
-      type: object
-      properties:
-        wikidataId:
+          description: Quarter associated with the place.
+        suburb:
           type:
           - string
           - 'null'
-          description: Wikidata identifier for the person.
-        name:
+          description: Suburb associated with the place.
+        city:
           type:
           - string
           - 'null'
-          description: Person name.
-        count:
-          type:
-          - integer
-          - 'null'
-          description: Number of story articles mentioning the person.
-          format: int32
-      description: People associated with the story and their article counts.
-    CompanyCount:
-      type: object
-      properties:
-        id:
+          description: City associated with the place.
+        town:
           type:
           - string
           - 'null'
-          description: Unique Perigon identifier for the company.
-        name:
+          description: Town associated with the place.
+        county:
           type:
           - string
           - 'null'
-          description: Company name.
-        domains:
-          type:
-          - array
-          - 'null'
-          description: Domains associated with the company.
-          items:
-            type: string
-            description: Domains associated with the company.
-        symbols:
-          type:
-          - array
-          - 'null'
-          description: Stock symbols associated with the company.
-          items:
-            type: string
-            description: Stock symbols associated with the company.
-        count:
-          type:
-          - integer
-          - 'null'
-          description: Number of story articles mentioning the company.
-          format: int32
-      description: Companies associated with the story and their article counts.
-    KeywordHolder:
-      type: object
-      properties:
-        name:
+          description: County associated with the place.
+        stateDistrict:
           type:
           - string
           - 'null'
-          description: Keyword extracted from the article.
-        weight:
-          type:
-          - number
-          - 'null'
-          description: Relative relevance weight of the keyword.
-          format: float
-      description: Keywords extracted from the article with their relevance weights.
-    SourceHolder:
-      type: object
-      properties:
-        domain:
+          description: State district associated with the place.
+        state:
           type:
           - string
           - 'null'
-          description: Publisher domain.
-        paywall:
+          description: State or region associated with the place.
+        postcode:
           type:
-          - boolean
+          - string
           - 'null'
-          description: Whether the publisher uses a paywall, when known.
-        location:
+          description: Postal code associated with the place.
+        country:
+          type:
+          - string
+          - 'null'
+          description: Country associated with the place.
+        countryCode:
+          type:
+          - string
+          - 'null'
+          description: Two-character country code for the place.
+        amenity:
+          type:
+          - string
+          - 'null'
+          description: Named amenity associated with the place.
+        neighbourhood:
+          type:
+          - string
+          - 'null'
+          description: Neighborhood associated with the place.
+        coordinates:
           allOf:
-          - $ref: '#/components/schemas/SourceLocation'
-      description: Publisher information for the selected story image.
-    VectorData:
-      type: object
-      properties:
-        data:
-          type:
-          - array
-          - 'null'
-          description: Numeric values in the vector embedding.
-          items:
-            type: number
-            description: Numeric values in the vector embedding.
-            format: float
-        version:
-          type:
-          - integer
-          - 'null'
-          description: Version of the embedding representation.
-          format: int32
-      description: Vector embeddings associated with the article, when requested.
-    IdNameHolder:
-      type: object
-      properties:
-        id:
-          type:
-          - string
-          - 'null'
-          description: Unique identifier for the matched record.
-        name:
-          type:
-          - string
-          - 'null'
-          description: Display name of the matched record.
-      description: Known journalist records matched to the article byline.
-    Question:
-      type: object
-      properties:
-        question:
-          type:
-          - string
-          - 'null'
-          description: Question generated from the story content.
-        answer:
-          type:
-          - string
-          - 'null'
-          description: Answer generated from the story content.
-        references:
-          type:
-          - array
-          - 'null'
-          description: Article IDs supporting the answer.
-          items:
-            type: string
-            description: Article IDs supporting the answer.
-      description: Questions and answers generated from the story content.
-    LocationHolder:
-      type: object
-      properties:
-        country:
-          type:
-          - string
-          - 'null'
-          description: Country central to the article.
-        state:
-          type:
-          - string
-          - 'null'
-          description: State or region central to the article.
-        county:
-          type:
-          - string
-          - 'null'
-          description: County central to the article.
-        city:
-          type:
-          - string
-          - 'null'
-          description: City central to the article.
-        area:
-          type:
-          - string
-          - 'null'
-          description: Neighborhood, borough, or district central to the article.
-      description: Locations most strongly associated with the story.
-    RecordStatHolder:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: Name of the aggregated value.
-        count:
-          type:
-          - integer
-          - 'null'
-          description: Number of matching articles for the value.
-          format: int32
-      description: Google Content Categories associated with the story and their article counts.
-    NameCount:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: Name of the aggregated value.
-        count:
-          type:
-          - integer
-          - 'null'
-          description: Number of matching records for the value.
-          format: int64
-      description: Countries most frequently associated with the journalist's articles.
-    TopicHolder:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: Topic assigned to the article.
-      description: Topics most strongly associated with the story.
-    LocationCount:
-      type: object
-      properties:
-        country:
-          type:
-          - string
-          - 'null'
-          description: Country associated with the story.
-        state:
-          type:
-          - string
-          - 'null'
-          description: State or region associated with the story.
-        county:
-          type:
-          - string
-          - 'null'
-          description: County associated with the story.
-        city:
-          type:
-          - string
-          - 'null'
-          description: City associated with the story.
-        area:
-          type:
-          - string
-          - 'null'
-          description: Neighborhood, borough, or district associated with the story.
-        count:
-          type:
-          - integer
-          - 'null'
-          description: Number of story articles associated with the location.
-          format: int32
-      description: Locations associated with the story and their article counts.
-    CompanyHolder:
-      type: object
-      properties:
-        id:
-          type:
-          - string
-          - 'null'
-          description: Unique Perigon identifier for the company.
-        name:
-          type:
-          - string
-          - 'null'
-          description: Company name.
-        domains:
-          type:
-          - array
-          - 'null'
-          description: Domains associated with the company.
-          items:
-            type: string
-            description: Domains associated with the company.
-        symbols:
-          type:
-          - array
-          - 'null'
-          description: Stock symbols associated with the company.
-          items:
-            type: string
-            description: Stock symbols associated with the company.
-      description: Companies most strongly associated with the story.
-    CategoryHolder:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: Content category assigned to the article.
-      description: Google Content Categories most strongly associated with the story.
+          - $ref: '#/components/schemas/Coordinate'
+      description: Structured geographic places extracted from the article.
     SummaryBody:
       type: object
       properties:
@@ -1503,6 +1601,253 @@ components:
           format: int32
           default: 2048
       description: Request body for the Search-Summarizer endpoint. Contains the user’s summary instructions, how many articles to include, which fields to use, the retrieval method, and LLM generation settings.
+    IdNameHolder:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          description: Unique identifier for the matched record.
+        name:
+          type:
+          - string
+          - 'null'
+          description: Display name of the matched record.
+      description: Known journalist records matched to the article byline.
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        message:
+          type:
+          - string
+          - 'null'
+        timestamp:
+          type:
+          - integer
+          - 'null'
+          format: int64
+    EntityHolder:
+      type: object
+      properties:
+        data:
+          type:
+          - string
+          - 'null'
+          description: Text value of the extracted entity.
+        type:
+          type:
+          - string
+          - 'null'
+          description: Entity type, such as PERSON, ORGANIZATION, or LOCATION.
+        mentions:
+          type:
+          - integer
+          - 'null'
+          description: Number of times the entity appears in the article.
+          format: int32
+      description: Named entities extracted from the article.
+    CategoryHolder:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: Content category assigned to the article.
+      description: Google Content Categories most strongly associated with the story.
+    PersonHolder:
+      type: object
+      properties:
+        wikidataId:
+          type:
+          - string
+          - 'null'
+          description: Wikidata identifier for the person.
+        name:
+          type:
+          - string
+          - 'null'
+          description: Person name.
+      description: People most strongly associated with the story.
+    SourceLocation:
+      type: object
+      properties:
+        country:
+          type:
+          - string
+          - 'null'
+          description: Country where the publisher is located.
+        state:
+          type:
+          - string
+          - 'null'
+          description: State or region where the publisher is located.
+        county:
+          type:
+          - string
+          - 'null'
+          description: County where the publisher is located.
+        city:
+          type:
+          - string
+          - 'null'
+          description: City where the publisher is located.
+        coordinates:
+          allOf:
+          - $ref: '#/components/schemas/Coordinate'
+      description: Geographic location of the publisher, when available.
+    PersonCount:
+      type: object
+      properties:
+        wikidataId:
+          type:
+          - string
+          - 'null'
+          description: Wikidata identifier for the person.
+        name:
+          type:
+          - string
+          - 'null'
+          description: Person name.
+        count:
+          type:
+          - integer
+          - 'null'
+          description: Number of story articles mentioning the person.
+          format: int32
+      description: People associated with the story and their article counts.
+    NameCount:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: Name of the aggregated value.
+        count:
+          type:
+          - integer
+          - 'null'
+          description: Number of matching records for the value.
+          format: int64
+      description: Countries most frequently associated with the journalist's articles.
+    CompanyHolder:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          description: Unique Perigon identifier for the company.
+        name:
+          type:
+          - string
+          - 'null'
+          description: Company name.
+        domains:
+          type:
+          - array
+          - 'null'
+          description: Domains associated with the company.
+          items:
+            type: string
+            description: Domains associated with the company.
+        symbols:
+          type:
+          - array
+          - 'null'
+          description: Stock symbols associated with the company.
+          items:
+            type: string
+            description: Stock symbols associated with the company.
+      description: Companies most strongly associated with the story.
+    LabelHolder:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: Editorial label assigned to the article.
+      description: Editorial labels assigned to the article.
+    CategoryWithScoreHolder:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: Full taxonomy category path.
+        score:
+          type:
+          - number
+          - 'null'
+          description: Confidence score for the category assignment.
+          format: double
+      description: Google Content Categories assigned to the article with confidence scores.
+    KeywordHolder:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: Keyword extracted from the article.
+        weight:
+          type:
+          - number
+          - 'null'
+          description: Relative relevance weight of the keyword.
+          format: float
+      description: Keywords extracted from the article with their relevance weights.
+    Coordinate:
+      type: object
+      properties:
+        lat:
+          type:
+          - number
+          - 'null'
+          description: Latitude in decimal degrees.
+          format: double
+        lon:
+          type:
+          - number
+          - 'null'
+          description: Longitude in decimal degrees.
+          format: double
+      description: Geographic coordinates of the place.
+    TopicHolder:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: Topic assigned to the article.
+      description: Topics most strongly associated with the story.
+    KeyPoint:
+      type: object
+      properties:
+        point:
+          type:
+          - string
+          - 'null'
+          description: A key fact or development identified in the content.
+        references:
+          type:
+          - array
+          - 'null'
+          description: Article IDs supporting the key point.
+          items:
+            type: string
+            description: Article IDs supporting the key point.
+      description: Key facts and developments identified in the story.
     Journalist:
       type: object
       properties:
@@ -1661,121 +2006,6 @@ components:
           - 'null'
           description: YouTube channel URL for the journalist.
       description: Expanded journalist details, when requested and available.
-    SentimentHolder:
-      type: object
-      properties:
-        positive:
-          type:
-          - number
-          - 'null'
-          description: Positive sentiment score from 0 to 1.
-          format: float
-        negative:
-          type:
-          - number
-          - 'null'
-          description: Negative sentiment score from 0 to 1.
-          format: float
-        neutral:
-          type:
-          - number
-          - 'null'
-          description: Neutral sentiment score from 0 to 1.
-          format: float
-      description: Aggregate sentiment scores for the story.
-    Place:
-      type: object
-      properties:
-        osmId:
-          type:
-          - string
-          - 'null'
-          description: OpenStreetMap identifier for the place.
-        road:
-          type:
-          - string
-          - 'null'
-          description: Road associated with the place.
-        quarter:
-          type:
-          - string
-          - 'null'
-          description: Quarter associated with the place.
-        suburb:
-          type:
-          - string
-          - 'null'
-          description: Suburb associated with the place.
-        city:
-          type:
-          - string
-          - 'null'
-          description: City associated with the place.
-        town:
-          type:
-          - string
-          - 'null'
-          description: Town associated with the place.
-        county:
-          type:
-          - string
-          - 'null'
-          description: County associated with the place.
-        stateDistrict:
-          type:
-          - string
-          - 'null'
-          description: State district associated with the place.
-        state:
-          type:
-          - string
-          - 'null'
-          description: State or region associated with the place.
-        postcode:
-          type:
-          - string
-          - 'null'
-          description: Postal code associated with the place.
-        country:
-          type:
-          - string
-          - 'null'
-          description: Country associated with the place.
-        countryCode:
-          type:
-          - string
-          - 'null'
-          description: Two-character country code for the place.
-        amenity:
-          type:
-          - string
-          - 'null'
-          description: Named amenity associated with the place.
-        neighbourhood:
-          type:
-          - string
-          - 'null'
-          description: Neighborhood associated with the place.
-        coordinates:
-          allOf:
-          - $ref: '#/components/schemas/Coordinate'
-      description: Structured geographic places extracted from the article.
-    Coordinate:
-      type: object
-      properties:
-        lat:
-          type:
-          - number
-          - 'null'
-          description: Latitude in decimal degrees.
-          format: double
-        lon:
-          type:
-          - number
-          - 'null'
-          description: Longitude in decimal degrees.
-          format: double
-      description: Geographic coordinates of the place.
     Article:
       type: object
       properties:
@@ -2037,291 +2267,78 @@ components:
           description: Vector embeddings associated with the article, when requested.
           items:
             $ref: '#/components/schemas/VectorData'
-    SummarySearchResult:
-      required:
-      - numResults
-      - results
-      - status
-      - summary
-      type: object
-      properties:
-        status:
-          type: integer
-          description: HTTP status code for the response.
-          format: int32
-        numResults:
-          type: integer
-          description: Number of articles returned in results after applying returnedArticleCount.
-          format: int64
-        summary:
-          type: string
-          description: Generated summary of the selected articles, or 'No articles found' when no content matches.
-        results:
-          type: array
-          description: Articles returned after summary generation, limited by returnedArticleCount.
-          items:
-            $ref: '#/components/schemas/Article'
-      example:
-        status: 200
-        numResults: 10
-        summary: 'Across these articles, a few themes stand out: public concern and adaptation in the face of ongoing challenges, whether in pandemic management, economic shifts, or even sports. In the U.S., anxiety about COVID-19 is surging again as the delta variant spreads, with Americans divided yet increasingly supportive of mask and vaccine mandates, even as federal travel restrictions persist at the borders. Meanwhile, regions like Rheinland-Pfalz in Germany are experiencing rising infection rates, signaling the fourth wave’s intensification. On the economic front, both the industrial fastening equipment and intravascular ultrasound catheter markets are navigating recovery, competition, and supply chain intricacies, highlighting the pandemic’s ripple effects. Elsewhere, local politics—like Lipetsk’s focus on wages and infrastructure, or Russia’s restoration of energy market competition—reflect everyday priorities. Even in sports, player transfers and injuries illustrate how life’s routines continue, albeit under new pressures and uncertainties.'
-        results:
-        - url: https://www.recorderonline.com/news/national_news/covid-anxiety-rising-amid-delta-surge-ap-norc-poll-finds/article_0f59e7ab-864d-5690-b6f5-692cd9903d40.html
-          authorsByline: JAMES ANDERSON and HANNAH FINGERHUT Associated Press
-          articleId: cbf66b7f0ec641528180766d7a1f95d6
-          clusterId: 6c262dee867f45588b43da0066126f79
-          source:
-            domain: recorderonline.com
-            location: null
-          imageUrl: https://bloximages.newyork1.vip.townnews.com/recorderonline.com/content/tncms/assets/v3/editorial/2/44/244be964-8860-5c56-bc92-95b2cf717acf/611fab31295f3.image.jpg?resize=945%2C630
-          country: us
-          language: en
-          pubDate: '2021-08-20T13:12:55+00:00'
-          addDate: '2021-08-22T01:07:16.414408+00:00'
-          refreshDate: '2021-08-22T01:07:16.414408+00:00'
-          score: 1.0
-          title: COVID anxiety rising amid delta surge, AP-NORC poll finds
-          description: COVID anxiety rising amid delta surge, AP-NORC poll finds  Porterville Recorder
-          content: 'DENVER (AP) — Anxiety in the United States over COVID-19 is at its highest level since winter, a new poll shows, as the delta variant rages, more states and school districts adopt mask and vaccination requirements and the nation’s hospitals once again fill to capacity.
-
-
-            The poll from The Associated Press-NORC Center for Public Affairs Research also finds that majorities of American adults want vaccination mandates for those attending movies, sports, concerts and other crowded events; those traveling by airplane; and workers in hospitals, restaurants, stores and government offices.
-
-
-            The poll shows that 41% are “extremely” or “very” worried about themselves or their family becoming infected with the virus. That is up from 21% in June, and about the same as in January, during the country''s last major surge, when 43% were extremely or very worried.
-
-
-            “I wouldn’t have said this a couple of years ago, but I’m not as confident as I was in America’s ability to take care of itself,” said David Bowers, a 42-year-old business analyst in the Phoenix suburb of Peoria.
-
-
-            Bowers, a Democrat, and his wife, a public school teacher, got vaccinated early. But they fret once again about their daughters, ages 7 and 9, attending school in a state whose Republican governor, Doug Ducey, signed a law to block school districts from mandating masks, let alone vaccines.
-
-
-            A brief summer respite from COVID-19 fatigue included a family trip to New York. “COVID was pretty much out of mind," Bowers said. "Now it feels like we’re going backward.”
-
-
-            Close to 6 in 10 Americans say they favor requiring people to be fully vaccinated against COVID-19 to travel on an airplane or attend crowded public events. Only about a quarter of Americans oppose such measures.
-
-
-            Roughly 6 in 10 also support vaccine mandates for hospital or other health care workers, along with government employees, members of the military and workers who interact with the public, such as in restaurants and stores. Support is slightly lower for requiring vaccinations to go out to a bar or restaurant, though more are in favor than opposed, 51% to 28%.
-
-
-            Nearly 200 million people, or just over 60% of the U.S. population, had received at least one vaccine dose as of Thursday, according to the Centers for Disease Control and Prevention. Just over half of the population was fully vaccinated.
-
-
-            Hospitals across the U.S. had more than 75,000 coronavirus patients as of last week, a dramatic increase from a few weeks ago but still well below the winter surge records. Florida, Arkansas, Oregon, Hawaii, Louisiana and Mississippi have set records for COVID-19 hospitalizations in recent weeks, and the surge in the delta variant, combined with low vaccination rates, has produced a scramble to find beds for patients.
-
-
-            The poll suggests that despite increasing cases and greater concern about the virus, Americans have not stepped up their own precautionary behavior since June, though at least half still say they always or often wear a mask around other people, stay away from large groups and avoid nonessential travel.
-
-
-            Confidence in vaccines to withstand virus variants has not waned, either, as U.S. health officials this week announced plans to dispense booster shots to all Americans to shore up their protection. The doses could begin next month.
-
-
-            Carla Jones, 37, of Lafayette, Louisiana, is a paraplegic with immunity problems and uses a wheelchair after she was severely injured in a car accident. Because of her health, she has been told by her doctor she cannot get the vaccine. She gets anxious visiting the doctor or when her grandchildren visit.
-
-
-            “I see someone next to me at the doctor’s without a mask, it makes my heart rapidly beat faster,” Jones said.
-
-
-            Jones, a Democrat, strongly favors vaccination and mask mandates, and not just for herself. “For the good of all,” she said. "I don’t have the shot, but I definitely wouldn’t want to pass it on to anyone else.”
-
-
-            The poll shows that 55% support requiring Americans to wear masks around other people outside their homes, while 62% support mask mandates specifically for workers who interact with the public, such as at restaurants and stores. Eighty-five percent of Democrats and 39% of Republicans are in favor of mask mandates for public-facing workers.
-
-
-            Robbie Allen, a 63-year-old retiree from Clifton, Texas, is fully vaccinated and will wear a mask when required by stores or other places. But the self-described independent who leans Republican insists it is a matter of personal choice, and he sees mandates as taking the joy out of life.
-
-
-            “The COVID is not going away very quickly, but I don’t think people should live in fear," said Allen, who motorcycled with his girlfriend to this month''s Sturgis Motorcycle Rally, which attracted hundreds of thousands to the South Dakota city. “People are going to die, but if we all hunker down, life gets miserable."
-
-
-            Partisan gaps are also wide on vaccination requirements. In Arizona, Bowers has already taken time off work to pick up his daughter from school after she developed a high fever. They spent hours last week looking for a drive-thru COVID-19 testing site that wasn’t overcrowded. She tested negative. But the worries persist.
-
-
-            “My thinking is, the people who don’t want mandates are the people who need to be regulated,” Bowers said. "There’s a slim majority in this country making the right decisions. If it wasn’t for a slim majority as a country, we’d be in trouble.”
-
-
-            The AP-NORC poll of 1,729 adults was conducted Aug. 12-16 using a sample drawn from NORC’s probability-based AmeriSpeak Panel, which is designed to be representative of the U.S. population. The margin of sampling error for all respondents is plus or minus 3.2 percentage points.'
-          medium: Article
-          labels:
-          - name: Opinion
-          matchedAuthors: []
-          claim: ''
-          verdict: ''
-          keywords:
-          - name: mask mandates
-            weight: 0.07696303
-          - name: vaccine mandates
-            weight: 0.06830935
-          - name: vaccination mandates
-            weight: 0.06619582
-          - name: other people
-            weight: 0.06527583
-          - name: masks
-            weight: 0.06391404
-          - name: other crowded events
-            weight: 0.06374716
-          - name: last week
-            weight: 0.062233474
-          - name: recent weeks
-            weight: 0.059354812
-          - name: virus variants
-            weight: 0.059015423
-          - name: school districts
-            weight: 0.058817048
-          topics:
-          - name: Coronavirus
-          - name: Polls
-          categories: []
-          taxonomies: []
-          entities:
-          - data: hours
-            type: TIME
-            mentions: 1
-          - data: David Bowers
-            type: PERSON
-            mentions: 5
-          - data: Jones
-            type: PERSON
-            mentions: 2
-          - data: Doug Ducey
-            type: PERSON
-            mentions: 1
-          - data: Carla Jones
-            type: PERSON
-            mentions: 1
-          - data: Robbie Allen
-            type: PERSON
-            mentions: 1
-          - data: Allen
-            type: PERSON
-            mentions: 1
-          - data: AP
-            type: ORG
-            mentions: 2
-          - data: The Associated Press-NORC Center for Public Affairs Research
-            type: ORG
-            mentions: 1
-          - data: the Centers for Disease Control and Prevention
-            type: ORG
-            mentions: 1
-          - data: COVID
-            type: ORG
-            mentions: 1
-          - data: NORC
-            type: ORG
-            mentions: 1
-          - data: the United States
-            type: GPE
-            mentions: 6
-          - data: Louisiana
-            type: GPE
-            mentions: 2
-          - data: DENVER
-            type: GPE
-            mentions: 1
-          - data: Phoenix
-            type: GPE
-            mentions: 1
-          - data: Peoria
-            type: GPE
-            mentions: 1
-          - data: New York
-            type: GPE
-            mentions: 1
-          - data: Florida
-            type: GPE
-            mentions: 1
-          - data: Arkansas
-            type: GPE
-            mentions: 1
-          - data: Oregon
-            type: GPE
-            mentions: 1
-          - data: Hawaii
-            type: GPE
-            mentions: 1
-          - data: Mississippi
-            type: GPE
-            mentions: 1
-          - data: Lafayette
-            type: GPE
-            mentions: 1
-          - data: Clifton
-            type: GPE
-            mentions: 1
-          - data: Texas
-            type: GPE
-            mentions: 1
-          - data: South Dakota
-            type: GPE
-            mentions: 1
-          - data: Arizona
-            type: GPE
-            mentions: 1
-          - data: delta
-            type: LOC
-            mentions: 1
-          - data: COVID
-            type: EVENT
-            mentions: 1
-          - data: Sturgis Motorcycle Rally
-            type: EVENT
-            mentions: 1
-          - data: American
-            type: NORP
-            mentions: 6
-          - data: Democrat
-            type: NORP
-            mentions: 3
-          - data: Republican
-            type: NORP
-            mentions: 3
-          sentiment:
-            positive: 0.05536453
-            negative: 0.6762484
-            neutral: 0.26838717
-          summary: "\n\nThe poll from The Associated Press-NORC Center for Public Affairs Research also finds that majorities of American adults want vaccination mandates for those attending movies, sports, concerts and other crowded events; those traveling by airplane; and workers in hospitals, restaurants, stores and government offices. But they fret once again about their daughters, ages 7 and 9, attending school in a state whose Republican governor, Doug Ducey, signed a law to block school districts from mandating masks, let alone vaccines. \n\nJones, a Democrat, strongly favors vaccination and mask mandates, and not just for herself. “For the good of all,” she said. \"I don’t have the shot, but I definitely wouldn’t want to pass it on to anyone else.”\n\nThe poll shows that 55% support requiring Americans to wear masks around other people outside their homes, while 62% support mask mandates specifically for workers who interact with the public, such as at restaurants and stores."
-          translation: ''
-          locations: []
-          reprint: true
-          places: null
-    CategoryWithScoreHolder:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: Full taxonomy category path.
-        score:
-          type:
-          - number
-          - 'null'
-          description: Confidence score for the category assignment.
-          format: double
-      description: Google Content Categories assigned to the article with confidence scores.
-    EntityHolder:
+    VectorData:
       type: object
       properties:
         data:
           type:
-          - string
+          - array
           - 'null'
-          description: Text value of the extracted entity.
-        type:
-          type:
-          - string
-          - 'null'
-          description: Entity type, such as PERSON, ORGANIZATION, or LOCATION.
-        mentions:
+          description: Numeric values in the vector embedding.
+          items:
+            type: number
+            description: Numeric values in the vector embedding.
+            format: float
+        version:
           type:
           - integer
           - 'null'
-          description: Number of times the entity appears in the article.
+          description: Version of the embedding representation.
           format: int32
-      description: Named entities extracted from the article.
+      description: Vector embeddings associated with the article, when requested.
+    SourceHolder:
+      type: object
+      properties:
+        domain:
+          type:
+          - string
+          - 'null'
+          description: Publisher domain.
+        paywall:
+          type:
+          - boolean
+          - 'null'
+          description: Whether the publisher uses a paywall, when known.
+        location:
+          allOf:
+          - $ref: '#/components/schemas/SourceLocation'
+      description: Publisher information for the selected story image.
+    CompanyCount:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          description: Unique Perigon identifier for the company.
+        name:
+          type:
+          - string
+          - 'null'
+          description: Company name.
+        domains:
+          type:
+          - array
+          - 'null'
+          description: Domains associated with the company.
+          items:
+            type: string
+            description: Domains associated with the company.
+        symbols:
+          type:
+          - array
+          - 'null'
+          description: Stock symbols associated with the company.
+          items:
+            type: string
+            description: Stock symbols associated with the company.
+        count:
+          type:
+          - integer
+          - 'null'
+          description: Number of story articles mentioning the company.
+          format: int32
+      description: Companies associated with the story and their article counts.
     EventTypeHolder:
       type: object
       properties:
@@ -2336,23 +2353,6 @@ components:
           - 'null'
           description: Detected event classification.
       description: Event types detected in the article.
-    KeyPoint:
-      type: object
-      properties:
-        point:
-          type:
-          - string
-          - 'null'
-          description: A key fact or development identified in the content.
-        references:
-          type:
-          - array
-          - 'null'
-          description: Article IDs supporting the key point.
-          items:
-            type: string
-            description: Article IDs supporting the key point.
-      description: Key facts and developments identified in the story.
   securitySchemes:
     apiKeyAuth:
       type: http
