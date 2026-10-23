@@ -3,16 +3,16 @@
   "feeds": [
     {
       "source": "https://perigon.io/blog",
-      "feed_url": "https://perigon.io/blog",
+      "feed_url": "https://perigon.io/blog/rss.xml",
       "title": "",
-      "saved": 0,
-      "method": "none"
+      "saved": 10,
+      "method": "discovered"
     },
     {
       "source": "https://perigon.io/blog/rss.xml",
       "feed_url": "https://perigon.io/blog/rss.xml",
       "title": "",
-      "saved": 12,
+      "saved": 0,
       "method": "feed"
     },
     {
@@ -23,6 +23,6 @@
       "method": "none"
     }
   ],
-  "post_count": 12,
-  "fetched": "2026-10-10T13:15:00Z"
+  "post_count": 22,
+  "fetched": "2026-10-17T14:53:57Z"
 }
