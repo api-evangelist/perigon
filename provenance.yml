@@ -30,7 +30,13 @@ artifacts:
   front-door-ai/2026-09-17.yml:
     method: unknown
     evidence: no authorship recorded
-  kin/checks-2026-09-24T161608.yml:
+  integrations/_index.yml:
+    method: generated
+    evidence: carries an API Evangelist house phrase
+  integrations/perigon-integration-edges.yml:
+    method: searched
+    evidence: declared in the artifact
+  kin/checks-2026-10-11T110117.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   kin/score-2026-09-20T205903.yml:
@@ -60,6 +66,21 @@ artifacts:
   kin/score-2026-09-24T161608.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-25T210408.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-25T232841.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-10-03T000835.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-10-03T024842.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-10-11T110117.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
   lifecycle/perigon-lifecycle.yml:
     method: searched
     evidence: declared in the artifact
@@ -74,12 +95,10 @@ artifacts:
     evidence: declared in the artifact
   openapi/_original/perigon-openapi.json:
     method: harvested
-    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
-      to the provider's source is unverified
+    evidence: the same operations as https://perigon.io/openapi.json (sha256 be48c94f3175, fetched 2026-10-04)
   openapi/_original/perigon-openapi.yml:
     method: harvested
-    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
-      to the provider's source is unverified
+    evidence: the same operations as https://perigon.io/openapi.json (sha256 be48c94f3175, fetched 2026-10-04)
   openapi/perigon-ai-advanced-search-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
@@ -107,7 +126,34 @@ artifacts:
   openapi/perigon-wikipedia-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  overlays/perigon-ai-advanced-search-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/perigon-contact-points-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/perigon-monitors-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/perigon-news-stories-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
   overlays/perigon-openapi-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/perigon-source-groups-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/perigon-supplemental-endpoints-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/perigon-utilities-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/perigon-watchlists-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/perigon-wikipedia-api-phrasing-overlay.yaml:
     method: generated
     evidence: declared in the artifact
   packages/perigon-packages.yml:
