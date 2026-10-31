@@ -64,5 +64,151 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Perigon is a company surfaced via the API Evangelist harvest backlog (source: news) and added to the network as a stub for full-pipeline profiling.
-- https://perigon.io/
+Perigon is a real-time global news data and intelligence platform. It provides structured, enriched news data from 200,000+ sources worldwide through REST APIs — articles, clustered stories, AI search summaries, semantic vector search, sources, companies, people, journalists, topics and Wikipedia — plus Signals, an AI-driven monitoring product with monitors, watchlists, contact points and signed webhooks. Perigon publishes an OpenAPI description, a hosted remote MCP server, official TypeScript, Python and Go SDKs, Agent Skills, and an API versioning and deprecation policy.
+
+**Areas:** Company · News · Media Monitoring · Search · Artificial Intelligence · Data · MCP · Webhook
+
+## Perigon on APIs.io
+
+Everything profiled for Perigon is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/perigon/](https://apis.io/providers/perigon/)** — or go straight to one of the APIs or properties below.
+
+### APIs (10)
+
+- [Perigon MCP Server](https://apis.io/apis/perigon/perigon-mcp/) — Hosted remote Model Context Protocol server (Streamable HTTP, with an SSE variant) exposing Perigon news search, analytics and monitor tools to AI clients.…
+- [Perigon AI & Advanced Search API](https://apis.io/apis/perigon/perigon-ai-advanced-search-api/) — These endpoints enable semantic search beyond traditional keyword matching, content summarization, and advanced information retrieval across articles
+- [Perigon Contact Points API](https://apis.io/apis/perigon/perigon-contact-points-api/) — Manage contact points used to deliver monitor notifications. Contact points define where and how monitor events are delivered (e.g. webhooks). Only WEBHOOK…
+- [Perigon Monitors API](https://apis.io/apis/perigon/perigon-monitors-api/) — Manage AI Monitors — configurable monitors that continuously scan news content for topics, entities, and events of interest. Monitors run asynchronously and…
+- [Perigon News & Stories API](https://apis.io/apis/perigon/perigon-news-stories-api/) — Endpoints for accessing news articles and stories
+- [Perigon Source Groups API](https://apis.io/apis/perigon/perigon-source-groups-api/) — Manage custom source groups for organizing and filtering news sources. Source groups allow grouping domains together for use in search queries and monitors.
+- [Perigon Supplemental Endpoints API](https://apis.io/apis/perigon/perigon-supplemental-endpoints-api/) — Additional endpoints for metadata and related information
+- [Perigon Utilities API](https://apis.io/apis/perigon/perigon-utilities-api/) — The Utilities API from Perigon — 1 operation(s) for utilities.
+- [Perigon Watchlists API](https://apis.io/apis/perigon/perigon-watchlists-api/) — Manage watchlists of people and companies for use with monitors. Watchlists can contain up to 100 combined entities and are used to track mentions across…
+- [Perigon Wikipedia API](https://apis.io/apis/perigon/perigon-wikipedia-api/) — Endpoints for searching ingested Wikipedia content. Provides keyword and filtered search capabilities along with vector-based semantic search across…
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### AsyncAPI (1)
+
+Event-driven and webhook contracts.
+
+- [Perigon Webhooks](https://apis.io/asyncapis/perigon/perigon-webhooks/)
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [Perigon MCP](https://apis.io/servers/perigon/io-perigon-mcp/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Perigon Agentic Access](https://apis.io/agentic-access/perigon/perigon-agentic-access/)
+
+#### Overlays (10)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Perigon Ai Advanced Search Api Phrasing Overlay](https://apis.io/overlays/perigon/perigon-ai-advanced-search-api-phrasing-overlay/)
+- [Perigon Contact Points Api Phrasing Overlay](https://apis.io/overlays/perigon/perigon-contact-points-api-phrasing-overlay/)
+- [Perigon Monitors Api Phrasing Overlay](https://apis.io/overlays/perigon/perigon-monitors-api-phrasing-overlay/)
+- [Perigon News Stories Api Phrasing Overlay](https://apis.io/overlays/perigon/perigon-news-stories-api-phrasing-overlay/)
+- [Perigon Openapi Overlay](https://apis.io/overlays/perigon/perigon-openapi-overlay/)
+- [Perigon Source Groups Api Phrasing Overlay](https://apis.io/overlays/perigon/perigon-source-groups-api-phrasing-overlay/)
+- [Perigon Supplemental Endpoints Api Phrasing Overlay](https://apis.io/overlays/perigon/perigon-supplemental-endpoints-api-phrasing-overlay/)
+- [Perigon Utilities Api Phrasing Overlay](https://apis.io/overlays/perigon/perigon-utilities-api-phrasing-overlay/)
+- [Perigon Watchlists Api Phrasing Overlay](https://apis.io/overlays/perigon/perigon-watchlists-api-phrasing-overlay/)
+- [Perigon Wikipedia Api Phrasing Overlay](https://apis.io/overlays/perigon/perigon-wikipedia-api-phrasing-overlay/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Perigon Authentication](https://apis.io/security/perigon/perigon-authentication/)
+- [Perigon Domain Security](https://apis.io/security/perigon/perigon-domain-security/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Perigon Plans Pricing](https://apis.io/plans/perigon/perigon-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Perigon Rate Limits](https://apis.io/rate-limits/perigon/perigon-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://perigon.io/)
+- [Documentation](https://perigon.io/docs/api/intro)
+- [Getting started](https://perigon.io/docs/api/getting-started)
+- [API reference](https://perigon.io/reference)
+- [Pricing](https://perigon.io/products/pricing/apis)
+- [Sign up](https://perigon.io/sign-up)
+- [Support](https://perigon.io/contact)
+- [Blog](https://perigon.io/blog)
+- [Terms of service](https://perigon.io/terms)
+- [Privacy policy](https://perigon.io/privacy)
+- [GitHub](https://github.com/goperigon)
+- [Status](https://status.perigon.io/)
+
+## API Evangelist rating
+
+**Kin Score 67.2** — exemplar · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 75.0 |
+| Contract quality | 65.0 |
+| Contract governance | 18.2 |
+| Operational transparency | 84.2 |
+| Developer ergonomics | 73.2 |
+| Access clarity | 76.3 |
+
+**Agent readiness 53.8** — agent-ready (gated down from agent-native)
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | documented (partial credit) |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | verified |
+| OpenAPI Examples | verified |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | yes |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | yes |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | verified |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | partial |
+| Operation Distinctiveness | mostly |
+
+**Regulatory alignment 22.7** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/perigon/](https://apis.io/providers/perigon/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Perigon: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/perigon/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
